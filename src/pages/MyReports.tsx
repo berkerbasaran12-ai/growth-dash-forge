@@ -127,6 +127,8 @@ export default function MyReports() {
               const isExpanded = expandedId === report.id;
               const profitPositive = report.net_profit >= 0;
 
+              const isClient = report.report_type === "client";
+
               return (
                 <Card
                   key={report.id}
@@ -149,16 +151,23 @@ export default function MyReports() {
                       </p>
                     </div>
                     <div className="flex items-center gap-3 shrink-0">
-                      <div className="text-right">
-                        <p className="text-xs text-muted-foreground">Net Kar</p>
-                        <p className={`text-sm font-bold ${profitPositive ? "text-green-600 dark:text-green-400" : "text-destructive"}`}>
-                          {formatCurrency(report.net_profit)}
-                        </p>
-                      </div>
-                      <Badge variant={profitPositive ? "default" : "destructive"} className="text-xs">
-                        {profitPositive ? <TrendingUp className="h-3 w-3 mr-1" /> : <TrendingDown className="h-3 w-3 mr-1" />}
-                        {profitPositive ? "Kâr" : "Zarar"}
+                      <Badge variant="outline" className="text-xs">
+                        {isClient ? "Müşteri" : "Ajans"}
                       </Badge>
+                      {!isClient && (
+                        <div className="text-right">
+                          <p className="text-xs text-muted-foreground">Net Kar</p>
+                          <p className={`text-sm font-bold ${profitPositive ? "text-green-600 dark:text-green-400" : "text-destructive"}`}>
+                            {formatCurrency(report.net_profit)}
+                          </p>
+                        </div>
+                      )}
+                      {!isClient && (
+                        <Badge variant={profitPositive ? "default" : "destructive"} className="text-xs">
+                          {profitPositive ? <TrendingUp className="h-3 w-3 mr-1" /> : <TrendingDown className="h-3 w-3 mr-1" />}
+                          {profitPositive ? "Kâr" : "Zarar"}
+                        </Badge>
+                      )}
                       <ChevronRight className={`h-4 w-4 text-muted-foreground transition-transform ${isExpanded ? "rotate-90" : ""}`} />
                     </div>
                   </button>
