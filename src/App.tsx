@@ -22,6 +22,7 @@ import Finance from "./pages/Finance";
 import Analytics from "./pages/Analytics";
 import ReportBuilder from "./pages/ReportBuilder";
 import MyReports from "./pages/MyReports";
+import KnowledgeCategoryDetail from "./pages/KnowledgeCategoryDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -41,6 +42,7 @@ const App = () => (
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
               <Route path="/knowledge-base" element={<ProtectedRoute><KnowledgeBase /></ProtectedRoute>} />
+              <Route path="/knowledge-base/:categoryId" element={<ProtectedRoute><KnowledgeCategoryDetail /></ProtectedRoute>} />
               <Route path="/admin/clients" element={<ProtectedRoute adminOnly><AdminClients /></ProtectedRoute>} />
               <Route path="/admin/clients/:userId" element={<ProtectedRoute adminOnly><ClientDetail /></ProtectedRoute>} />
               <Route path="/admin/knowledge" element={<ProtectedRoute adminOnly><AdminKnowledge /></ProtectedRoute>} />

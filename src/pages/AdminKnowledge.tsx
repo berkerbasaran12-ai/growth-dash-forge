@@ -21,7 +21,7 @@ const AdminKnowledge = () => {
   const [editItem, setEditItem] = useState<any>(null);
   const [catDialogOpen, setCatDialogOpen] = useState(false);
   const [editCat, setEditCat] = useState<any>(null);
-  const [catForm, setCatForm] = useState({ name: "", icon: "📚" });
+  const [catForm, setCatForm] = useState({ name: "", icon: "📚", thumbnail_url: "" });
 
   const fetchData = async () => {
     const [contentRes, catRes] = await Promise.all([
@@ -61,17 +61,17 @@ const AdminKnowledge = () => {
   const handleSaveCat = async () => {
     if (!catForm.name.trim()) return;
     if (editCat) {
-      const { error } = await supabase.from("kb_categories").update({ name: catForm.name, icon: catForm.icon }).eq("id", editCat.id);
+      const { error } = await supabase.from("kb_categories").update({ name: catForm.name, icon: catForm.icon, thumbnail_url: catForm.thumbnail_url }).eq("id", editCat.id);
       if (error) { toast.error(error.message); return; }
       toast.success("Kategori güncellendi");
     } else {
-      const { error } = await supabase.from("kb_categories").insert({ name: catForm.name, icon: catForm.icon });
+      const { error } = await supabase.from("kb_categories").insert({ name: catForm.name, icon: catForm.icon, thumbnail_url: catForm.thumbnail_url });
       if (error) { toast.error(error.message); return; }
       toast.success("Kategori oluşturuldu");
     }
     setCatDialogOpen(false);
     setEditCat(null);
-    setCatForm({ name: "", icon: "📚" });
+    setCatForm({ name: "", icon: "📚", thumbnail_url: "" });
     fetchData();
   };
 
@@ -104,7 +104,7 @@ const AdminKnowledge = () => {
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="glass rounded-xl p-5 space-y-3">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-medium text-foreground">Kategoriler</h3>
-            <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={() => { setEditCat(null); setCatForm({ name: "", icon: "📚" }); setCatDialogOpen(true); }}>
+            <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={() => { setEditCat(null); setCatForm({ name: "", icon: "📚", thumbnail_url: "" }); setCatDialogOpen(true); }}>
               <Plus className="h-3 w-3 mr-1" /> Ekle
             </Button>
           </div>
@@ -112,7 +112,7 @@ const AdminKnowledge = () => {
             {categories.map((cat) => (
               <div key={cat.id} className="inline-flex items-center gap-1.5 bg-secondary rounded-lg px-3 py-1.5 text-xs text-foreground group">
                 <span>{cat.icon} {cat.name}</span>
-                <Button variant="ghost" size="sm" className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground" onClick={() => { setEditCat(cat); setCatForm({ name: cat.name, icon: cat.icon || "📚" }); setCatDialogOpen(true); }}>
+                <Button variant="ghost" size="sm" className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground" onClick={() => { setEditCat(cat); setCatForm({ name: cat.name, icon: cat.icon || "📚", thumbnail_url: cat.thumbnail_url || "" }); setCatDialogOpen(true); }}>
                   <Edit className="h-3 w-3" />
                 </Button>
                 <Button variant="ghost" size="sm" className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-destructive" onClick={() => handleDeleteCat(cat.id)}>
@@ -172,17 +172,26 @@ const AdminKnowledge = () => {
         </Dialog>
 
         {/* Category Dialog */}
-        <Dialog open={catDialogOpen} onOpenChange={(open) => { setCatDialogOpen(open); if (!open) { setEditCat(null); setCatForm({ name: "", icon: "📚" }); } }}>
+        <Dialog open={catDialogOpen} onOpenChange={(open) => { setCatDialogOpen(open); if (!open) { setEditCat(null); setCatForm({ name: "", icon: "📚", thumbnail_url: "" }); } }}>
           <DialogContent className="glass border-border max-w-sm">
             <DialogHeader><DialogTitle className="text-foreground">{editCat ? "Kategori Düzenle" : "Yeni Kategori"}</DialogTitle></DialogHeader>
             <div className="space-y-4 pt-2">
-              <div className="space-y-1.5">
-                <Label className="text-xs text-muted-foreground">İkon</Label>
-                <Input value={catForm.icon} onChange={e => setCatForm({ ...catForm, icon: e.target.value })} className="bg-secondary border-border h-9 text-sm w-20" />
+              <div className="grid grid-cols-4 gap-4">
+                <div className="space-y-1.5">
+                  <Label className="text-xs text-muted-foreground">İkon</Label>
+                  <Input value={catForm.icon} onChange={e => setCatForm({ ...catForm, icon: e.target.value })} className="bg-secondary border-border h-9 text-sm" />
+                </div>
+                <div className="col-span-3 space-y-1.5">
+                  <Label className="text-xs text-muted-foreground">Kategori Adı</Label>
+                  <Input value={catForm.name} onChange={e => setCatForm({ ...catForm, name: e.target.value })} className="bg-secondary border-border h-9 text-sm" required />
+                </div>
               </div>
               <div className="space-y-1.5">
-                <Label className="text-xs text-muted-foreground">Kategori Adı</Label>
-                <Input value={catForm.name} onChange={e => setCatForm({ ...catForm, name: e.target.value })} className="bg-secondary border-border h-9 text-sm" required />
+                <Label className="text-xs text-muted-foreground">Kapak Görseli URL</Label>
+                <Input value={catForm.thumbnail_url} onChange={e => setCatForm({ ...catForm, thumbnail_url: e.target.value })} placeholder="https://..." className="bg-secondary border-border h-9 text-sm" />
+                {catForm.thumbnail_url && (
+                  <img src={catForm.thumbnail_url} alt="Önizleme" className="w-full h-24 object-cover rounded-lg mt-2" />
+                )}
               </div>
               <Button className="w-full h-9 text-sm bg-primary hover:bg-primary/90" onClick={handleSaveCat}>
                 <Save className="h-4 w-4 mr-1.5" /> Kaydet
@@ -230,6 +239,7 @@ function ContentForm({ categories, initialData, onSave }: { categories: any[]; i
               <SelectItem value="video">Video</SelectItem>
               <SelectItem value="pdf">PDF</SelectItem>
               <SelectItem value="link">Link</SelectItem>
+              <SelectItem value="file">Dosya</SelectItem>
             </SelectContent>
           </Select>
         </div>

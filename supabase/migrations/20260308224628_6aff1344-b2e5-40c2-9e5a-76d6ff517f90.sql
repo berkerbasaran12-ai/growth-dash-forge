@@ -1,0 +1,1 @@
+ALTER TABLE public.kb_categories ADD COLUMN thumbnail_url text DEFAULT '';
