@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import havanaLogo from "@/assets/havana-logo.png";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -37,7 +38,7 @@ const Login = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background relative overflow-hidden">
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-foreground/5 rounded-full blur-3xl" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -47,9 +48,7 @@ const Login = () => {
       >
         <div className="glass rounded-2xl p-8 space-y-8">
           <div className="text-center space-y-2">
-            <div className="w-14 h-14 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto mb-4">
-              <span className="text-primary font-bold text-xl">P</span>
-            </div>
+            <img src={havanaLogo} alt="Havana Dijital" className="h-10 mx-auto mb-4" />
             <h1 className="text-2xl font-semibold text-foreground tracking-tight">Hoş Geldiniz</h1>
             <p className="text-sm text-muted-foreground">Müşteri portalına giriş yapın</p>
           </div>
@@ -107,7 +106,7 @@ const Login = () => {
           </form>
 
           <p className="text-xs text-center text-muted-foreground">
-            Hesap bilgilerinizi yöneticinizden alabilirsiniz.
+            Kayıt için bize ulaşın.
           </p>
         </div>
       </motion.div>
