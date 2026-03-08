@@ -172,7 +172,7 @@ export default function ReportBuilder() {
   const handleNextMonth = () => setBrowseDate(new Date(browseYear, browseMonth + 1, 1));
 
   const canGoNext = () => {
-    if (step === 0) return !!reportType && (reportType === "agency" || (reportType === "client" && selectedClientId));
+    if (step === 0) return !!reportType && (reportType === "agency" || (reportType === "client" && selectedClientId && reportName.trim() !== ""));
     if (step === 1) return !!selectedWeek;
     if (step === 2) {
       const baseValid = newCustomerRevenue !== "" && existingCustomerRevenue !== "" && adSpend !== "" &&
