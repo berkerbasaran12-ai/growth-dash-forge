@@ -171,7 +171,7 @@ function SalesTable({ metrics, canEdit, editingId, editData, setEditData, startE
     <table className="w-full">
       <thead>
         <tr className="border-b border-border">
-          {["Tarih", "Satış (₺)", "Sipariş", "Lead", "Randevu", "Kapatma %", "ACV (₺)", "Yeni Müşteri", "Kayıp %", "LTV (₺)", "Net Kar (₺)"].map((h, i) => (
+          {["Tarih", "Satış (₺)", "Sipariş", "Lead", "Randevu", "Kapatma %", "ACV (₺)", "Yeni Müş.", "Tekrar Müş.", "Kayıp %", "LTV (₺)", "Net Kar (₺)"].map((h, i) => (
             <th key={h} className={`text-xs font-medium text-muted-foreground uppercase tracking-wider px-3 py-3 ${i === 0 ? "text-left" : "text-right"}`}>{h}</th>
           ))}
           {canEdit && <th className="text-right text-xs font-medium text-muted-foreground uppercase tracking-wider px-3 py-3">İşlem</th>}
