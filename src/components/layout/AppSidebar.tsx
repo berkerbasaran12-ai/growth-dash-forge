@@ -1,4 +1,5 @@
 import { LayoutDashboard, BookOpen, Settings, Users, LogOut, FileText, Plug, Activity, Sun, Moon } from "lucide-react";
+import havanaLogo from "@/assets/havana-logo.png";
 import { NotificationBell } from "@/components/NotificationBell";
 import { SendNotificationDialog } from "@/components/SendNotificationDialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -22,14 +23,14 @@ import {
 } from "@/components/ui/sidebar";
 
 const clientItems = [
-  { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+  { title: "Yönetim Paneli", url: "/dashboard", icon: LayoutDashboard },
   { title: "Havana Akademi", url: "/knowledge-base", icon: BookOpen },
   { title: "Entegrasyonlar", url: "/integrations", icon: Plug },
   { title: "Ayarlar", url: "/settings", icon: Settings },
 ];
 
 const adminItems = [
-  { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+  { title: "Yönetim Paneli", url: "/dashboard", icon: LayoutDashboard },
   { title: "Müşteri Yönetimi", url: "/admin/clients", icon: Users },
   { title: "Havana Akademi", url: "/knowledge-base", icon: BookOpen },
   { title: "İçerik Yönetimi", url: "/admin/knowledge", icon: FileText },
@@ -56,18 +57,14 @@ export function AppSidebar() {
       <SidebarHeader className="p-4 border-b border-border">
         {!collapsed ? (
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shrink-0">
-              <span className="text-primary-foreground font-bold text-sm">H</span>
-            </div>
+            <img src={havanaLogo} alt="Havana Dijital" className="w-8 h-8 rounded-lg object-contain shrink-0" />
             <div className="min-w-0">
               <p className="font-semibold text-foreground tracking-tight text-sm leading-tight truncate">Havana Dijital</p>
               <p className="text-[10px] text-muted-foreground leading-tight truncate">Müşteri Yönetim Portalı</p>
             </div>
           </div>
         ) : (
-          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center mx-auto">
-            <span className="text-primary-foreground font-bold text-sm">H</span>
-          </div>
+          <img src={havanaLogo} alt="Havana Dijital" className="w-8 h-8 rounded-lg object-contain mx-auto" />
         )}
       </SidebarHeader>
 
