@@ -33,6 +33,7 @@ const clientItems = [
 const adminItems = [
   { title: "Yönetim Paneli", url: "/dashboard", icon: LayoutDashboard },
   { title: "Hedefler", url: "/goals", icon: Target },
+  { title: "Gelir-Gider", url: "/finance", icon: Wallet },
   { title: "Müşteri Yönetimi", url: "/admin/clients", icon: Users },
   { title: "Havana Akademi", url: "/knowledge-base", icon: BookOpen },
   { title: "İçerik Yönetimi", url: "/admin/knowledge", icon: FileText },
