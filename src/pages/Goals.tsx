@@ -62,7 +62,7 @@ const Goals = () => {
       const goals = Array.isArray(data.goals) ? data.goals : [];
       setRecord({
         ...data,
-        goals: goals as GoalItem[],
+        goals: goals as unknown as GoalItem[],
       } as MonthlyGoalRecord);
     } else {
       setRecord(null);
