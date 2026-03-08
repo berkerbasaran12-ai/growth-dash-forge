@@ -23,8 +23,8 @@ function exportCSV(metrics: any[], type: string) {
     headers = ["Tarih", "Kanal", "Harcama", "Trafik", "Dönüşüm", "Lead", "CPC", "CPM", "Etkileşim %", "ROAS"];
     mapRow = r => [r.date, r.channel, r.spend, r.traffic, r.conversions, r.leads, r.cpc, r.cpm, r.engagement_rate, r.roas];
   } else {
-    headers = ["Tarih", "Satış", "Sipariş", "Lead", "Randevu", "Kapatma %", "ACV", "Yeni Müşteri", "Kayıp %", "LTV", "Net Kar"];
-    mapRow = r => [r.date, r.total_sales, r.order_count, r.leads_received, r.appointments, r.win_rate, r.avg_deal_value, r.new_customers, r.churn_rate, r.ltv, r.net_profit];
+    headers = ["Tarih", "Satış", "Sipariş", "Lead", "Randevu", "Kapatma %", "ACV", "Yeni Müşteri", "Tekrar Müş.", "Kayıp %", "LTV", "Net Kar"];
+    mapRow = r => [r.date, r.total_sales, r.order_count, r.leads_received, r.appointments, r.win_rate, r.avg_deal_value, r.new_customers, r.returning_customers, r.churn_rate, r.ltv, r.net_profit];
   }
 
   const csv = [headers.join(","), ...metrics.map(r => mapRow(r).join(","))].join("\n");
