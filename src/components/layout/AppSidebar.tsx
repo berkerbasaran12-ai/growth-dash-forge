@@ -34,13 +34,13 @@ const clientItems = [
 
 const adminItems = [
   { title: "Anasayfa", url: "/dashboard", icon: LayoutDashboard },
-  { title: "Raporlarım", url: "/reports", icon: ClipboardList },
-  { title: "Hedefler", url: "/goals", icon: Target },
-  { title: "Detaylı Analiz", url: "/analytics", icon: BarChart3 },
   { title: "Gelir-Gider", url: "/finance", icon: Wallet },
   { title: "Müşteri Yönetimi", url: "/admin/clients", icon: Users },
-  { title: "Havana Akademi", url: "/knowledge-base", icon: BookOpen },
   { title: "İçerik Yönetimi", url: "/admin/knowledge", icon: FileText },
+  { title: "Havana Akademi", url: "/knowledge-base", icon: BookOpen },
+  { title: "Hedefler", url: "/goals", icon: Target },
+  { title: "Detaylı Analiz", url: "/analytics", icon: BarChart3 },
+  { title: "Raporlarım", url: "/reports", icon: ClipboardList },
   { title: "Entegrasyonlar", url: "/integrations", icon: Plug },
   { title: "Aktivite Logu", url: "/admin/activity", icon: Activity },
   { title: "Ayarlar", url: "/settings", icon: Settings },
