@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft, Play, FileText, ExternalLink, File, CheckCircle2, ChevronDown } from "lucide-react";
+import { ArrowLeft, Play, FileText, ExternalLink, File, CheckCircle2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -8,11 +8,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
 
-const typeIcon: Record<string, React.ReactNode> = {
-  video: <Play className="h-4 w-4" />,
-  pdf: <FileText className="h-4 w-4" />,
-  link: <ExternalLink className="h-4 w-4" />,
-  file: <File className="h-4 w-4" />,
+const typeLabel: Record<string, string> = {
+  video: "Video",
+  pdf: "PDF",
+  link: "Link",
+  file: "Dosya",
 };
 
 const KnowledgeCategoryDetail = () => {
@@ -57,74 +57,11 @@ const KnowledgeCategoryDetail = () => {
     });
   };
 
-  const renderContent = () => {
-    if (!selectedItem) {
-      return (
-        <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
-          Bir içerik seçin
-        </div>
-      );
-    }
-
-    return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-start justify-between gap-4">
-          <h2 className="text-xl font-bold text-foreground">{selectedItem.title}</h2>
-          <button
-            onClick={() => toggleComplete(selectedItem.id)}
-            className={`shrink-0 h-7 w-7 rounded-full border-2 flex items-center justify-center transition-colors ${
-              completedIds.has(selectedItem.id)
-                ? "border-primary bg-primary text-primary-foreground"
-                : "border-border text-transparent hover:border-muted-foreground"
-            }`}
-          >
-            <CheckCircle2 className="h-4 w-4" />
-          </button>
-        </div>
-
-        {selectedItem.description && (
-          <div className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
-            {selectedItem.description}
-          </div>
-        )}
-
-        {selectedItem.content_url && selectedItem.content_type === "video" && (
-          <div className="aspect-video rounded-xl overflow-hidden bg-black">
-            <iframe
-              src={selectedItem.content_url.replace("watch?v=", "embed/")}
-              className="w-full h-full"
-              allowFullScreen
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            />
-          </div>
-        )}
-
-        {selectedItem.content_url && selectedItem.content_type === "pdf" && (
-          <div className="rounded-xl overflow-hidden border border-border bg-card">
-            <iframe src={selectedItem.content_url} className="w-full h-[600px]" />
-          </div>
-        )}
-
-        {selectedItem.content_url && (selectedItem.content_type === "link" || selectedItem.content_type === "file") && (
-          <a
-            href={selectedItem.content_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
-          >
-            {typeIcon[selectedItem.content_type]}
-            {selectedItem.content_url}
-          </a>
-        )}
-      </div>
-    );
-  };
-
   return (
     <AppLayout>
-      <div className="flex flex-col lg:flex-row gap-0 -m-6 min-h-[calc(100vh-4rem)]">
-        {/* Left sidebar */}
-        <div className="w-full lg:w-[380px] shrink-0 border-r border-border bg-card overflow-y-auto">
+      <div className="-m-3 sm:-m-6 flex flex-col lg:flex-row min-h-[calc(100vh-3.5rem)]">
+        {/* Left sidebar - content list */}
+        <div className="w-full lg:w-[380px] shrink-0 border-r border-border bg-card lg:overflow-y-auto lg:h-[calc(100vh-3.5rem)]">
           <div className="p-5 border-b border-border space-y-3">
             <Button
               variant="ghost"
@@ -139,7 +76,7 @@ const KnowledgeCategoryDetail = () => {
             </h2>
             <div className="space-y-1.5">
               <Progress value={progressPercent} className="h-2" />
-              <p className="text-xs text-muted-foreground">{progressPercent}% tamamlandı</p>
+              <p className="text-xs text-muted-foreground">{progressPercent}%</p>
             </div>
           </div>
 
@@ -152,14 +89,14 @@ const KnowledgeCategoryDetail = () => {
                 <button
                   key={item.id}
                   onClick={() => setSelectedId(item.id)}
-                  className={`w-full flex items-center gap-3 px-5 py-3.5 text-left transition-colors text-sm ${
+                  className={`w-full flex items-center gap-3 px-5 py-3.5 text-left transition-colors text-sm border-l-2 ${
                     isSelected
-                      ? "bg-primary/10 text-primary font-medium"
-                      : "text-foreground hover:bg-accent/50"
+                      ? "bg-primary/10 border-l-primary font-medium text-foreground"
+                      : "border-l-transparent text-foreground hover:bg-accent/50"
                   }`}
                 >
                   <div
-                    className={`h-5 w-5 rounded-full border-2 flex items-center justify-center shrink-0 text-[10px] ${
+                    className={`h-5 w-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
                       isCompleted
                         ? "border-primary bg-primary text-primary-foreground"
                         : "border-border"
@@ -167,18 +104,9 @@ const KnowledgeCategoryDetail = () => {
                   >
                     {isCompleted && <CheckCircle2 className="h-3 w-3" />}
                   </div>
-                  <span className="truncate">{item.title}</span>
-                  <Badge
-                    variant="secondary"
-                    className="ml-auto shrink-0 text-[10px] px-1.5 py-0"
-                  >
-                    {item.content_type === "video"
-                      ? "Video"
-                      : item.content_type === "pdf"
-                      ? "PDF"
-                      : item.content_type === "link"
-                      ? "Link"
-                      : "Dosya"}
+                  <span className="flex-1 truncate">{item.title}</span>
+                  <Badge variant="secondary" className="shrink-0 text-[10px] px-1.5 py-0">
+                    {typeLabel[item.content_type] || "Dosya"}
                   </Badge>
                 </button>
               );
@@ -193,8 +121,63 @@ const KnowledgeCategoryDetail = () => {
         </div>
 
         {/* Right content area */}
-        <div className="flex-1 bg-background overflow-y-auto">
-          {renderContent()}
+        <div className="flex-1 bg-background lg:overflow-y-auto lg:h-[calc(100vh-3.5rem)]">
+          {selectedItem ? (
+            <div className="p-6 lg:p-10 max-w-3xl space-y-6">
+              <div className="flex items-start justify-between gap-4">
+                <h2 className="text-xl font-bold text-foreground">{selectedItem.title}</h2>
+                <button
+                  onClick={() => toggleComplete(selectedItem.id)}
+                  className={`shrink-0 h-7 w-7 rounded-full border-2 flex items-center justify-center transition-colors ${
+                    completedIds.has(selectedItem.id)
+                      ? "border-primary bg-primary text-primary-foreground"
+                      : "border-border text-transparent hover:border-muted-foreground"
+                  }`}
+                >
+                  <CheckCircle2 className="h-4 w-4" />
+                </button>
+              </div>
+
+              {selectedItem.description && (
+                <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                  {selectedItem.description}
+                </p>
+              )}
+
+              {selectedItem.content_url && selectedItem.content_type === "video" && (
+                <div className="aspect-video rounded-xl overflow-hidden bg-black">
+                  <iframe
+                    src={selectedItem.content_url.replace("watch?v=", "embed/")}
+                    className="w-full h-full"
+                    allowFullScreen
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  />
+                </div>
+              )}
+
+              {selectedItem.content_url && selectedItem.content_type === "pdf" && (
+                <div className="rounded-xl overflow-hidden border border-border">
+                  <iframe src={selectedItem.content_url} className="w-full h-[600px]" />
+                </div>
+              )}
+
+              {selectedItem.content_url && (selectedItem.content_type === "link" || selectedItem.content_type === "file") && (
+                <a
+                  href={selectedItem.content_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                  {selectedItem.content_url}
+                </a>
+              )}
+            </div>
+          ) : (
+            <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
+              Bir içerik seçin
+            </div>
+          )}
         </div>
       </div>
     </AppLayout>
