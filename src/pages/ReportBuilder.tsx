@@ -110,7 +110,17 @@ export default function ReportBuilder() {
   const [submitted, setSubmitted] = useState(false);
 
   const isClientReport = reportType === "client";
-  const TOTAL_STEPS = 4;
+  const TOTAL_STEPS = isClientReport ? 3 : 4;
+
+  const getNextStep = (current: number) => {
+    if (isClientReport && current === 2) return 3; // skip notes, go to summary (now step 3)
+    return current + 1;
+  };
+  const getPrevStep = (current: number) => {
+    if (isClientReport && current === 3) return 2; // skip notes going back
+    return current - 1;
+  };
+  const getSummaryStep = () => isClientReport ? 3 : 4;
 
   // Fetch clients for admin
   const { data: clients } = useQuery({
