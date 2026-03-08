@@ -85,6 +85,57 @@ export type Database = {
           },
         ]
       }
+      marketing_metrics: {
+        Row: {
+          channel: string
+          conversions: number
+          cpc: number
+          cpm: number
+          created_at: string
+          date: string
+          engagement_rate: number
+          id: string
+          leads: number
+          roas: number
+          spend: number
+          traffic: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          channel?: string
+          conversions?: number
+          cpc?: number
+          cpm?: number
+          created_at?: string
+          date: string
+          engagement_rate?: number
+          id?: string
+          leads?: number
+          roas?: number
+          spend?: number
+          traffic?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          channel?: string
+          conversions?: number
+          cpc?: number
+          cpm?: number
+          created_at?: string
+          date?: string
+          engagement_rate?: number
+          id?: string
+          leads?: number
+          roas?: number
+          spend?: number
+          traffic?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           company: string | null
@@ -147,10 +198,15 @@ export type Database = {
       }
       sales_metrics: {
         Row: {
+          appointments: number
           avg_cart_value: number | null
+          avg_deal_value: number
+          churn_rate: number
           created_at: string
           date: string
           id: string
+          leads_received: number
+          ltv: number
           net_profit: number
           new_customers: number
           order_count: number
@@ -158,12 +214,18 @@ export type Database = {
           total_sales: number
           updated_at: string
           user_id: string
+          win_rate: number
         }
         Insert: {
+          appointments?: number
           avg_cart_value?: number | null
+          avg_deal_value?: number
+          churn_rate?: number
           created_at?: string
           date: string
           id?: string
+          leads_received?: number
+          ltv?: number
           net_profit?: number
           new_customers?: number
           order_count?: number
@@ -171,12 +233,18 @@ export type Database = {
           total_sales?: number
           updated_at?: string
           user_id: string
+          win_rate?: number
         }
         Update: {
+          appointments?: number
           avg_cart_value?: number | null
+          avg_deal_value?: number
+          churn_rate?: number
           created_at?: string
           date?: string
           id?: string
+          leads_received?: number
+          ltv?: number
           net_profit?: number
           new_customers?: number
           order_count?: number
@@ -184,6 +252,7 @@ export type Database = {
           total_sales?: number
           updated_at?: string
           user_id?: string
+          win_rate?: number
         }
         Relationships: []
       }
