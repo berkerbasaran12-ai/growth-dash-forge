@@ -118,6 +118,33 @@ export type Database = {
         }
         Relationships: []
       }
+      sales_goals: {
+        Row: {
+          created_at: string
+          id: string
+          month: string
+          target_sales: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          month: string
+          target_sales?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          month?: string
+          target_sales?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       sales_metrics: {
         Row: {
           avg_cart_value: number | null
