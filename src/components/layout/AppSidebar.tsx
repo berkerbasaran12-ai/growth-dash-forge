@@ -24,6 +24,7 @@ import {
 
 const clientItems = [
   { title: "Yönetim Paneli", url: "/dashboard", icon: LayoutDashboard },
+  { title: "Detaylı Analiz", url: "/analytics", icon: BarChart3 },
   { title: "Gelir-Gider", url: "/finance", icon: Wallet },
   { title: "Havana Akademi", url: "/knowledge-base", icon: BookOpen },
   { title: "Entegrasyonlar", url: "/integrations", icon: Plug },
