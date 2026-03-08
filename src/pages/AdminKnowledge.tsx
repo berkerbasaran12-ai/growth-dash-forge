@@ -183,7 +183,7 @@ const AdminKnowledge = () => {
                     </td>
                   </tr>
                 ))}
-                {filtered.length === 0 && <tr><td colSpan={5} className="px-5 py-8 text-center text-sm text-muted-foreground">İçerik bulunamadı</td></tr>}
+                {filtered.length === 0 && <tr><td colSpan={6} className="px-5 py-8 text-center text-sm text-muted-foreground">İçerik bulunamadı</td></tr>}
               </tbody>
             </table>
           </div>
