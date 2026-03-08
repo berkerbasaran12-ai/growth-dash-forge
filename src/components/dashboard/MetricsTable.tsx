@@ -179,7 +179,7 @@ function SalesTable({ metrics, canEdit, editingId, editData, setEditData, startE
       </thead>
       <tbody>
         {metrics.length === 0 ? (
-          <tr><td colSpan={canEdit ? 12 : 11} className="px-5 py-8 text-center text-sm text-muted-foreground">Henüz veri yok</td></tr>
+          <tr><td colSpan={canEdit ? 13 : 12} className="px-5 py-8 text-center text-sm text-muted-foreground">Henüz veri yok</td></tr>
         ) : metrics.map((row: any) => (
           <tr key={row.id} className="border-b border-border/50 hover:bg-secondary/50 transition-colors">
             <td className="px-3 py-3 text-sm text-foreground">{format(parseISO(row.date), "dd MMM", { locale: tr })}</td>
