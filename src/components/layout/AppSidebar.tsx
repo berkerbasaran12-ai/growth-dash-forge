@@ -22,7 +22,7 @@ import {
 const clientItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "Entegrasyonlar", url: "/integrations", icon: Plug },
-  { title: "Bilgi Bankası", url: "/knowledge-base", icon: BookOpen },
+  { title: "Havana Akademi", url: "/knowledge-base", icon: BookOpen },
   { title: "Ayarlar", url: "/settings", icon: Settings },
 ];
 
