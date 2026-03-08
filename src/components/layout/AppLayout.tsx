@@ -14,7 +14,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           <header className="h-14 flex items-center border-b border-border px-4 glass">
             <SidebarTrigger className="text-muted-foreground hover:text-foreground" />
           </header>
-          <main className="flex-1 p-6 overflow-auto">
+          <main className="flex-1 p-3 sm:p-6 overflow-auto">
             {children}
           </main>
         </div>

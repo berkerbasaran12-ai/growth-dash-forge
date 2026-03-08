@@ -126,31 +126,33 @@ const ClientDetail = () => {
     <AppLayout>
       <div className="space-y-6 max-w-5xl">
         {/* Header */}
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => navigate("/admin/clients")}>
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          <Avatar className="h-12 w-12">
-            <AvatarImage src={client.avatar_url || undefined} />
-            <AvatarFallback className="bg-primary/10 text-primary font-semibold">{initials}</AvatarFallback>
-          </Avatar>
-          <div>
-            <h1 className="text-xl font-semibold text-foreground">{client.full_name || client.email}</h1>
-            <p className="text-sm text-muted-foreground">{client.company || "Şirket belirtilmemiş"} · {client.email}</p>
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" size="icon" className="h-9 w-9 shrink-0" onClick={() => navigate("/admin/clients")}>
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+            <Avatar className="h-10 w-10 sm:h-12 sm:w-12 shrink-0">
+              <AvatarImage src={client.avatar_url || undefined} />
+              <AvatarFallback className="bg-primary/10 text-primary font-semibold">{initials}</AvatarFallback>
+            </Avatar>
+            <div className="min-w-0">
+              <h1 className="text-lg sm:text-xl font-semibold text-foreground truncate">{client.full_name || client.email}</h1>
+              <p className="text-xs sm:text-sm text-muted-foreground truncate">{client.company || "Şirket belirtilmemiş"} · {client.email}</p>
+            </div>
           </div>
-          <Badge variant={client.is_active ? "default" : "secondary"} className={client.is_active ? "ml-auto bg-accent/10 text-accent border-accent/20" : "ml-auto"}>
+          <Badge variant={client.is_active ? "default" : "secondary"} className={`self-start sm:ml-auto shrink-0 ${client.is_active ? "bg-accent/10 text-accent border-accent/20" : ""}`}>
             {client.is_active ? "Aktif" : "Pasif"}
           </Badge>
         </div>
 
         {/* Tabs */}
         <Tabs defaultValue="info" className="space-y-4">
-          <TabsList className="bg-secondary">
-            <TabsTrigger value="info" className="gap-1.5"><Building2 className="h-3.5 w-3.5" /> Bilgiler</TabsTrigger>
-            <TabsTrigger value="team" className="gap-1.5"><Users className="h-3.5 w-3.5" /> Ekip</TabsTrigger>
-            <TabsTrigger value="akademi" className="gap-1.5"><BookOpen className="h-3.5 w-3.5" /> Akademi Erişimi</TabsTrigger>
-            <TabsTrigger value="services" className="gap-1.5"><CreditCard className="h-3.5 w-3.5" /> Hizmetler & Ödemeler</TabsTrigger>
-            <TabsTrigger value="notes" className="gap-1.5"><StickyNote className="h-3.5 w-3.5" /> Notlar</TabsTrigger>
+          <TabsList className="bg-secondary w-full overflow-x-auto flex justify-start">
+            <TabsTrigger value="info" className="gap-1.5 text-xs sm:text-sm"><Building2 className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Bilgiler</span></TabsTrigger>
+            <TabsTrigger value="team" className="gap-1.5 text-xs sm:text-sm"><Users className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Ekip</span></TabsTrigger>
+            <TabsTrigger value="akademi" className="gap-1.5 text-xs sm:text-sm"><BookOpen className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Akademi</span></TabsTrigger>
+            <TabsTrigger value="services" className="gap-1.5 text-xs sm:text-sm"><CreditCard className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Hizmetler</span></TabsTrigger>
+            <TabsTrigger value="notes" className="gap-1.5 text-xs sm:text-sm"><StickyNote className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Notlar</span></TabsTrigger>
           </TabsList>
 
           {/* INFO TAB */}
