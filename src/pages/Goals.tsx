@@ -256,7 +256,7 @@ const Goals = () => {
             {sortedGoals.map((goal, i) => (
               <Card key={i} className={`border-border transition-colors ${goal.is_completed ? "opacity-60" : ""}`}>
                 <CardContent className="flex items-center gap-3 py-4 px-5">
-                  <div className={`h-8 w-8 rounded-full flex items-center justify-center text-sm font-semibold shrink-0 ${goal.is_completed ? "bg-green-100 text-green-600" : "bg-primary/10 text-primary"}`}>
+                  <div className={`h-8 w-8 rounded-full flex items-center justify-center text-sm font-semibold shrink-0 ${goal.is_completed ? "bg-accent text-accent-foreground" : "bg-primary/10 text-primary"}`}>
                     {goal.is_completed ? <Check className="h-4 w-4" /> : i + 1}
                   </div>
                   <span className={`flex-1 text-sm ${goal.is_completed ? "line-through text-muted-foreground" : "text-foreground"}`}>
