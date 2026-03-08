@@ -738,18 +738,18 @@ export default function ReportBuilder() {
           )}
 
           {/* Footer Buttons */}
-          {!(step === 4 && submitted) && (
+          {!(step === getSummaryStep() && submitted) && (
             <div className="flex items-center justify-end gap-3 mt-8 pt-6 border-t border-border">
               {step > (isAdmin ? 0 : 1) && (
-                <Button variant="outline" onClick={() => setStep(step - 1)} className="rounded-xl">
+                <Button variant="outline" onClick={() => setStep(getPrevStep(step))} className="rounded-xl">
                   <ArrowLeft className="h-4 w-4 mr-2" /> Geri
                 </Button>
               )}
               <Button variant="outline" onClick={() => navigate("/reports")} className="rounded-xl">
                 İptal
               </Button>
-              {step < TOTAL_STEPS ? (
-                <Button onClick={() => setStep(step + 1)} disabled={!canGoNext()} className="rounded-xl">
+              {step < getSummaryStep() ? (
+                <Button onClick={() => setStep(getNextStep(step))} disabled={!canGoNext()} className="rounded-xl">
                   Sonraki <ChevronRight className="h-4 w-4 ml-2" />
                 </Button>
               ) : (
