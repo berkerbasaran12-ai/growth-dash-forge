@@ -1,4 +1,4 @@
-import { LayoutDashboard, BookOpen, Settings, Users, LogOut, FileText, Plug, Activity, Sun, Moon, Target, Wallet, BarChart3, ClipboardList, Plus } from "lucide-react";
+import { LayoutDashboard, BookOpen, Settings, Users, LogOut, FileText, Plug, Activity, Sun, Moon, Target, Wallet, BarChart3, ClipboardList, Plus, ClipboardCheck } from "lucide-react";
 import havanaLogo from "@/assets/havana-logo.png";
 import { NotificationBell } from "@/components/NotificationBell";
 import { SendNotificationDialog } from "@/components/SendNotificationDialog";
@@ -24,6 +24,7 @@ import {
 
 const clientItems = [
   { title: "Anasayfa", url: "/dashboard", icon: LayoutDashboard },
+  { title: "Onboarding", url: "/onboarding", icon: ClipboardCheck },
   { title: "Raporlarım", url: "/reports", icon: ClipboardList },
   { title: "Detaylı Analiz", url: "/analytics", icon: BarChart3 },
   { title: "Gelir-Gider", url: "/finance", icon: Wallet },
@@ -36,6 +37,7 @@ const adminItems = [
   { title: "Anasayfa", url: "/dashboard", icon: LayoutDashboard },
   { title: "Gelir-Gider", url: "/finance", icon: Wallet },
   { title: "Müşteri Yönetimi", url: "/admin/clients", icon: Users },
+  { title: "Onboarding Şablonları", url: "/admin/onboarding-templates", icon: ClipboardCheck },
   { title: "İçerik Yönetimi", url: "/admin/knowledge", icon: FileText },
   { title: "Havana Akademi", url: "/knowledge-base", icon: BookOpen },
   { title: "Hedefler", url: "/goals", icon: Target },

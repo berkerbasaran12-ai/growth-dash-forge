@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Building2, Users, CreditCard, StickyNote, Plus, X, Save, Trash2, BookOpen, BarChart3, Send, Copy } from "lucide-react";
+import { ArrowLeft, Building2, Users, CreditCard, StickyNote, Plus, X, Save, Trash2, BookOpen, BarChart3, Send, Copy, ClipboardCheck } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,6 +16,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { ClientOnboardingTab } from "@/components/ClientOnboardingTab";
 import { format } from "date-fns";
 import { tr } from "date-fns/locale";
 
@@ -155,6 +156,7 @@ const ClientDetail = () => {
             <TabsTrigger value="team" className="gap-1.5 text-xs sm:text-sm"><Users className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Ekip</span></TabsTrigger>
             <TabsTrigger value="akademi" className="gap-1.5 text-xs sm:text-sm"><BookOpen className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Akademi</span></TabsTrigger>
             <TabsTrigger value="services" className="gap-1.5 text-xs sm:text-sm"><CreditCard className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Hizmetler</span></TabsTrigger>
+            <TabsTrigger value="onboarding" className="gap-1.5 text-xs sm:text-sm"><ClipboardCheck className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Onboarding</span></TabsTrigger>
             <TabsTrigger value="notes" className="gap-1.5 text-xs sm:text-sm"><StickyNote className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Notlar</span></TabsTrigger>
           </TabsList>
 
@@ -292,6 +294,13 @@ const ClientDetail = () => {
                 )}
               </motion.div>
             </div>
+          </TabsContent>
+
+          {/* ONBOARDING TAB */}
+          <TabsContent value="onboarding">
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="glass rounded-xl p-6">
+              <ClientOnboardingTab clientUserId={userId!} />
+            </motion.div>
           </TabsContent>
 
           {/* NOTES TAB */}
