@@ -7,6 +7,7 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { logActivity } from "@/hooks/useActivityLog";
 import { format, subDays, parseISO } from "date-fns";
 import { tr } from "date-fns/locale";
 import {
