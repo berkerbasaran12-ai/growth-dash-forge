@@ -197,6 +197,36 @@ const ClientDetail = () => {
             </motion.div>
           </TabsContent>
 
+          {/* AKADEMI ACCESS TAB */}
+          <TabsContent value="akademi">
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="glass rounded-xl p-6 space-y-4">
+              <div>
+                <h3 className="text-sm font-medium text-foreground">Havana Akademi Kategori Erişimi</h3>
+                <p className="text-xs text-muted-foreground mt-1">Bu müşterinin erişebileceği Akademi kategorilerini seçin. Hiçbiri seçilmezse hiçbir içerik görünmez.</p>
+              </div>
+              <div className="space-y-1">
+                {categories.map((cat) => (
+                  <label key={cat.id} className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-secondary cursor-pointer transition-colors">
+                    <Checkbox
+                      checked={accessCategoryIds.includes(cat.id)}
+                      onCheckedChange={async (checked) => {
+                        if (checked) {
+                          await supabase.from("kb_category_access").insert({ category_id: cat.id, user_id: userId });
+                          setAccessCategoryIds((prev) => [...prev, cat.id]);
+                        } else {
+                          await supabase.from("kb_category_access").delete().eq("category_id", cat.id).eq("user_id", userId);
+                          setAccessCategoryIds((prev) => prev.filter((id) => id !== cat.id));
+                        }
+                      }}
+                    />
+                    <span className="text-sm text-foreground">{cat.icon} {cat.name}</span>
+                  </label>
+                ))}
+                {categories.length === 0 && <p className="text-sm text-muted-foreground text-center py-4">Henüz kategori oluşturulmamış.</p>}
+              </div>
+            </motion.div>
+          </TabsContent>
+
           {/* SERVICES & PAYMENTS TAB */}
           <TabsContent value="services">
             <div className="space-y-4">

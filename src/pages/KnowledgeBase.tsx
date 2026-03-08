@@ -30,17 +30,16 @@ const KnowledgeBase = () => {
       if (catRes.data) setCategories(catRes.data);
 
       if (contentRes.data && user && !isAdmin) {
-        // Filter restricted content for non-admin users
-        const { data: visibilityData } = await supabase
-          .from("kb_content_visibility")
-          .select("content_id")
+        // Filter by category access
+        const { data: accessData } = await supabase
+          .from("kb_category_access")
+          .select("category_id")
           .eq("user_id", user.id);
 
-        const allowedIds = new Set(visibilityData?.map((v: any) => v.content_id) || []);
+        const allowedCatIds = new Set(accessData?.map((a: any) => a.category_id) || []);
 
         const filtered = contentRes.data.filter((item: any) => {
-          if (item.visibility === "public") return true;
-          return allowedIds.has(item.id);
+          return item.category_id && allowedCatIds.has(item.category_id);
         });
         setContent(filtered);
       } else if (contentRes.data) {
