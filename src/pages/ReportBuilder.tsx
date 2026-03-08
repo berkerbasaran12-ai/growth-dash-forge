@@ -345,30 +345,32 @@ export default function ReportBuilder() {
 
               {/* Client selector for "client" type */}
               {reportType === "client" && (
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium">Müşteri Seçin</Label>
-                  <Select value={selectedClientId} onValueChange={setSelectedClientId}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Rapor oluşturulacak müşteriyi seçin" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {clients?.map((c) => (
-                        <SelectItem key={c.user_id} value={c.user_id}>
-                          {c.full_name || c.email} {c.company ? `(${c.company})` : ""}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium">Rapor Adı</Label>
-                  <Input
-                    placeholder="Örn: Mart 1. Hafta Performans Raporu"
-                    value={reportName}
-                    onChange={(e) => setReportName(e.target.value)}
-                    className="rounded-xl"
-                  />
-                </div>
+                <>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium">Müşteri Seçin</Label>
+                    <Select value={selectedClientId} onValueChange={setSelectedClientId}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Rapor oluşturulacak müşteriyi seçin" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {clients?.map((c) => (
+                          <SelectItem key={c.user_id} value={c.user_id}>
+                            {c.full_name || c.email} {c.company ? `(${c.company})` : ""}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium">Rapor Adı</Label>
+                    <Input
+                      placeholder="Örn: Mart 1. Hafta Performans Raporu"
+                      value={reportName}
+                      onChange={(e) => setReportName(e.target.value)}
+                      className="rounded-xl"
+                    />
+                  </div>
+                </>
               )}
             </div>
           )}
