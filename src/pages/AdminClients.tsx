@@ -111,8 +111,8 @@ const AdminClients = () => {
               <tbody>
                 {filtered.map((client) => (
                   <tr key={client.id} className="border-b border-border/50 hover:bg-secondary/50 transition-colors">
-                    <td className="px-5 py-3">
-                      <div><div className="text-sm font-medium text-foreground">{client.full_name || "-"}</div><div className="text-xs text-muted-foreground">{client.email}</div></div>
+                    <td className="px-5 py-3 cursor-pointer" onClick={() => navigate(`/admin/clients/${client.user_id}`)}>
+                      <div><div className="text-sm font-medium text-foreground hover:text-primary transition-colors">{client.full_name || "-"}</div><div className="text-xs text-muted-foreground">{client.email}</div></div>
                     </td>
                     <td className="px-5 py-3 text-sm text-foreground">{client.company || "-"}</td>
                     <td className="px-5 py-3">
