@@ -110,7 +110,7 @@ const Login = () => {
           </form>
 
           <p className="text-xs text-center text-muted-foreground">
-            Hesap bilgilerinizi yöneticinizden alabilirsiniz.
+            Kayıt için bize ulaşın.
           </p>
         </div>
       </motion.div>
