@@ -17,6 +17,7 @@ import Integrations from "./pages/Integrations";
 import AcceptInvite from "./pages/AcceptInvite";
 import ResetPassword from "./pages/ResetPassword";
 import ActivityLogs from "./pages/ActivityLogs";
+import Goals from "./pages/Goals";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
