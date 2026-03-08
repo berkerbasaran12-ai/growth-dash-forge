@@ -200,12 +200,12 @@ const Integrations = () => {
             <CardContent>
               {metaConnected ? (
                 <div className="flex gap-2">
-                  <Button variant="outline" size="sm" className="gap-1.5">
+                  <Button variant="outline" size="sm" onClick={handleDisconnectMeta} className="gap-1.5">
                     <Unplug className="h-3.5 w-3.5" /> Bağlantıyı Kes
                   </Button>
                 </div>
               ) : (
-                <Button size="sm" onClick={handleConnectMeta} disabled={loadingMeta} variant="outline" className="gap-1.5">
+                <Button size="sm" onClick={handleConnectMeta} disabled={loadingMeta} className="gap-1.5">
                   {loadingMeta ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ExternalLink className="h-3.5 w-3.5" />}
                   Meta Ads Bağla
                 </Button>
