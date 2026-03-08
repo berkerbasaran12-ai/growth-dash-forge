@@ -1,37 +1,70 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Plus, Search, Edit, Trash2, Eye, MoreHorizontal } from "lucide-react";
+import { Plus, Search, Edit, Trash2, MoreHorizontal, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import {
-  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { AppLayout } from "@/components/layout/AppLayout";
-
-const mockContent = [
-  { id: 1, title: "Dashboard'a Nasıl Veri Girilir?", category: "Dashboard Kullanımı", type: "video", status: "published", date: "01 Mar 2024" },
-  { id: 2, title: "Satış Raporlarını Anlama", category: "Veri Analizi", type: "pdf", status: "published", date: "28 Şub 2024" },
-  { id: 3, title: "E-Ticaret Satış Stratejileri", category: "Satış Stratejileri", type: "video", status: "draft", date: "25 Şub 2024" },
-  { id: 4, title: "Google Ads Optimizasyonu", category: "Pazarlama İpuçları", type: "link", status: "published", date: "20 Şub 2024" },
-];
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const AdminKnowledge = () => {
   const [search, setSearch] = useState("");
+  const [content, setContent] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editItem, setEditItem] = useState<any>(null);
 
-  const filtered = mockContent.filter(c => c.title.toLowerCase().includes(search.toLowerCase()));
+  const fetchData = async () => {
+    const [contentRes, catRes] = await Promise.all([
+      supabase.from("kb_content").select("*, kb_categories(name, icon)").order("sort_order"),
+      supabase.from("kb_categories").select("*").order("sort_order"),
+    ]);
+    if (contentRes.data) setContent(contentRes.data);
+    if (catRes.data) setCategories(catRes.data);
+  };
+
+  useEffect(() => { fetchData(); }, []);
+
+  const handleSave = async (data: any) => {
+    if (editItem) {
+      const { error } = await supabase.from("kb_content").update(data).eq("id", editItem.id);
+      if (error) { toast.error(error.message); return; }
+      toast.success("İçerik güncellendi");
+    } else {
+      const { error } = await supabase.from("kb_content").insert(data);
+      if (error) { toast.error(error.message); return; }
+      toast.success("İçerik oluşturuldu");
+    }
+    setDialogOpen(false);
+    setEditItem(null);
+    fetchData();
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Bu içeriği silmek istediğinizden emin misiniz?")) return;
+    const { error } = await supabase.from("kb_content").delete().eq("id", id);
+    if (error) toast.error(error.message);
+    else { toast.success("İçerik silindi"); fetchData(); }
+  };
+
+  const filtered = content.filter(c => c.title.toLowerCase().includes(search.toLowerCase()));
 
   return (
     <AppLayout>
       <div className="space-y-6 max-w-7xl">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-foreground tracking-tight">Bilgi Bankası Yönetimi</h1>
-            <p className="text-sm text-muted-foreground mt-1">{mockContent.length} içerik</p>
+            <h1 className="text-2xl font-semibold text-foreground tracking-tight">İçerik Yönetimi</h1>
+            <p className="text-sm text-muted-foreground mt-1">{content.length} içerik</p>
           </div>
-          <Button size="sm" className="bg-primary hover:bg-primary/90 h-9">
-            <Plus className="h-4 w-4 mr-1.5" />
-            Yeni İçerik
+          <Button size="sm" className="bg-primary hover:bg-primary/90 h-9" onClick={() => { setEditItem(null); setDialogOpen(true); }}>
+            <Plus className="h-4 w-4 mr-1.5" /> Yeni İçerik
           </Button>
         </div>
 
@@ -49,7 +82,6 @@ const AdminKnowledge = () => {
                   <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-5 py-3">Kategori</th>
                   <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-5 py-3">Tip</th>
                   <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-5 py-3">Durum</th>
-                  <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-5 py-3">Tarih</th>
                   <th className="text-right text-xs font-medium text-muted-foreground uppercase tracking-wider px-5 py-3">İşlemler</th>
                 </tr>
               </thead>
@@ -57,39 +89,94 @@ const AdminKnowledge = () => {
                 {filtered.map((item) => (
                   <tr key={item.id} className="border-b border-border/50 hover:bg-secondary/50 transition-colors">
                     <td className="px-5 py-3 text-sm font-medium text-foreground">{item.title}</td>
-                    <td className="px-5 py-3 text-sm text-muted-foreground">{item.category}</td>
+                    <td className="px-5 py-3 text-sm text-muted-foreground">{item.kb_categories ? `${item.kb_categories.icon} ${item.kb_categories.name}` : "-"}</td>
+                    <td className="px-5 py-3"><Badge variant="secondary" className="text-xs bg-secondary text-muted-foreground capitalize">{item.content_type}</Badge></td>
                     <td className="px-5 py-3">
-                      <Badge variant="secondary" className="text-xs bg-secondary text-muted-foreground capitalize">{item.type}</Badge>
-                    </td>
-                    <td className="px-5 py-3">
-                      <Badge variant={item.status === "published" ? "default" : "secondary"} className={item.status === "published" ? "bg-accent/10 text-accent border-accent/20 text-xs" : "bg-warning/10 text-warning border-warning/20 text-xs"}>
+                      <Badge className={item.status === "published" ? "bg-accent/10 text-accent border-accent/20 text-xs" : "bg-warning/10 text-warning border-warning/20 text-xs"}>
                         {item.status === "published" ? "Yayında" : "Taslak"}
                       </Badge>
                     </td>
-                    <td className="px-5 py-3 text-sm text-muted-foreground">{item.date}</td>
                     <td className="px-5 py-3 text-right">
                       <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
+                        <DropdownMenuTrigger asChild><Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"><MoreHorizontal className="h-4 w-4" /></Button></DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="glass border-border">
-                          <DropdownMenuItem className="text-sm cursor-pointer"><Eye className="h-3.5 w-3.5 mr-2" /> Önizle</DropdownMenuItem>
-                          <DropdownMenuItem className="text-sm cursor-pointer"><Edit className="h-3.5 w-3.5 mr-2" /> Düzenle</DropdownMenuItem>
-                          <DropdownMenuItem className="text-sm cursor-pointer text-destructive"><Trash2 className="h-3.5 w-3.5 mr-2" /> Sil</DropdownMenuItem>
+                          <DropdownMenuItem className="text-sm cursor-pointer" onClick={() => { setEditItem(item); setDialogOpen(true); }}><Edit className="h-3.5 w-3.5 mr-2" /> Düzenle</DropdownMenuItem>
+                          <DropdownMenuItem className="text-sm cursor-pointer text-destructive" onClick={() => handleDelete(item.id)}><Trash2 className="h-3.5 w-3.5 mr-2" /> Sil</DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </td>
                   </tr>
                 ))}
+                {filtered.length === 0 && <tr><td colSpan={5} className="px-5 py-8 text-center text-sm text-muted-foreground">İçerik bulunamadı</td></tr>}
               </tbody>
             </table>
           </div>
         </motion.div>
+
+        <Dialog open={dialogOpen} onOpenChange={(open) => { setDialogOpen(open); if (!open) setEditItem(null); }}>
+          <DialogContent className="glass border-border max-w-lg">
+            <DialogHeader><DialogTitle className="text-foreground">{editItem ? "İçerik Düzenle" : "Yeni İçerik"}</DialogTitle></DialogHeader>
+            <ContentForm categories={categories} initialData={editItem} onSave={handleSave} />
+          </DialogContent>
+        </Dialog>
       </div>
     </AppLayout>
   );
 };
+
+function ContentForm({ categories, initialData, onSave }: { categories: any[]; initialData?: any; onSave: (data: any) => void }) {
+  const [form, setForm] = useState({
+    title: initialData?.title || '',
+    description: initialData?.description || '',
+    category_id: initialData?.category_id || '',
+    content_type: initialData?.content_type || 'video',
+    content_url: initialData?.content_url || '',
+    status: initialData?.status || 'draft',
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSave({ ...form, category_id: form.category_id || null });
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4 pt-2">
+      <div className="space-y-1.5"><Label className="text-xs text-muted-foreground">Başlık</Label><Input value={form.title} onChange={e => setForm({...form, title: e.target.value})} className="bg-secondary border-border h-9 text-sm" required /></div>
+      <div className="space-y-1.5"><Label className="text-xs text-muted-foreground">Açıklama</Label><Textarea value={form.description} onChange={e => setForm({...form, description: e.target.value})} className="bg-secondary border-border text-sm min-h-[80px]" required /></div>
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-1.5">
+          <Label className="text-xs text-muted-foreground">Kategori</Label>
+          <Select value={form.category_id} onValueChange={v => setForm({...form, category_id: v})}>
+            <SelectTrigger className="bg-secondary border-border h-9 text-sm"><SelectValue placeholder="Seçin" /></SelectTrigger>
+            <SelectContent>{categories.map(c => <SelectItem key={c.id} value={c.id}>{c.icon} {c.name}</SelectItem>)}</SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-1.5">
+          <Label className="text-xs text-muted-foreground">İçerik Tipi</Label>
+          <Select value={form.content_type} onValueChange={v => setForm({...form, content_type: v})}>
+            <SelectTrigger className="bg-secondary border-border h-9 text-sm"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="video">Video</SelectItem>
+              <SelectItem value="pdf">PDF</SelectItem>
+              <SelectItem value="link">Link</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      <div className="space-y-1.5"><Label className="text-xs text-muted-foreground">İçerik URL</Label><Input value={form.content_url} onChange={e => setForm({...form, content_url: e.target.value})} placeholder="https://..." className="bg-secondary border-border h-9 text-sm" /></div>
+      <div className="space-y-1.5">
+        <Label className="text-xs text-muted-foreground">Durum</Label>
+        <Select value={form.status} onValueChange={v => setForm({...form, status: v})}>
+          <SelectTrigger className="bg-secondary border-border h-9 text-sm"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="draft">Taslak</SelectItem>
+            <SelectItem value="published">Yayında</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <Button type="submit" className="w-full h-9 text-sm bg-primary hover:bg-primary/90"><Save className="h-4 w-4 mr-1.5" /> Kaydet</Button>
+    </form>
+  );
+}
 
 export default AdminKnowledge;

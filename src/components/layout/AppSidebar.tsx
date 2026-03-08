@@ -1,6 +1,7 @@
-import { LayoutDashboard, BookOpen, Settings, Users, LogOut, ChevronLeft } from "lucide-react";
+import { LayoutDashboard, BookOpen, Settings, Users, LogOut, FileText } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
-import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Sidebar,
   SidebarContent,
@@ -25,18 +26,21 @@ const adminItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "Müşteri Yönetimi", url: "/admin/clients", icon: Users },
   { title: "Bilgi Bankası", url: "/knowledge-base", icon: BookOpen },
-  { title: "Bilgi Bankası Yönetimi", url: "/admin/knowledge", icon: BookOpen },
+  { title: "İçerik Yönetimi", url: "/admin/knowledge", icon: FileText },
   { title: "Ayarlar", url: "/settings", icon: Settings },
 ];
 
 export function AppSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
-  const location = useLocation();
-
-  // TODO: Replace with actual role check
-  const isAdmin = true;
+  const { isAdmin, signOut, profile } = useAuth();
+  const navigate = useNavigate();
   const items = isAdmin ? adminItems : clientItems;
+
+  const handleLogout = async () => {
+    await signOut();
+    navigate("/login");
+  };
 
   return (
     <Sidebar collapsible="icon" className="border-r border-border">
@@ -81,10 +85,16 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="p-4 border-t border-border">
+        {!collapsed && profile && (
+          <div className="px-4 py-2 mb-2">
+            <p className="text-xs font-medium text-foreground truncate">{profile.full_name || profile.email}</p>
+            <p className="text-xs text-muted-foreground truncate">{profile.email}</p>
+          </div>
+        )}
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <button className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sidebar-foreground transition-all duration-200 hover:bg-destructive/10 hover:text-destructive w-full">
+              <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sidebar-foreground transition-all duration-200 hover:bg-destructive/10 hover:text-destructive w-full">
                 <LogOut className="h-4 w-4 shrink-0" />
                 {!collapsed && <span className="text-sm">Çıkış Yap</span>}
               </button>
