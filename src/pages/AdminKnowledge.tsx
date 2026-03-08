@@ -100,12 +100,31 @@ const AdminKnowledge = () => {
           <Input placeholder="İçerik ara..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9 bg-secondary border-border h-9" />
         </div>
 
+        {/* Categories Management */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="glass rounded-xl p-5 space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-medium text-foreground">Kategoriler</h3>
+            <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={() => { setEditCat(null); setCatForm({ name: "", icon: "📚" }); setCatDialogOpen(true); }}>
+              <Plus className="h-3 w-3 mr-1" /> Ekle
+            </Button>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {categories.map((cat) => (
+              <div key={cat.id} className="inline-flex items-center gap-1.5 bg-secondary rounded-lg px-3 py-1.5 text-xs text-foreground group">
+                <span>{cat.icon} {cat.name}</span>
+                <Button variant="ghost" size="sm" className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground" onClick={() => { setEditCat(cat); setCatForm({ name: cat.name, icon: cat.icon || "📚" }); setCatDialogOpen(true); }}>
+                  <Edit className="h-3 w-3" />
+                </Button>
+                <Button variant="ghost" size="sm" className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-destructive" onClick={() => handleDeleteCat(cat.id)}>
+                  <Trash2 className="h-3 w-3" />
+                </Button>
+              </div>
+            ))}
+            {categories.length === 0 && <span className="text-xs text-muted-foreground">Henüz kategori yok</span>}
+          </div>
+        </motion.div>
+
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="glass rounded-xl overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-5 py-3">Başlık</th>
                   <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-5 py-3">Kategori</th>
                   <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-5 py-3">Tip</th>
                   <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-5 py-3">Durum</th>
