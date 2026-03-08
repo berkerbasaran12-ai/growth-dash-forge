@@ -164,7 +164,7 @@ const Goals = () => {
     updatedGoals[idx] = { ...updatedGoals[idx], is_completed: !updatedGoals[idx].is_completed };
     const { error } = await supabase
       .from("monthly_goals")
-      .update({ goals: updatedGoals })
+      .update({ goals: updatedGoals as unknown as import("@/integrations/supabase/types").Json })
       .eq("id", record.id);
     if (error) {
       toast.error("Güncellenemedi");
