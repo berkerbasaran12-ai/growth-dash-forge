@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { logActivity } from "@/hooks/useActivityLog";
 import havanaLogo from "@/assets/havana-logo.png";
 import { BackgroundPaths } from "@/components/BackgroundPaths";
 
