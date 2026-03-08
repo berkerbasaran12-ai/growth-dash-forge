@@ -352,6 +352,5 @@ function ContentForm({ categories, initialData, onSave }: { categories: any[]; i
     </form>
   );
 }
-}
 
 export default AdminKnowledge;
