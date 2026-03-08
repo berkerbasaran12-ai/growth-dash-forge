@@ -725,6 +725,27 @@ export default function ReportBuilder() {
                   </>
                 )}
 
+                <Separator />
+
+                <SalesFunnel steps={
+                  isClientReport
+                    ? [
+                        { label: "Gösterim", value: parseInt(impressions) || 0, color: "hsl(220, 70%, 55%)" },
+                        { label: "Erişim", value: parseInt(reach) || 0, color: "hsl(200, 70%, 50%)" },
+                        { label: "Tıklama", value: parseInt(clicks) || 0, color: "hsl(170, 60%, 45%)" },
+                        { label: "DM", value: parseInt(dmCount) || 0, color: "hsl(150, 60%, 42%)" },
+                        { label: "Lead", value: parseInt(leadsCount) || 0, color: "hsl(40, 80%, 50%)" },
+                        { label: "Toplantı", value: parseInt(meetingsHeld) || 0, color: "hsl(25, 80%, 50%)" },
+                        { label: "Satış", value: parseInt(salesClosed) || 0, color: "hsl(140, 65%, 40%)" },
+                      ]
+                    : [
+                        { label: "Lead", value: parseInt(leadsCount) || 0, color: "hsl(220, 70%, 55%)" },
+                        { label: "Planlanan Toplantı", value: parseInt(meetingsPlanned) || 0, color: "hsl(200, 70%, 50%)" },
+                        { label: "Yapılan Toplantı", value: parseInt(meetingsHeld) || 0, color: "hsl(40, 80%, 50%)" },
+                        { label: "Satış", value: parseInt(salesClosed) || 0, color: "hsl(140, 65%, 40%)" },
+                      ]
+                } />
+
                 {!isClientReport && (weeklyNotes || challenges || nextWeekPlan) && (
                   <>
                     <Separator />
