@@ -160,6 +160,63 @@ export type Database = {
         }
         Relationships: []
       }
+      team_invites: {
+        Row: {
+          client_user_id: string
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          permission: string
+          status: string
+          token: string
+        }
+        Insert: {
+          client_user_id: string
+          created_at?: string
+          email: string
+          expires_at?: string
+          id?: string
+          permission?: string
+          status?: string
+          token?: string
+        }
+        Update: {
+          client_user_id?: string
+          created_at?: string
+          email?: string
+          expires_at?: string
+          id?: string
+          permission?: string
+          status?: string
+          token?: string
+        }
+        Relationships: []
+      }
+      team_members: {
+        Row: {
+          client_user_id: string
+          created_at: string
+          id: string
+          member_user_id: string
+          permission: string
+        }
+        Insert: {
+          client_user_id: string
+          created_at?: string
+          id?: string
+          member_user_id: string
+          permission?: string
+        }
+        Update: {
+          client_user_id?: string
+          created_at?: string
+          id?: string
+          member_user_id?: string
+          permission?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
