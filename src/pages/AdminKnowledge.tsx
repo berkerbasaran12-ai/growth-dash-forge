@@ -144,13 +144,6 @@ const AdminKnowledge = () => {
                     <td className="px-5 py-3 text-sm text-muted-foreground">{item.kb_categories ? `${item.kb_categories.icon} ${item.kb_categories.name}` : "-"}</td>
                     <td className="px-5 py-3"><Badge variant="secondary" className="text-xs bg-secondary text-muted-foreground capitalize">{item.content_type}</Badge></td>
                     <td className="px-5 py-3">
-                      {item.visibility === "restricted" ? (
-                        <Badge variant="outline" className="text-xs gap-1"><Lock className="h-3 w-3" /> Kısıtlı</Badge>
-                      ) : (
-                        <Badge variant="secondary" className="text-xs gap-1"><Globe className="h-3 w-3" /> Herkese Açık</Badge>
-                      )}
-                    </td>
-                    <td className="px-5 py-3">
                       <Badge className={item.status === "published" ? "bg-accent/10 text-accent border-accent/20 text-xs" : "bg-warning/10 text-warning border-warning/20 text-xs"}>
                         {item.status === "published" ? "Yayında" : "Taslak"}
                       </Badge>
