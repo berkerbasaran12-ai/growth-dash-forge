@@ -1,4 +1,5 @@
 import { LayoutDashboard, BookOpen, Settings, Users, LogOut, FileText, Plug, Activity, Sun, Moon } from "lucide-react";
+import havanaLogo from "@/assets/havana-logo.png";
 import { NotificationBell } from "@/components/NotificationBell";
 import { SendNotificationDialog } from "@/components/SendNotificationDialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
