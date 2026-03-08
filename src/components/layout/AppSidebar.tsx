@@ -62,7 +62,7 @@ export function AppSidebar() {
           </div>
         ) : (
           <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center mx-auto">
-            <span className="text-primary-foreground font-bold text-sm">P</span>
+            <span className="text-primary-foreground font-bold text-sm">H</span>
           </div>
         )}
       </SidebarHeader>
