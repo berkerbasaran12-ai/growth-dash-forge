@@ -58,6 +58,30 @@ const AdminKnowledge = () => {
 
   const filtered = content.filter(c => c.title.toLowerCase().includes(search.toLowerCase()));
 
+  const handleSaveCat = async () => {
+    if (!catForm.name.trim()) return;
+    if (editCat) {
+      const { error } = await supabase.from("kb_categories").update({ name: catForm.name, icon: catForm.icon }).eq("id", editCat.id);
+      if (error) { toast.error(error.message); return; }
+      toast.success("Kategori güncellendi");
+    } else {
+      const { error } = await supabase.from("kb_categories").insert({ name: catForm.name, icon: catForm.icon });
+      if (error) { toast.error(error.message); return; }
+      toast.success("Kategori oluşturuldu");
+    }
+    setCatDialogOpen(false);
+    setEditCat(null);
+    setCatForm({ name: "", icon: "📚" });
+    fetchData();
+  };
+
+  const handleDeleteCat = async (id: string) => {
+    if (!confirm("Bu kategoriyi silmek istediğinizden emin misiniz?")) return;
+    const { error } = await supabase.from("kb_categories").delete().eq("id", id);
+    if (error) toast.error(error.message);
+    else { toast.success("Kategori silindi"); fetchData(); }
+  };
+
   return (
     <AppLayout>
       <div className="space-y-6 max-w-7xl">
