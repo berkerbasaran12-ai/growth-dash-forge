@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
+import { SalesFunnel } from "@/components/dashboard/SalesFunnel";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
