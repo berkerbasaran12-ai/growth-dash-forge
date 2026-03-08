@@ -239,6 +239,7 @@ function ContentForm({ categories, initialData, onSave }: { categories: any[]; i
               <SelectItem value="video">Video</SelectItem>
               <SelectItem value="pdf">PDF</SelectItem>
               <SelectItem value="link">Link</SelectItem>
+              <SelectItem value="file">Dosya</SelectItem>
             </SelectContent>
           </Select>
         </div>
