@@ -59,6 +59,11 @@ const Integrations = () => {
       setGoogleConnected(true);
       setSearchParams({});
     }
+    if (success === "meta_ads") {
+      toast.success("Meta Ads başarıyla bağlandı!");
+      setMetaConnected(true);
+      setSearchParams({});
+    }
     if (error) {
       toast.error("Bağlantı başarısız: " + error);
       setSearchParams({});
