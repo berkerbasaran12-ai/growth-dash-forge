@@ -176,9 +176,9 @@ const Dashboard = () => {
   }));
 
   const handleSaveMarketing = async (form: any) => {
-    if (!effectiveUserId) return;
+    if (!targetUserId) return;
     const { error } = await supabase.from("marketing_metrics").upsert({
-      user_id: effectiveUserId, date: form.date, channel: form.channel,
+      user_id: targetUserId, date: form.date, channel: form.channel,
       spend: Number(form.spend || 0), traffic: Number(form.traffic || 0),
       conversions: Number(form.conversions || 0), leads: Number(form.leads || 0),
       cpc: Number(form.cpc || 0), cpm: Number(form.cpm || 0),
