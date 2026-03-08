@@ -118,7 +118,7 @@ const KnowledgeCategoryDetail = () => {
         </div>
 
         {/* Right content area */}
-        <div className="flex-1 bg-background lg:overflow-y-auto lg:h-[calc(100vh-3.5rem)]">
+        <div className="flex-1 bg-background overflow-y-auto h-[calc(100vh-3.5rem)]">
           {selectedItem ? (
             <div className="p-6 lg:p-10 max-w-3xl space-y-6">
               <div className="flex items-start justify-between gap-4">
