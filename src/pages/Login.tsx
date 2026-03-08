@@ -8,10 +8,6 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import havanaLogo from "@/assets/havana-logo.png";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useAuth } from "@/contexts/AuthContext";
-import { toast } from "sonner";
 
 const Login = () => {
   const [email, setEmail] = useState("");
