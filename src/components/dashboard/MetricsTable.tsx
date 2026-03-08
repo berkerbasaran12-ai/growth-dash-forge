@@ -206,6 +206,7 @@ function SalesTable({ metrics, canEdit, editingId, editData, setEditData, startE
                 <td className="px-3 py-3 text-sm text-right font-mono text-foreground">%{Number(row.win_rate || 0).toFixed(1)}</td>
                 <td className="px-3 py-3 text-sm text-right font-mono text-foreground">{Number(row.avg_deal_value || 0).toLocaleString("tr-TR")}</td>
                 <td className="px-3 py-3 text-sm text-right font-mono text-foreground">{row.new_customers}</td>
+                <td className="px-3 py-3 text-sm text-right font-mono text-foreground">{row.returning_customers || 0}</td>
                 <td className="px-3 py-3 text-sm text-right font-mono text-foreground">%{Number(row.churn_rate || 0).toFixed(1)}</td>
                 <td className="px-3 py-3 text-sm text-right font-mono text-foreground">{Number(row.ltv || 0).toLocaleString("tr-TR")}</td>
                 <td className="px-3 py-3 text-sm text-right font-mono text-accent">{Number(row.net_profit).toLocaleString("tr-TR")}</td>
