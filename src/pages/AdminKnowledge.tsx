@@ -125,6 +125,11 @@ const AdminKnowledge = () => {
         </motion.div>
 
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="glass rounded-xl overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-border">
+                  <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-5 py-3">Başlık</th>
                   <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-5 py-3">Kategori</th>
                   <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-5 py-3">Tip</th>
                   <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-5 py-3">Durum</th>
