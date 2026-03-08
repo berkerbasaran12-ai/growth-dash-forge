@@ -1,4 +1,7 @@
 import { LayoutDashboard, BookOpen, Settings, Users, LogOut, FileText, Plug } from "lucide-react";
+import { NotificationBell } from "@/components/NotificationBell";
+import { SendNotificationDialog } from "@/components/SendNotificationDialog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { NavLink } from "@/components/NavLink";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -87,12 +90,26 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="p-4 border-t border-border">
-        {!collapsed && profile && (
-          <div className="px-4 py-2 mb-2">
-            <p className="text-xs font-medium text-foreground truncate">{profile.full_name || profile.email}</p>
-            <p className="text-xs text-muted-foreground truncate">{profile.email}</p>
+        <div className="flex items-center justify-between mb-2">
+          {!collapsed && profile && (
+            <div className="flex items-center gap-2.5 px-2 py-1 min-w-0">
+              <Avatar className="h-8 w-8 shrink-0">
+                <AvatarImage src={profile.avatar_url || undefined} alt="Profil" />
+                <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
+                  {profile.full_name?.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2) || "?"}
+                </AvatarFallback>
+              </Avatar>
+              <div className="min-w-0">
+                <p className="text-xs font-medium text-foreground truncate">{profile.full_name || profile.email}</p>
+                <p className="text-xs text-muted-foreground truncate">{profile.email}</p>
+              </div>
+            </div>
+          )}
+          <div className="flex items-center gap-1 shrink-0">
+            <NotificationBell />
+            {isAdmin && !collapsed && <SendNotificationDialog />}
           </div>
-        )}
+        </div>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild>

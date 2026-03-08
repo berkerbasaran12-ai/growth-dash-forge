@@ -16,6 +16,7 @@ interface AuthUser {
     email: string;
     company: string | null;
     is_active: boolean;
+    avatar_url: string | null;
   } | null;
   teamMembership: TeamMembership | null;
   isLoading: boolean;
@@ -42,7 +43,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const fetchUserData = async (userId: string) => {
     const [roleRes, profileRes, teamRes] = await Promise.all([
       supabase.from("user_roles").select("role").eq("user_id", userId).maybeSingle(),
-      supabase.from("profiles").select("full_name, email, company, is_active").eq("user_id", userId).maybeSingle(),
+      supabase.from("profiles").select("full_name, email, company, is_active, avatar_url").eq("user_id", userId).maybeSingle(),
       supabase.from("team_members").select("client_user_id, permission").eq("member_user_id", userId).maybeSingle(),
     ]);
 
