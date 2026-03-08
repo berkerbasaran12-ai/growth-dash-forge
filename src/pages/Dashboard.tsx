@@ -164,7 +164,20 @@ const Dashboard = () => {
   const psReturning = sum(prevSalesMetrics, "returning_customers");
   const psNetProfit = sum(prevSalesMetrics, "net_profit");
 
-  const salesCards = [
+  const adminSalesCards = [
+    { title: "Toplam Satış", value: `₺${sTotalSales.toLocaleString("tr-TR")}`, icon: DollarSign, current: sTotalSales, previous: psTotalSales },
+    { title: "Gelen Lead", value: sLeadsReceived.toString(), icon: Users, current: sLeadsReceived, previous: psLeadsReceived },
+    { title: "Randevu", value: sAppointments.toString(), icon: CalendarCheck, current: sAppointments, previous: psAppointments },
+    { title: "Kapatma Oranı", value: `%${sWinRate.toFixed(1)}`, icon: Percent, current: sWinRate, previous: psWinRate },
+    { title: "Ort. Anlaşma", value: `₺${sACV.toFixed(0)}`, icon: Gem, current: sACV, previous: psACV },
+    { title: "Yeni Müşteri", value: sNewCustomers.toString(), icon: Users, current: sNewCustomers, previous: psNewCustomers },
+    { title: "Aktif Müşteri Sayısı", value: sReturning.toString(), icon: Repeat, current: sReturning, previous: psReturning },
+    { title: "Kayıp Oranı", value: `%${sChurnRate.toFixed(1)}`, icon: UserMinus, current: sChurnRate, previous: psChurnRate },
+    { title: "LTV", value: `₺${sLTV.toFixed(0)}`, icon: TrendingUp, current: sLTV, previous: psLTV },
+    { title: "Net Kar", value: `₺${sNetProfit.toLocaleString("tr-TR")}`, icon: BarChart3, current: sNetProfit, previous: psNetProfit },
+  ];
+
+  const clientSalesCards = [
     { title: "Toplam Satış", value: `₺${sTotalSales.toLocaleString("tr-TR")}`, icon: DollarSign, current: sTotalSales, previous: psTotalSales },
     { title: "Sipariş Adedi", value: sTotalOrders.toString(), icon: ShoppingCart, current: sTotalOrders, previous: psTotalOrders },
     { title: "Gelen Lead", value: sLeadsReceived.toString(), icon: Users, current: sLeadsReceived, previous: psLeadsReceived },
@@ -177,6 +190,8 @@ const Dashboard = () => {
     { title: "LTV", value: `₺${sLTV.toFixed(0)}`, icon: TrendingUp, current: sLTV, previous: psLTV },
     { title: "Net Kar", value: `₺${sNetProfit.toLocaleString("tr-TR")}`, icon: BarChart3, current: sNetProfit, previous: psNetProfit },
   ];
+
+  const salesCards = isAdmin ? adminSalesCards : clientSalesCards;
 
   const salesChartData = salesMetrics.map(m => ({
     date: format(parseISO(m.date), "dd MMM", { locale: tr }),
