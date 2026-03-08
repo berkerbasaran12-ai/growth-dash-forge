@@ -16,6 +16,7 @@ interface AuthUser {
     email: string;
     company: string | null;
     is_active: boolean;
+    avatar_url: string | null;
   } | null;
   teamMembership: TeamMembership | null;
   isLoading: boolean;
