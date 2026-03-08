@@ -116,17 +116,19 @@ const Dashboard = () => {
                 <SelectItem value="30d">Son 30 Gün</SelectItem>
               </SelectContent>
             </Select>
-            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-              <DialogTrigger asChild>
-                <Button size="sm" className="bg-primary hover:bg-primary/90 h-9">
-                  <Plus className="h-4 w-4 mr-1.5" /> Veri Ekle
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="glass border-border">
-                <DialogHeader><DialogTitle className="text-foreground">Yeni Satış Verisi</DialogTitle></DialogHeader>
-                <DataEntryForm onSave={handleSave} />
-              </DialogContent>
-            </Dialog>
+            {canEdit && (
+              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button size="sm" className="bg-primary hover:bg-primary/90 h-9">
+                    <Plus className="h-4 w-4 mr-1.5" /> Veri Ekle
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="glass border-border">
+                  <DialogHeader><DialogTitle className="text-foreground">Yeni Satış Verisi</DialogTitle></DialogHeader>
+                  <DataEntryForm onSave={handleSave} />
+                </DialogContent>
+              </Dialog>
+            )}
           </div>
         </div>
 
