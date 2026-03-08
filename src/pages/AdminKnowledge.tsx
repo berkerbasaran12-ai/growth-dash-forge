@@ -327,17 +327,21 @@ function ContentForm({ categories, initialData, onSave }: { categories: any[]; i
                 accept={acceptMap[form.content_type] || "*"}
                 onChange={handleFileUpload}
                 disabled={uploading}
+                multiple
               />
             </label>
           </div>
-          {form.content_url && (
-            <div className="flex items-center gap-2 text-xs text-muted-foreground bg-secondary rounded-lg px-3 py-2">
-              <span className="truncate flex-1">{form.content_url.split('/').pop()}</span>
-              <Button type="button" variant="ghost" size="sm" className="h-6 px-2 text-destructive text-xs" onClick={() => setForm({...form, content_url: ''})}>
+          {form.content_url && form.content_url.split('\n').filter(Boolean).map((url, idx) => (
+            <div key={idx} className="flex items-center gap-2 text-xs text-muted-foreground bg-secondary rounded-lg px-3 py-2">
+              <span className="truncate flex-1">{url.split('/').pop()?.split('?')[0]}</span>
+              <Button type="button" variant="ghost" size="sm" className="h-6 px-2 text-destructive text-xs" onClick={() => {
+                const urls = form.content_url.split('\n').filter(Boolean).filter((_, i) => i !== idx).join('\n');
+                setForm({...form, content_url: urls});
+              }}>
                 Kaldır
               </Button>
             </div>
-          )}
+          ))}
           <div className="space-y-1.5">
             <Label className="text-xs text-muted-foreground">veya URL girin</Label>
             <Input value={form.content_url} onChange={e => setForm({...form, content_url: e.target.value})} placeholder="https://..." className="bg-secondary border-border h-9 text-sm" />
