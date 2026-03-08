@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/sidebar";
 
 const clientItems = [
-  { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+  { title: "Yönetim Paneli", url: "/dashboard", icon: LayoutDashboard },
   { title: "Havana Akademi", url: "/knowledge-base", icon: BookOpen },
   { title: "Entegrasyonlar", url: "/integrations", icon: Plug },
   { title: "Ayarlar", url: "/settings", icon: Settings },
