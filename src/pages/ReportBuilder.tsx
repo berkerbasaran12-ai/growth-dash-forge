@@ -717,7 +717,7 @@ export default function ReportBuilder() {
           )}
 
           {/* Success */}
-          {step === 4 && submitted && (
+          {step === getSummaryStep() && submitted && (
             <div className="text-center py-12 space-y-4">
               <div className="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center mx-auto">
                 <CheckCircle2 className="h-8 w-8 text-green-600 dark:text-green-400" />
