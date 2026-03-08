@@ -63,6 +63,8 @@ const ClientDetail = () => {
     setServices(servicesRes.data || []);
     setPayments(paymentsRes.data || []);
     setNotes(notesRes.data || []);
+    setCategories(catsRes.data || []);
+    setAccessCategoryIds((accessRes.data || []).map((a: any) => a.category_id));
     setLoading(false);
   };
 
