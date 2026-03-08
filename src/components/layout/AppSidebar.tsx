@@ -1,4 +1,4 @@
-import { LayoutDashboard, BookOpen, Settings, Users, LogOut, FileText, Plug, Activity, Sun, Moon } from "lucide-react";
+import { LayoutDashboard, BookOpen, Settings, Users, LogOut, FileText, Plug, Activity, Sun, Moon, Target } from "lucide-react";
 import havanaLogo from "@/assets/havana-logo.png";
 import { NotificationBell } from "@/components/NotificationBell";
 import { SendNotificationDialog } from "@/components/SendNotificationDialog";
@@ -31,6 +31,7 @@ const clientItems = [
 
 const adminItems = [
   { title: "Yönetim Paneli", url: "/dashboard", icon: LayoutDashboard },
+  { title: "Hedefler", url: "/goals", icon: Target },
   { title: "Müşteri Yönetimi", url: "/admin/clients", icon: Users },
   { title: "Havana Akademi", url: "/knowledge-base", icon: BookOpen },
   { title: "İçerik Yönetimi", url: "/admin/knowledge", icon: FileText },
