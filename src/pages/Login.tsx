@@ -47,10 +47,8 @@ const Login = () => {
         className="w-full max-w-md mx-4"
       >
         <div className="glass rounded-2xl p-8 space-y-8">
-          <div className="text-center space-y-2">
-            <img src={havanaLogo} alt="Havana Dijital" className="h-10 mx-auto mb-4" />
-            <h1 className="text-2xl font-semibold text-foreground tracking-tight">Hoş Geldiniz</h1>
-            <p className="text-sm text-muted-foreground">Müşteri portalına giriş yapın</p>
+          <div className="text-center">
+            <img src={havanaLogo} alt="Havana Dijital" className="h-10 mx-auto" />
           </div>
 
           <form onSubmit={handleLogin} className="space-y-5">
