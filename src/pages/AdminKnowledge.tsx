@@ -172,17 +172,26 @@ const AdminKnowledge = () => {
         </Dialog>
 
         {/* Category Dialog */}
-        <Dialog open={catDialogOpen} onOpenChange={(open) => { setCatDialogOpen(open); if (!open) { setEditCat(null); setCatForm({ name: "", icon: "📚" }); } }}>
+        <Dialog open={catDialogOpen} onOpenChange={(open) => { setCatDialogOpen(open); if (!open) { setEditCat(null); setCatForm({ name: "", icon: "📚", thumbnail_url: "" }); } }}>
           <DialogContent className="glass border-border max-w-sm">
             <DialogHeader><DialogTitle className="text-foreground">{editCat ? "Kategori Düzenle" : "Yeni Kategori"}</DialogTitle></DialogHeader>
             <div className="space-y-4 pt-2">
-              <div className="space-y-1.5">
-                <Label className="text-xs text-muted-foreground">İkon</Label>
-                <Input value={catForm.icon} onChange={e => setCatForm({ ...catForm, icon: e.target.value })} className="bg-secondary border-border h-9 text-sm w-20" />
+              <div className="grid grid-cols-4 gap-4">
+                <div className="space-y-1.5">
+                  <Label className="text-xs text-muted-foreground">İkon</Label>
+                  <Input value={catForm.icon} onChange={e => setCatForm({ ...catForm, icon: e.target.value })} className="bg-secondary border-border h-9 text-sm" />
+                </div>
+                <div className="col-span-3 space-y-1.5">
+                  <Label className="text-xs text-muted-foreground">Kategori Adı</Label>
+                  <Input value={catForm.name} onChange={e => setCatForm({ ...catForm, name: e.target.value })} className="bg-secondary border-border h-9 text-sm" required />
+                </div>
               </div>
               <div className="space-y-1.5">
-                <Label className="text-xs text-muted-foreground">Kategori Adı</Label>
-                <Input value={catForm.name} onChange={e => setCatForm({ ...catForm, name: e.target.value })} className="bg-secondary border-border h-9 text-sm" required />
+                <Label className="text-xs text-muted-foreground">Kapak Görseli URL</Label>
+                <Input value={catForm.thumbnail_url} onChange={e => setCatForm({ ...catForm, thumbnail_url: e.target.value })} placeholder="https://..." className="bg-secondary border-border h-9 text-sm" />
+                {catForm.thumbnail_url && (
+                  <img src={catForm.thumbnail_url} alt="Önizleme" className="w-full h-24 object-cover rounded-lg mt-2" />
+                )}
               </div>
               <Button className="w-full h-9 text-sm bg-primary hover:bg-primary/90" onClick={handleSaveCat}>
                 <Save className="h-4 w-4 mr-1.5" /> Kaydet
