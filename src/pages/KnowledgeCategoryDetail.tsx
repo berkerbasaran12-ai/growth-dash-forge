@@ -105,9 +105,6 @@ const KnowledgeCategoryDetail = () => {
                     {isCompleted && <CheckCircle2 className="h-3 w-3" />}
                   </div>
                   <span className="flex-1 truncate">{item.title}</span>
-                  <Badge variant="secondary" className="shrink-0 text-[10px] px-1.5 py-0">
-                    {typeLabel[item.content_type] || "Dosya"}
-                  </Badge>
                 </button>
               );
             })}
