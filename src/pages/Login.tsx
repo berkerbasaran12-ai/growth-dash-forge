@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import havanaLogo from "@/assets/havana-logo.png";
+import { BackgroundPaths } from "@/components/BackgroundPaths";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -37,8 +38,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background relative overflow-hidden">
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-foreground/5 rounded-full blur-3xl" />
+      <BackgroundPaths />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
