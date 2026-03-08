@@ -192,12 +192,12 @@ const Dashboard = () => {
   return (
     <AppLayout>
       <div className="space-y-6 max-w-7xl">
-        <div className="flex items-center justify-between flex-wrap gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-semibold text-foreground tracking-tight">Dashboard</h1>
-            <p className="text-sm text-muted-foreground mt-1">Pazarlama ve satış metriklerinizi takip edin</p>
+            <h1 className="text-xl sm:text-2xl font-semibold text-foreground tracking-tight">Dashboard</h1>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1">Pazarlama ve satış metriklerinizi takip edin</p>
           </div>
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-2 flex-wrap">
             <DateFilter dateFilter={dateFilter} onFilterChange={setDateFilter} customRange={customRange} onCustomRangeChange={setCustomRange} />
             {canEdit && (
               <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -206,7 +206,7 @@ const Dashboard = () => {
                     <Plus className="h-4 w-4 mr-1.5" /> Veri Ekle
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="glass border-border max-w-lg max-h-[90vh] overflow-y-auto">
+                <DialogContent className="glass border-border max-w-lg max-h-[85vh] overflow-y-auto mx-2">
                   <DialogHeader>
                     <DialogTitle className="text-foreground">
                       {tab === "marketing" ? "Pazarlama Verisi Ekle" : "Satış Verisi Ekle"}

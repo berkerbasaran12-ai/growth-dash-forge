@@ -26,7 +26,7 @@ export function DateFilter({ dateFilter, onFilterChange, customRange, onCustomRa
   return (
     <div className="flex items-center gap-2">
       <Select value={dateFilter} onValueChange={handlePresetChange}>
-        <SelectTrigger className="w-[160px] bg-secondary border-border h-9 text-sm">
+        <SelectTrigger className="w-[130px] sm:w-[160px] bg-secondary border-border h-9 text-xs sm:text-sm">
           <CalendarIcon className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
           <SelectValue />
         </SelectTrigger>

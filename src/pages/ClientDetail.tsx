@@ -147,12 +147,12 @@ const ClientDetail = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="info" className="space-y-4">
-          <TabsList className="bg-secondary">
-            <TabsTrigger value="info" className="gap-1.5"><Building2 className="h-3.5 w-3.5" /> Bilgiler</TabsTrigger>
-            <TabsTrigger value="team" className="gap-1.5"><Users className="h-3.5 w-3.5" /> Ekip</TabsTrigger>
-            <TabsTrigger value="akademi" className="gap-1.5"><BookOpen className="h-3.5 w-3.5" /> Akademi Erişimi</TabsTrigger>
-            <TabsTrigger value="services" className="gap-1.5"><CreditCard className="h-3.5 w-3.5" /> Hizmetler & Ödemeler</TabsTrigger>
-            <TabsTrigger value="notes" className="gap-1.5"><StickyNote className="h-3.5 w-3.5" /> Notlar</TabsTrigger>
+          <TabsList className="bg-secondary w-full overflow-x-auto flex justify-start">
+            <TabsTrigger value="info" className="gap-1.5 text-xs sm:text-sm"><Building2 className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Bilgiler</span></TabsTrigger>
+            <TabsTrigger value="team" className="gap-1.5 text-xs sm:text-sm"><Users className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Ekip</span></TabsTrigger>
+            <TabsTrigger value="akademi" className="gap-1.5 text-xs sm:text-sm"><BookOpen className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Akademi</span></TabsTrigger>
+            <TabsTrigger value="services" className="gap-1.5 text-xs sm:text-sm"><CreditCard className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Hizmetler</span></TabsTrigger>
+            <TabsTrigger value="notes" className="gap-1.5 text-xs sm:text-sm"><StickyNote className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Notlar</span></TabsTrigger>
           </TabsList>
 
           {/* INFO TAB */}
