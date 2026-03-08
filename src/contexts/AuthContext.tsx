@@ -2,6 +2,11 @@ import { createContext, useContext, useEffect, useState, ReactNode } from "react
 import { supabase } from "@/integrations/supabase/client";
 import type { User, Session } from "@supabase/supabase-js";
 
+interface TeamMembership {
+  client_user_id: string;
+  permission: string;
+}
+
 interface AuthUser {
   user: User | null;
   session: Session | null;
@@ -12,6 +17,7 @@ interface AuthUser {
     company: string | null;
     is_active: boolean;
   } | null;
+  teamMembership: TeamMembership | null;
   isLoading: boolean;
 }
 
