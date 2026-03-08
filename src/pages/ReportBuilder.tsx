@@ -702,7 +702,7 @@ export default function ReportBuilder() {
                   <div className="flex items-center gap-2"><TrendingUp className="h-4 w-4 text-muted-foreground" /><div><p className="text-muted-foreground text-xs">Dönüşüm</p><p className="font-semibold text-foreground">{parseInt(leadsCount) > 0 ? `%${((parseInt(salesClosed) || 0) / parseInt(leadsCount) * 100).toFixed(0)}` : "%0"}</p></div></div>
                 </div>
 
-                {(weeklyNotes || challenges || nextWeekPlan) && (
+                {!isClientReport && (weeklyNotes || challenges || nextWeekPlan) && (
                   <>
                     <Separator />
                     <div className="space-y-2 text-sm">
