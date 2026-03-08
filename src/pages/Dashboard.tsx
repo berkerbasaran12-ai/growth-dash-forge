@@ -25,14 +25,16 @@ import { format, subDays, parseISO } from "date-fns";
 import { tr } from "date-fns/locale";
 
 const Dashboard = () => {
-  const { user } = useAuth();
+  const { user, effectiveUserId, isTeamMember, teamMembership } = useAuth();
   const [dateFilter, setDateFilter] = useState("7d");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [metrics, setMetrics] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const canEdit = !isTeamMember || teamMembership?.permission === "full";
+
   const fetchMetrics = async () => {
-    if (!user) return;
+    if (!effectiveUserId) return;
     setLoading(true);
 
     let fromDate: Date;
@@ -46,7 +48,7 @@ const Dashboard = () => {
     const { data, error } = await supabase
       .from("sales_metrics")
       .select("*")
-      .eq("user_id", user.id)
+      .eq("user_id", effectiveUserId)
       .gte("date", format(fromDate, "yyyy-MM-dd"))
       .order("date", { ascending: true });
 
@@ -55,7 +57,7 @@ const Dashboard = () => {
     setLoading(false);
   };
 
-  useEffect(() => { fetchMetrics(); }, [user, dateFilter]);
+  useEffect(() => { fetchMetrics(); }, [effectiveUserId, dateFilter]);
 
   const totalSales = metrics.reduce((s, m) => s + Number(m.total_sales), 0);
   const totalOrders = metrics.reduce((s, m) => s + m.order_count, 0);
@@ -78,9 +80,9 @@ const Dashboard = () => {
   ];
 
   const handleSave = async (formData: any) => {
-    if (!user) return;
+    if (!effectiveUserId) return;
     const { error } = await supabase.from("sales_metrics").upsert({
-      user_id: user.id,
+      user_id: effectiveUserId,
       date: formData.date,
       total_sales: Number(formData.totalSales),
       order_count: Number(formData.orderCount),
@@ -114,17 +116,19 @@ const Dashboard = () => {
                 <SelectItem value="30d">Son 30 Gün</SelectItem>
               </SelectContent>
             </Select>
-            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-              <DialogTrigger asChild>
-                <Button size="sm" className="bg-primary hover:bg-primary/90 h-9">
-                  <Plus className="h-4 w-4 mr-1.5" /> Veri Ekle
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="glass border-border">
-                <DialogHeader><DialogTitle className="text-foreground">Yeni Satış Verisi</DialogTitle></DialogHeader>
-                <DataEntryForm onSave={handleSave} />
-              </DialogContent>
-            </Dialog>
+            {canEdit && (
+              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button size="sm" className="bg-primary hover:bg-primary/90 h-9">
+                    <Plus className="h-4 w-4 mr-1.5" /> Veri Ekle
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="glass border-border">
+                  <DialogHeader><DialogTitle className="text-foreground">Yeni Satış Verisi</DialogTitle></DialogHeader>
+                  <DataEntryForm onSave={handleSave} />
+                </DialogContent>
+              </Dialog>
+            )}
           </div>
         </div>
 

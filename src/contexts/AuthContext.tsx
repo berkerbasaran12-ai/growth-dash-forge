@@ -2,6 +2,11 @@ import { createContext, useContext, useEffect, useState, ReactNode } from "react
 import { supabase } from "@/integrations/supabase/client";
 import type { User, Session } from "@supabase/supabase-js";
 
+interface TeamMembership {
+  client_user_id: string;
+  permission: string;
+}
+
 interface AuthUser {
   user: User | null;
   session: Session | null;
@@ -12,6 +17,7 @@ interface AuthUser {
     company: string | null;
     is_active: boolean;
   } | null;
+  teamMembership: TeamMembership | null;
   isLoading: boolean;
 }
 
@@ -19,6 +25,8 @@ interface AuthContextType extends AuthUser {
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
   isAdmin: boolean;
+  isTeamMember: boolean;
+  effectiveUserId: string | null; // The user_id whose data to display
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -28,16 +36,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [role, setRole] = useState<"admin" | "client" | null>(null);
   const [profile, setProfile] = useState<AuthUser["profile"]>(null);
+  const [teamMembership, setTeamMembership] = useState<TeamMembership | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchUserData = async (userId: string) => {
-    const [roleRes, profileRes] = await Promise.all([
+    const [roleRes, profileRes, teamRes] = await Promise.all([
       supabase.from("user_roles").select("role").eq("user_id", userId).maybeSingle(),
       supabase.from("profiles").select("full_name, email, company, is_active").eq("user_id", userId).maybeSingle(),
+      supabase.from("team_members").select("client_user_id, permission").eq("member_user_id", userId).maybeSingle(),
     ]);
 
     if (roleRes.data) setRole(roleRes.data.role);
     if (profileRes.data) setProfile(profileRes.data);
+    setTeamMembership(teamRes.data || null);
   };
 
   useEffect(() => {
@@ -51,6 +62,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } else {
         setRole(null);
         setProfile(null);
+        setTeamMembership(null);
       }
       setIsLoading(false);
     });
@@ -79,10 +91,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setSession(null);
     setRole(null);
     setProfile(null);
+    setTeamMembership(null);
   };
 
+  const isTeamMember = !!teamMembership;
+  const effectiveUserId = teamMembership ? teamMembership.client_user_id : user?.id ?? null;
+
   return (
-    <AuthContext.Provider value={{ user, session, role, profile, isLoading, signIn, signOut, isAdmin: role === "admin" }}>
+    <AuthContext.Provider value={{ user, session, role, profile, teamMembership, isLoading, signIn, signOut, isAdmin: role === "admin", isTeamMember, effectiveUserId }}>
       {children}
     </AuthContext.Provider>
   );
