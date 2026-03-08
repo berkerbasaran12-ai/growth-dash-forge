@@ -19,6 +19,7 @@ import ResetPassword from "./pages/ResetPassword";
 import ActivityLogs from "./pages/ActivityLogs";
 import Goals from "./pages/Goals";
 import Finance from "./pages/Finance";
+import Analytics from "./pages/Analytics";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
