@@ -14,6 +14,7 @@ import AdminKnowledge from "./pages/AdminKnowledge";
 import SettingsPage from "./pages/SettingsPage";
 import Integrations from "./pages/Integrations";
 import AcceptInvite from "./pages/AcceptInvite";
+import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
