@@ -35,7 +35,11 @@ const SettingsPage = () => {
     if (newPassword.length < 6) { toast.error("Şifre en az 6 karakter olmalı"); return; }
     const { error } = await supabase.auth.updateUser({ password: newPassword });
     if (error) toast.error(error.message);
-    else { toast.success("Şifre güncellendi"); setCurrentPassword(""); setNewPassword(""); setConfirmPassword(""); }
+    else {
+      toast.success("Şifre güncellendi");
+      logActivity("password_change", "Şifre değiştirildi");
+      setCurrentPassword(""); setNewPassword(""); setConfirmPassword("");
+    }
   };
 
   return (

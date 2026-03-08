@@ -190,7 +190,11 @@ const Dashboard = () => {
       leads_received: Number(form.leads_received || 0),
     }, { onConflict: "user_id,date" });
     if (error) toast.error("Kaydedilemedi: " + error.message);
-    else { toast.success("Satış verisi kaydedildi"); fetchData(); }
+    else {
+      toast.success("Satış verisi kaydedildi");
+      logActivity("data_entry_sales", `${form.date} satış verisi girildi`);
+      fetchData();
+    }
     setDialogOpen(false);
   };
 

@@ -35,6 +35,7 @@ const Login = () => {
     if (error) {
       toast.error("Giriş başarısız: " + error);
     } else {
+      logActivity("login", "Kullanıcı giriş yaptı");
       navigate("/dashboard");
     }
   };
