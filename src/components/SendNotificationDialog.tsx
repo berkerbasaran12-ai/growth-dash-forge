@@ -62,8 +62,8 @@ export function SendNotificationDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" className="gap-1.5">
-          <Send className="h-3.5 w-3.5" /> Bildirim Gönder
+        <Button size="icon" variant="ghost" className="h-8 w-8">
+          <Send className="h-4 w-4" />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
