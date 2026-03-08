@@ -1,4 +1,7 @@
 import { LayoutDashboard, BookOpen, Settings, Users, LogOut, FileText, Plug } from "lucide-react";
+import { NotificationBell } from "@/components/NotificationBell";
+import { SendNotificationDialog } from "@/components/SendNotificationDialog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { NavLink } from "@/components/NavLink";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
