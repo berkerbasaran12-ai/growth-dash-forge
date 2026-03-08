@@ -30,7 +30,7 @@ const clientItems = [
 ];
 
 const adminItems = [
-  { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+  { title: "Yönetim Paneli", url: "/dashboard", icon: LayoutDashboard },
   { title: "Müşteri Yönetimi", url: "/admin/clients", icon: Users },
   { title: "Havana Akademi", url: "/knowledge-base", icon: BookOpen },
   { title: "İçerik Yönetimi", url: "/admin/knowledge", icon: FileText },
