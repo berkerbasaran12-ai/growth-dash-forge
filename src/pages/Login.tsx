@@ -52,9 +52,7 @@ const Login = () => {
       >
         <div className="glass rounded-2xl p-8 space-y-8">
           <div className="text-center space-y-2">
-            <div className="w-14 h-14 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto mb-4">
-              <span className="text-primary font-bold text-xl">P</span>
-            </div>
+            <img src={havanaLogo} alt="Havana Dijital" className="h-10 mx-auto mb-4" />
             <h1 className="text-2xl font-semibold text-foreground tracking-tight">Hoş Geldiniz</h1>
             <p className="text-sm text-muted-foreground">Müşteri portalına giriş yapın</p>
           </div>
