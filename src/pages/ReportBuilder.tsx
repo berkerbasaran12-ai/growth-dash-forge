@@ -172,6 +172,7 @@ export default function ReportBuilder() {
         leadsCount !== "" && meetingsPlanned !== "" && meetingsHeld !== "" && salesClosed !== "";
     }
     return true;
+  };
 
   const handleSubmit = async () => {
     if (!user || !selectedWeek) return;
