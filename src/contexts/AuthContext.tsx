@@ -91,10 +91,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setSession(null);
     setRole(null);
     setProfile(null);
+    setTeamMembership(null);
   };
 
+  const isTeamMember = !!teamMembership;
+  const effectiveUserId = teamMembership ? teamMembership.client_user_id : user?.id ?? null;
+
   return (
-    <AuthContext.Provider value={{ user, session, role, profile, isLoading, signIn, signOut, isAdmin: role === "admin" }}>
+    <AuthContext.Provider value={{ user, session, role, profile, teamMembership, isLoading, signIn, signOut, isAdmin: role === "admin", isTeamMember, effectiveUserId }}>
       {children}
     </AuthContext.Provider>
   );
