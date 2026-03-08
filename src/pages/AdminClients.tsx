@@ -17,8 +17,8 @@ const AdminClients = () => {
   const [clients, setClients] = useState<any[]>([]);
 
   const fetchClients = async () => {
-    const { data } = await supabase.from("profiles").select("*, user_roles(role)").order("created_at", { ascending: false });
-    if (data) setClients(data.filter(p => p.user_roles?.some?.((r: any) => r.role === "client") || !p.user_roles?.length));
+    const { data: profiles } = await supabase.from("profiles").select("*").order("created_at", { ascending: false });
+    if (profiles) setClients(profiles);
   };
 
   useEffect(() => { fetchClients(); }, []);
