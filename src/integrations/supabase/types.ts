@@ -700,6 +700,87 @@ export type Database = {
         }
         Relationships: []
       }
+      weekly_reports: {
+        Row: {
+          ad_spend: number
+          challenges: string | null
+          created_at: string
+          dividend_spend: number
+          existing_customer_revenue: number
+          id: string
+          include_payments: boolean
+          leads_count: number
+          meetings_held: number
+          meetings_planned: number
+          net_profit: number
+          new_customer_revenue: number
+          next_week_plan: string | null
+          operational_spend: number
+          outsource_spend: number
+          salary_spend: number
+          sales_closed: number
+          total_expenses: number
+          total_revenue: number
+          updated_at: string
+          user_id: string
+          week_end: string
+          week_start: string
+          weekly_notes: string | null
+        }
+        Insert: {
+          ad_spend?: number
+          challenges?: string | null
+          created_at?: string
+          dividend_spend?: number
+          existing_customer_revenue?: number
+          id?: string
+          include_payments?: boolean
+          leads_count?: number
+          meetings_held?: number
+          meetings_planned?: number
+          net_profit?: number
+          new_customer_revenue?: number
+          next_week_plan?: string | null
+          operational_spend?: number
+          outsource_spend?: number
+          salary_spend?: number
+          sales_closed?: number
+          total_expenses?: number
+          total_revenue?: number
+          updated_at?: string
+          user_id: string
+          week_end: string
+          week_start: string
+          weekly_notes?: string | null
+        }
+        Update: {
+          ad_spend?: number
+          challenges?: string | null
+          created_at?: string
+          dividend_spend?: number
+          existing_customer_revenue?: number
+          id?: string
+          include_payments?: boolean
+          leads_count?: number
+          meetings_held?: number
+          meetings_planned?: number
+          net_profit?: number
+          new_customer_revenue?: number
+          next_week_plan?: string | null
+          operational_spend?: number
+          outsource_spend?: number
+          salary_spend?: number
+          sales_closed?: number
+          total_expenses?: number
+          total_revenue?: number
+          updated_at?: string
+          user_id?: string
+          week_end?: string
+          week_start?: string
+          weekly_notes?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
