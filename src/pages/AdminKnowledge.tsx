@@ -112,7 +112,7 @@ const AdminKnowledge = () => {
             {categories.map((cat) => (
               <div key={cat.id} className="inline-flex items-center gap-1.5 bg-secondary rounded-lg px-3 py-1.5 text-xs text-foreground group">
                 <span>{cat.icon} {cat.name}</span>
-                <Button variant="ghost" size="sm" className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground" onClick={() => { setEditCat(cat); setCatForm({ name: cat.name, icon: cat.icon || "📚" }); setCatDialogOpen(true); }}>
+                <Button variant="ghost" size="sm" className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground" onClick={() => { setEditCat(cat); setCatForm({ name: cat.name, icon: cat.icon || "📚", thumbnail_url: cat.thumbnail_url || "" }); setCatDialogOpen(true); }}>
                   <Edit className="h-3 w-3" />
                 </Button>
                 <Button variant="ghost" size="sm" className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-destructive" onClick={() => handleDeleteCat(cat.id)}>
