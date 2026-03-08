@@ -19,6 +19,9 @@ const AdminKnowledge = () => {
   const [categories, setCategories] = useState<any[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editItem, setEditItem] = useState<any>(null);
+  const [catDialogOpen, setCatDialogOpen] = useState(false);
+  const [editCat, setEditCat] = useState<any>(null);
+  const [catForm, setCatForm] = useState({ name: "", icon: "📚" });
 
   const fetchData = async () => {
     const [contentRes, catRes] = await Promise.all([
@@ -55,6 +58,30 @@ const AdminKnowledge = () => {
 
   const filtered = content.filter(c => c.title.toLowerCase().includes(search.toLowerCase()));
 
+  const handleSaveCat = async () => {
+    if (!catForm.name.trim()) return;
+    if (editCat) {
+      const { error } = await supabase.from("kb_categories").update({ name: catForm.name, icon: catForm.icon }).eq("id", editCat.id);
+      if (error) { toast.error(error.message); return; }
+      toast.success("Kategori güncellendi");
+    } else {
+      const { error } = await supabase.from("kb_categories").insert({ name: catForm.name, icon: catForm.icon });
+      if (error) { toast.error(error.message); return; }
+      toast.success("Kategori oluşturuldu");
+    }
+    setCatDialogOpen(false);
+    setEditCat(null);
+    setCatForm({ name: "", icon: "📚" });
+    fetchData();
+  };
+
+  const handleDeleteCat = async (id: string) => {
+    if (!confirm("Bu kategoriyi silmek istediğinizden emin misiniz?")) return;
+    const { error } = await supabase.from("kb_categories").delete().eq("id", id);
+    if (error) toast.error(error.message);
+    else { toast.success("Kategori silindi"); fetchData(); }
+  };
+
   return (
     <AppLayout>
       <div className="space-y-6 max-w-7xl">
@@ -72,6 +99,30 @@ const AdminKnowledge = () => {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input placeholder="İçerik ara..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9 bg-secondary border-border h-9" />
         </div>
+
+        {/* Categories Management */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="glass rounded-xl p-5 space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-medium text-foreground">Kategoriler</h3>
+            <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={() => { setEditCat(null); setCatForm({ name: "", icon: "📚" }); setCatDialogOpen(true); }}>
+              <Plus className="h-3 w-3 mr-1" /> Ekle
+            </Button>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {categories.map((cat) => (
+              <div key={cat.id} className="inline-flex items-center gap-1.5 bg-secondary rounded-lg px-3 py-1.5 text-xs text-foreground group">
+                <span>{cat.icon} {cat.name}</span>
+                <Button variant="ghost" size="sm" className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground" onClick={() => { setEditCat(cat); setCatForm({ name: cat.name, icon: cat.icon || "📚" }); setCatDialogOpen(true); }}>
+                  <Edit className="h-3 w-3" />
+                </Button>
+                <Button variant="ghost" size="sm" className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-destructive" onClick={() => handleDeleteCat(cat.id)}>
+                  <Trash2 className="h-3 w-3" />
+                </Button>
+              </div>
+            ))}
+            {categories.length === 0 && <span className="text-xs text-muted-foreground">Henüz kategori yok</span>}
+          </div>
+        </motion.div>
 
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="glass rounded-xl overflow-hidden">
           <div className="overflow-x-auto">
@@ -117,6 +168,26 @@ const AdminKnowledge = () => {
           <DialogContent className="glass border-border max-w-lg">
             <DialogHeader><DialogTitle className="text-foreground">{editItem ? "İçerik Düzenle" : "Yeni İçerik"}</DialogTitle></DialogHeader>
             <ContentForm categories={categories} initialData={editItem} onSave={handleSave} />
+          </DialogContent>
+        </Dialog>
+
+        {/* Category Dialog */}
+        <Dialog open={catDialogOpen} onOpenChange={(open) => { setCatDialogOpen(open); if (!open) { setEditCat(null); setCatForm({ name: "", icon: "📚" }); } }}>
+          <DialogContent className="glass border-border max-w-sm">
+            <DialogHeader><DialogTitle className="text-foreground">{editCat ? "Kategori Düzenle" : "Yeni Kategori"}</DialogTitle></DialogHeader>
+            <div className="space-y-4 pt-2">
+              <div className="space-y-1.5">
+                <Label className="text-xs text-muted-foreground">İkon</Label>
+                <Input value={catForm.icon} onChange={e => setCatForm({ ...catForm, icon: e.target.value })} className="bg-secondary border-border h-9 text-sm w-20" />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs text-muted-foreground">Kategori Adı</Label>
+                <Input value={catForm.name} onChange={e => setCatForm({ ...catForm, name: e.target.value })} className="bg-secondary border-border h-9 text-sm" required />
+              </div>
+              <Button className="w-full h-9 text-sm bg-primary hover:bg-primary/90" onClick={handleSaveCat}>
+                <Save className="h-4 w-4 mr-1.5" /> Kaydet
+              </Button>
+            </div>
           </DialogContent>
         </Dialog>
       </div>
