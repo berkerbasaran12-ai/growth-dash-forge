@@ -360,6 +360,15 @@ export default function ReportBuilder() {
                     </SelectContent>
                   </Select>
                 </div>
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">Rapor Adı</Label>
+                  <Input
+                    placeholder="Örn: Mart 1. Hafta Performans Raporu"
+                    value={reportName}
+                    onChange={(e) => setReportName(e.target.value)}
+                    className="rounded-xl"
+                  />
+                </div>
               )}
             </div>
           )}
