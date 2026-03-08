@@ -148,9 +148,11 @@ export default function MyReports() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-foreground text-sm">
-                        {formatWeek(report.week_start, report.week_end)}
+                        {isClient && report.report_name ? report.report_name : formatWeek(report.week_start, report.week_end)}
                       </p>
                       <p className="text-xs text-muted-foreground">
+                        {isClient && report.report_name ? formatWeek(report.week_start, report.week_end) + " · " : ""}
+                        {isClient && report.target_user_id ? (getClientName(report.target_user_id) || "") + " · " : ""}
                         {format(new Date(report.created_at), "dd MMM yyyy HH:mm", { locale: tr })}
                       </p>
                     </div>
