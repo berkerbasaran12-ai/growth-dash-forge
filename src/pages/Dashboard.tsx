@@ -194,9 +194,9 @@ const Dashboard = () => {
   };
 
   const handleSaveSales = async (form: any) => {
-    if (!effectiveUserId) return;
+    if (!targetUserId) return;
     const { error } = await supabase.from("sales_metrics").upsert({
-      user_id: effectiveUserId, date: form.date,
+      user_id: targetUserId, date: form.date,
       total_sales: Number(form.total_sales || 0), order_count: Number(form.order_count || 0),
       new_customers: Number(form.new_customers || 0), returning_customers: Number(form.returning_customers || 0),
       net_profit: Number(form.net_profit || 0), win_rate: Number(form.win_rate || 0),
