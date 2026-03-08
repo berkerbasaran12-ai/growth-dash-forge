@@ -51,7 +51,7 @@ export function MetricsTable({ metrics, canEdit, onRefresh, type }: MetricsTable
     if (type === "marketing") {
       setEditData({ spend: Number(row.spend), traffic: row.traffic, conversions: row.conversions, leads: row.leads, cpc: Number(row.cpc), cpm: Number(row.cpm), engagement_rate: Number(row.engagement_rate), roas: Number(row.roas) });
     } else {
-      setEditData({ total_sales: Number(row.total_sales), order_count: row.order_count, leads_received: row.leads_received, appointments: row.appointments, win_rate: Number(row.win_rate), avg_deal_value: Number(row.avg_deal_value), new_customers: row.new_customers, churn_rate: Number(row.churn_rate), ltv: Number(row.ltv), net_profit: Number(row.net_profit) });
+      setEditData({ total_sales: Number(row.total_sales), order_count: row.order_count, leads_received: row.leads_received, appointments: row.appointments, win_rate: Number(row.win_rate), avg_deal_value: Number(row.avg_deal_value), new_customers: row.new_customers, returning_customers: row.returning_customers, churn_rate: Number(row.churn_rate), ltv: Number(row.ltv), net_profit: Number(row.net_profit) });
     }
   };
 
