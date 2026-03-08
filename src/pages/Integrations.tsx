@@ -59,6 +59,11 @@ const Integrations = () => {
       setGoogleConnected(true);
       setSearchParams({});
     }
+    if (success === "meta_ads") {
+      toast.success("Meta Ads başarıyla bağlandı!");
+      setMetaConnected(true);
+      setSearchParams({});
+    }
     if (error) {
       toast.error("Bağlantı başarısız: " + error);
       setSearchParams({});
@@ -82,13 +87,51 @@ const Integrations = () => {
     }
   };
 
-  const handleConnectMeta = () => {
-    toast.info("Meta Ads entegrasyonu yakında aktif olacak");
+  const handleConnectMeta = async () => {
+    setLoadingMeta(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("meta-ads-auth", {
+        body: { user_id: effectiveUserId },
+      });
+      if (error) throw error;
+      if (data?.url) {
+        window.location.href = data.url;
+      }
+    } catch (err: any) {
+      toast.error("Meta Ads bağlantısı başlatılamadı: " + err.message);
+    } finally {
+      setLoadingMeta(false);
+    }
+  };
+
+  const handleDisconnectMeta = async () => {
+    try {
+      const { error } = await supabase
+        .from("ad_platform_connections")
+        .update({ is_active: false })
+        .eq("user_id", effectiveUserId)
+        .eq("platform", "meta_ads");
+      if (error) throw error;
+      setMetaConnected(false);
+      toast.success("Meta Ads bağlantısı kaldırıldı");
+    } catch (err: any) {
+      toast.error("Bağlantı kaldırılamadı: " + err.message);
+    }
   };
 
   const handleDisconnectGoogle = async () => {
-    toast.info("Google Ads bağlantısı kaldırıldı");
-    setGoogleConnected(false);
+    try {
+      const { error } = await supabase
+        .from("ad_platform_connections")
+        .update({ is_active: false })
+        .eq("user_id", effectiveUserId)
+        .eq("platform", "google_ads");
+      if (error) throw error;
+      setGoogleConnected(false);
+      toast.success("Google Ads bağlantısı kaldırıldı");
+    } catch (err: any) {
+      toast.error("Bağlantı kaldırılamadı: " + err.message);
+    }
   };
 
   return (
@@ -157,12 +200,12 @@ const Integrations = () => {
             <CardContent>
               {metaConnected ? (
                 <div className="flex gap-2">
-                  <Button variant="outline" size="sm" className="gap-1.5">
+                  <Button variant="outline" size="sm" onClick={handleDisconnectMeta} className="gap-1.5">
                     <Unplug className="h-3.5 w-3.5" /> Bağlantıyı Kes
                   </Button>
                 </div>
               ) : (
-                <Button size="sm" onClick={handleConnectMeta} disabled={loadingMeta} variant="outline" className="gap-1.5">
+                <Button size="sm" onClick={handleConnectMeta} disabled={loadingMeta} className="gap-1.5">
                   {loadingMeta ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ExternalLink className="h-3.5 w-3.5" />}
                   Meta Ads Bağla
                 </Button>

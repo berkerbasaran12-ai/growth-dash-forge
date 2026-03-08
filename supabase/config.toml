@@ -1,1 +1,4 @@
 project_id = "savvdewkodzfehyxfrhf"
+
+[functions.meta-ads-callback]
+verify_jwt = false
