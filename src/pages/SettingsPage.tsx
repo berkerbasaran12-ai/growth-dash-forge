@@ -1,13 +1,36 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { User, Lock, Bell } from "lucide-react";
+import { User, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AppLayout } from "@/components/layout/AppLayout";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const SettingsPage = () => {
-  const [profile, setProfile] = useState({ name: "Ahmet Yılmaz", email: "ahmet@firma.com", company: "Firma A" });
+  const { profile, user } = useAuth();
+  const [name, setName] = useState(profile?.full_name || "");
+  const [company, setCompany] = useState(profile?.company || "");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const handleProfileSave = async () => {
+    if (!user) return;
+    const { error } = await supabase.from("profiles").update({ full_name: name, company }).eq("user_id", user.id);
+    if (error) toast.error(error.message);
+    else toast.success("Profil güncellendi");
+  };
+
+  const handlePasswordChange = async () => {
+    if (newPassword !== confirmPassword) { toast.error("Şifreler eşleşmiyor"); return; }
+    if (newPassword.length < 6) { toast.error("Şifre en az 6 karakter olmalı"); return; }
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    if (error) toast.error(error.message);
+    else { toast.success("Şifre güncellendi"); setCurrentPassword(""); setNewPassword(""); setConfirmPassword(""); }
+  };
 
   return (
     <AppLayout>
@@ -23,19 +46,10 @@ const SettingsPage = () => {
             <h2 className="text-sm font-medium text-foreground">Profil Bilgileri</h2>
           </div>
           <div className="space-y-4">
-            <div className="space-y-1.5">
-              <Label className="text-xs text-muted-foreground">Ad Soyad</Label>
-              <Input value={profile.name} onChange={e => setProfile({...profile, name: e.target.value})} className="bg-secondary border-border h-9 text-sm" />
-            </div>
-            <div className="space-y-1.5">
-              <Label className="text-xs text-muted-foreground">E-posta</Label>
-              <Input value={profile.email} readOnly className="bg-muted border-border h-9 text-sm text-muted-foreground" />
-            </div>
-            <div className="space-y-1.5">
-              <Label className="text-xs text-muted-foreground">Şirket</Label>
-              <Input value={profile.company} onChange={e => setProfile({...profile, company: e.target.value})} className="bg-secondary border-border h-9 text-sm" />
-            </div>
-            <Button size="sm" className="bg-primary hover:bg-primary/90 h-9">Kaydet</Button>
+            <div className="space-y-1.5"><Label className="text-xs text-muted-foreground">Ad Soyad</Label><Input value={name} onChange={e => setName(e.target.value)} className="bg-secondary border-border h-9 text-sm" /></div>
+            <div className="space-y-1.5"><Label className="text-xs text-muted-foreground">E-posta</Label><Input value={profile?.email || ""} readOnly className="bg-muted border-border h-9 text-sm text-muted-foreground" /></div>
+            <div className="space-y-1.5"><Label className="text-xs text-muted-foreground">Şirket</Label><Input value={company} onChange={e => setCompany(e.target.value)} className="bg-secondary border-border h-9 text-sm" /></div>
+            <Button size="sm" onClick={handleProfileSave} className="bg-primary hover:bg-primary/90 h-9">Kaydet</Button>
           </div>
         </motion.div>
 
@@ -45,19 +59,9 @@ const SettingsPage = () => {
             <h2 className="text-sm font-medium text-foreground">Şifre Değiştir</h2>
           </div>
           <div className="space-y-4">
-            <div className="space-y-1.5">
-              <Label className="text-xs text-muted-foreground">Mevcut Şifre</Label>
-              <Input type="password" className="bg-secondary border-border h-9 text-sm" />
-            </div>
-            <div className="space-y-1.5">
-              <Label className="text-xs text-muted-foreground">Yeni Şifre</Label>
-              <Input type="password" className="bg-secondary border-border h-9 text-sm" />
-            </div>
-            <div className="space-y-1.5">
-              <Label className="text-xs text-muted-foreground">Yeni Şifre (Tekrar)</Label>
-              <Input type="password" className="bg-secondary border-border h-9 text-sm" />
-            </div>
-            <Button size="sm" className="bg-primary hover:bg-primary/90 h-9">Şifreyi Güncelle</Button>
+            <div className="space-y-1.5"><Label className="text-xs text-muted-foreground">Yeni Şifre</Label><Input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} className="bg-secondary border-border h-9 text-sm" /></div>
+            <div className="space-y-1.5"><Label className="text-xs text-muted-foreground">Yeni Şifre (Tekrar)</Label><Input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} className="bg-secondary border-border h-9 text-sm" /></div>
+            <Button size="sm" onClick={handlePasswordChange} className="bg-primary hover:bg-primary/90 h-9">Şifreyi Güncelle</Button>
           </div>
         </motion.div>
       </div>

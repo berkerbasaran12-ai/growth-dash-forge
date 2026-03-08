@@ -5,6 +5,8 @@ import { Eye, EyeOff, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -12,20 +14,28 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { signIn, user } = useAuth();
+
+  // If already logged in, redirect
+  if (user) {
+    navigate("/dashboard", { replace: true });
+    return null;
+  }
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // TODO: Replace with actual auth
-    setTimeout(() => {
-      setIsLoading(false);
+    const { error } = await signIn(email, password);
+    setIsLoading(false);
+    if (error) {
+      toast.error("Giriş başarısız: " + error);
+    } else {
       navigate("/dashboard");
-    }, 1000);
+    }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background relative overflow-hidden">
-      {/* Ambient glow effects */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
 
@@ -36,7 +46,6 @@ const Login = () => {
         className="w-full max-w-md mx-4"
       >
         <div className="glass rounded-2xl p-8 space-y-8">
-          {/* Logo area */}
           <div className="text-center space-y-2">
             <div className="w-14 h-14 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto mb-4">
               <span className="text-primary font-bold text-xl">P</span>
