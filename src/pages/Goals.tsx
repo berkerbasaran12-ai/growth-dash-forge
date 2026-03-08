@@ -140,13 +140,13 @@ const Goals = () => {
       user_id: user.id,
       month: monthKey,
       target_revenue: Number(editRevenue) || 0,
-      goals: editGoals,
+      goals: editGoals as unknown as import("@/integrations/supabase/types").Json,
       is_locked: true,
     };
 
     const { error } = record
       ? await supabase.from("monthly_goals").update(payload).eq("id", record.id)
-      : await supabase.from("monthly_goals").insert(payload);
+      : await supabase.from("monthly_goals").insert({ ...payload, month: monthKey, user_id: user.id } as any);
 
     if (error) {
       toast.error("Kaydedilemedi: " + error.message);
