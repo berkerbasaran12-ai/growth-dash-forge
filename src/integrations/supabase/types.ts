@@ -193,6 +193,35 @@ export type Database = {
         }
         Relationships: []
       }
+      kb_category_access: {
+        Row: {
+          category_id: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          category_id: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          category_id?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kb_category_access_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "kb_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       kb_content: {
         Row: {
           category_id: string | null
@@ -205,7 +234,6 @@ export type Database = {
           status: string
           title: string
           updated_at: string
-          visibility: string
         }
         Insert: {
           category_id?: string | null
@@ -218,7 +246,6 @@ export type Database = {
           status?: string
           title: string
           updated_at?: string
-          visibility?: string
         }
         Update: {
           category_id?: string | null
@@ -231,7 +258,6 @@ export type Database = {
           status?: string
           title?: string
           updated_at?: string
-          visibility?: string
         }
         Relationships: [
           {
@@ -239,35 +265,6 @@ export type Database = {
             columns: ["category_id"]
             isOneToOne: false
             referencedRelation: "kb_categories"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      kb_content_visibility: {
-        Row: {
-          content_id: string
-          created_at: string
-          id: string
-          user_id: string
-        }
-        Insert: {
-          content_id: string
-          created_at?: string
-          id?: string
-          user_id: string
-        }
-        Update: {
-          content_id?: string
-          created_at?: string
-          id?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "kb_content_visibility_content_id_fkey"
-            columns: ["content_id"]
-            isOneToOne: false
-            referencedRelation: "kb_content"
             referencedColumns: ["id"]
           },
         ]

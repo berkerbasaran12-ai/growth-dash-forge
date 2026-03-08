@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Building2, Users, CreditCard, StickyNote, Plus, X, Save, Trash2 } from "lucide-react";
+import { ArrowLeft, Building2, Users, CreditCard, StickyNote, Plus, X, Save, Trash2, BookOpen } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -27,6 +28,8 @@ const ClientDetail = () => {
   const [services, setServices] = useState<any[]>([]);
   const [payments, setPayments] = useState<any[]>([]);
   const [notes, setNotes] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [accessCategoryIds, setAccessCategoryIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Editable fields
@@ -41,12 +44,14 @@ const ClientDetail = () => {
     if (!userId) return;
     setLoading(true);
 
-    const [profileRes, teamRes, servicesRes, paymentsRes, notesRes] = await Promise.all([
+    const [profileRes, teamRes, servicesRes, paymentsRes, notesRes, catsRes, accessRes] = await Promise.all([
       supabase.from("profiles").select("*").eq("user_id", userId).maybeSingle(),
       supabase.from("team_members").select("*, profiles!team_members_member_user_id_fkey(full_name, email)").eq("client_user_id", userId),
       supabase.from("client_services").select("*").eq("client_user_id", userId).order("created_at", { ascending: false }),
       supabase.from("client_payments").select("*, client_services(service_name)").eq("client_user_id", userId).order("payment_date", { ascending: false }),
       supabase.from("client_notes").select("*").eq("client_user_id", userId).order("created_at", { ascending: false }),
+      supabase.from("kb_categories").select("*").order("sort_order"),
+      supabase.from("kb_category_access").select("category_id").eq("user_id", userId),
     ]);
 
     if (profileRes.data) {
@@ -58,6 +63,8 @@ const ClientDetail = () => {
     setServices(servicesRes.data || []);
     setPayments(paymentsRes.data || []);
     setNotes(notesRes.data || []);
+    setCategories(catsRes.data || []);
+    setAccessCategoryIds((accessRes.data || []).map((a: any) => a.category_id));
     setLoading(false);
   };
 
@@ -141,6 +148,7 @@ const ClientDetail = () => {
           <TabsList className="bg-secondary">
             <TabsTrigger value="info" className="gap-1.5"><Building2 className="h-3.5 w-3.5" /> Bilgiler</TabsTrigger>
             <TabsTrigger value="team" className="gap-1.5"><Users className="h-3.5 w-3.5" /> Ekip</TabsTrigger>
+            <TabsTrigger value="akademi" className="gap-1.5"><BookOpen className="h-3.5 w-3.5" /> Akademi Erişimi</TabsTrigger>
             <TabsTrigger value="services" className="gap-1.5"><CreditCard className="h-3.5 w-3.5" /> Hizmetler & Ödemeler</TabsTrigger>
             <TabsTrigger value="notes" className="gap-1.5"><StickyNote className="h-3.5 w-3.5" /> Notlar</TabsTrigger>
           </TabsList>
@@ -186,6 +194,36 @@ const ClientDetail = () => {
                   ))}
                 </div>
               )}
+            </motion.div>
+          </TabsContent>
+
+          {/* AKADEMI ACCESS TAB */}
+          <TabsContent value="akademi">
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="glass rounded-xl p-6 space-y-4">
+              <div>
+                <h3 className="text-sm font-medium text-foreground">Havana Akademi Kategori Erişimi</h3>
+                <p className="text-xs text-muted-foreground mt-1">Bu müşterinin erişebileceği Akademi kategorilerini seçin. Hiçbiri seçilmezse hiçbir içerik görünmez.</p>
+              </div>
+              <div className="space-y-1">
+                {categories.map((cat) => (
+                  <label key={cat.id} className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-secondary cursor-pointer transition-colors">
+                    <Checkbox
+                      checked={accessCategoryIds.includes(cat.id)}
+                      onCheckedChange={async (checked) => {
+                        if (checked) {
+                          await supabase.from("kb_category_access").insert({ category_id: cat.id, user_id: userId });
+                          setAccessCategoryIds((prev) => [...prev, cat.id]);
+                        } else {
+                          await supabase.from("kb_category_access").delete().eq("category_id", cat.id).eq("user_id", userId);
+                          setAccessCategoryIds((prev) => prev.filter((id) => id !== cat.id));
+                        }
+                      }}
+                    />
+                    <span className="text-sm text-foreground">{cat.icon} {cat.name}</span>
+                  </label>
+                ))}
+                {categories.length === 0 && <p className="text-sm text-muted-foreground text-center py-4">Henüz kategori oluşturulmamış.</p>}
+              </div>
             </motion.div>
           </TabsContent>
 
