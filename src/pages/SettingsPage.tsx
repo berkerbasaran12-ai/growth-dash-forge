@@ -8,6 +8,7 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { AvatarUpload } from "@/components/AvatarUpload";
 
 const SettingsPage = () => {
   const { profile, user } = useAuth();
