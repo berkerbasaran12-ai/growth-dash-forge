@@ -37,6 +37,7 @@ const adminItems = [
   { title: "Anasayfa", url: "/dashboard", icon: LayoutDashboard },
   { title: "Gelir-Gider", url: "/finance", icon: Wallet },
   { title: "Müşteri Yönetimi", url: "/admin/clients", icon: Users },
+  { title: "Onboarding Şablonları", url: "/admin/onboarding-templates", icon: ClipboardCheck },
   { title: "İçerik Yönetimi", url: "/admin/knowledge", icon: FileText },
   { title: "Havana Akademi", url: "/knowledge-base", icon: BookOpen },
   { title: "Hedefler", url: "/goals", icon: Target },

@@ -296,6 +296,13 @@ const ClientDetail = () => {
             </div>
           </TabsContent>
 
+          {/* ONBOARDING TAB */}
+          <TabsContent value="onboarding">
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="glass rounded-xl p-6">
+              <ClientOnboardingTab clientUserId={userId!} />
+            </motion.div>
+          </TabsContent>
+
           {/* NOTES TAB */}
           <TabsContent value="notes">
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="glass rounded-xl p-6 space-y-4">
