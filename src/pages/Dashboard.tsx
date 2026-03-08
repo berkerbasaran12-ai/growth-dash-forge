@@ -56,7 +56,7 @@ const Dashboard = () => {
   };
 
   const fetchData = async () => {
-    if (!effectiveUserId) return;
+    if (!targetUserId) return;
     const { from, to, prevFrom, prevTo } = getDateRange();
     const fmtFrom = format(from, "yyyy-MM-dd");
     const fmtTo = format(to, "yyyy-MM-dd");
@@ -64,10 +64,10 @@ const Dashboard = () => {
     const fmtPrevTo = format(prevTo, "yyyy-MM-dd");
 
     const [salesCur, salesPrev, mktCur, mktPrev] = await Promise.all([
-      supabase.from("sales_metrics").select("*").eq("user_id", effectiveUserId).gte("date", fmtFrom).lte("date", fmtTo).order("date"),
-      supabase.from("sales_metrics").select("*").eq("user_id", effectiveUserId).gte("date", fmtPrevFrom).lte("date", fmtPrevTo),
-      supabase.from("marketing_metrics").select("*").eq("user_id", effectiveUserId).gte("date", fmtFrom).lte("date", fmtTo).order("date"),
-      supabase.from("marketing_metrics").select("*").eq("user_id", effectiveUserId).gte("date", fmtPrevFrom).lte("date", fmtPrevTo),
+      supabase.from("sales_metrics").select("*").eq("user_id", targetUserId).gte("date", fmtFrom).lte("date", fmtTo).order("date"),
+      supabase.from("sales_metrics").select("*").eq("user_id", targetUserId).gte("date", fmtPrevFrom).lte("date", fmtPrevTo),
+      supabase.from("marketing_metrics").select("*").eq("user_id", targetUserId).gte("date", fmtFrom).lte("date", fmtTo).order("date"),
+      supabase.from("marketing_metrics").select("*").eq("user_id", targetUserId).gte("date", fmtPrevFrom).lte("date", fmtPrevTo),
     ]);
 
     setSalesMetrics(salesCur.data || []);
@@ -76,7 +76,14 @@ const Dashboard = () => {
     setPrevMarketingMetrics(mktPrev.data || []);
   };
 
-  useEffect(() => { fetchData(); }, [effectiveUserId, dateFilter, customRange.from?.getTime(), customRange.to?.getTime()]);
+  useEffect(() => {
+    if (isViewingClient && viewingClientId) {
+      supabase.from("profiles").select("full_name").eq("user_id", viewingClientId).maybeSingle()
+        .then(({ data }) => setViewingClientName(data?.full_name || ""));
+    }
+  }, [viewingClientId]);
+
+  useEffect(() => { fetchData(); }, [targetUserId, dateFilter, customRange.from?.getTime(), customRange.to?.getTime()]);
 
   const sum = (arr: any[], key: string) => arr.reduce((s, m) => s + Number(m[key] || 0), 0);
   const avg = (arr: any[], key: string) => arr.length > 0 ? sum(arr, key) / arr.length : 0;
