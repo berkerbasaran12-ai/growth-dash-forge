@@ -475,121 +475,120 @@ export default function ReportBuilder() {
                 </>
               )}
 
-              {/* Revenue */}
-              <div className="space-y-4">
-                <h3 className="font-semibold text-foreground">Finansal Sorular (TL bazında)</h3>
+              {/* Client Report: Ad Metrics only */}
+              {isClientReport && (
                 <div className="space-y-3">
-                  <div>
-                    <Label className="text-sm">Geçen hafta yeni müşterilerden elde edilen ciro? (₺) <span className="text-destructive">*</span></Label>
-                    <Input type="number" placeholder="0" value={newCustomerRevenue} onChange={(e) => setNewCustomerRevenue(e.target.value)} className="mt-1" />
+                  <div className="flex items-center gap-2">
+                    <Megaphone className="h-5 w-5 text-primary" />
+                    <h3 className="font-semibold text-foreground">Reklam Metrikleri</h3>
                   </div>
-                  <div>
-                    <Label className="text-sm">Geçen hafta eski/düzenli müşterilerden elde edilen ciro? (₺) <span className="text-destructive">*</span></Label>
-                    <Input type="number" placeholder="0" value={existingCustomerRevenue} onChange={(e) => setExistingCustomerRevenue(e.target.value)} className="mt-1" />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <Label className="text-sm">Harcanan Reklam Bütçesi (₺) <span className="text-destructive">*</span></Label>
+                      <p className="text-xs text-muted-foreground mt-0.5">Toplam reklam harcaması</p>
+                      <Input type="number" placeholder="0" value={adSpend} onChange={(e) => setAdSpend(e.target.value)} className="mt-1" />
+                    </div>
+                    <div>
+                      <Label className="text-sm">DM Sayısı (adet) <span className="text-destructive">*</span></Label>
+                      <p className="text-xs text-muted-foreground mt-0.5">Gelen direkt mesaj sayısı</p>
+                      <Input type="number" placeholder="0" value={dmCount} onChange={(e) => setDmCount(e.target.value)} className="mt-1" />
+                    </div>
+                    <div>
+                      <Label className="text-sm">Gösterim (adet)</Label>
+                      <p className="text-xs text-muted-foreground mt-0.5">Toplam reklam gösterim sayısı</p>
+                      <Input type="number" placeholder="0" value={impressions} onChange={(e) => setImpressions(e.target.value)} className="mt-1" />
+                    </div>
+                    <div>
+                      <Label className="text-sm">Erişim (adet)</Label>
+                      <p className="text-xs text-muted-foreground mt-0.5">Ulaşılan tekil kişi sayısı</p>
+                      <Input type="number" placeholder="0" value={reach} onChange={(e) => setReach(e.target.value)} className="mt-1" />
+                    </div>
+                    <div>
+                      <Label className="text-sm">Tıklama (adet)</Label>
+                      <p className="text-xs text-muted-foreground mt-0.5">Toplam link/reklam tıklaması</p>
+                      <Input type="number" placeholder="0" value={clicks} onChange={(e) => setClicks(e.target.value)} className="mt-1" />
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
-              <Separator />
-
-              {/* Ad Spend */}
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <Megaphone className="h-5 w-5 text-primary" />
-                  <h3 className="font-semibold text-foreground">Reklam Harcamaları</h3>
-                </div>
-                <div>
-                  <Label className="text-sm">Toplam reklam harcama (₺) <span className="text-destructive">*</span></Label>
-                  <p className="text-xs text-muted-foreground mt-0.5">Facebook, Google Ads ve diğer reklam platformlarındaki harcamaların toplam tutarı</p>
-                  <Input type="number" placeholder="0" value={adSpend} onChange={(e) => setAdSpend(e.target.value)} className="mt-1" />
-                </div>
-              </div>
-
-              {/* Agency-only sections */}
+              {/* Agency Report: Full Financial */}
               {!isClientReport && (
                 <>
-                  <Separator />
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2">
-                      <Settings2 className="h-5 w-5 text-primary" />
-                      <h3 className="font-semibold text-foreground">Operasyonel Harcamalar</h3>
-                    </div>
-                    <div>
-                      <Label className="text-sm">Toplam operasyonel harcama (₺) <span className="text-destructive">*</span></Label>
-                      <p className="text-xs text-muted-foreground mt-0.5">İşletme giderleri toplam tutarı</p>
-                      <Input type="number" placeholder="0" value={operationalSpend} onChange={(e) => setOperationalSpend(e.target.value)} className="mt-1" />
-                      <p className="text-xs text-muted-foreground mt-1">💡 Detaylı operasyonel giderleri Gelir-Gider sayfasında kaydedebilirsin</p>
+                  <div className="space-y-4">
+                    <h3 className="font-semibold text-foreground">Finansal Sorular (TL bazında)</h3>
+                    <div className="space-y-3">
+                      <div>
+                        <Label className="text-sm">Geçen hafta yeni müşterilerden elde edilen ciro? (₺) <span className="text-destructive">*</span></Label>
+                        <Input type="number" placeholder="0" value={newCustomerRevenue} onChange={(e) => setNewCustomerRevenue(e.target.value)} className="mt-1" />
+                      </div>
+                      <div>
+                        <Label className="text-sm">Geçen hafta eski/düzenli müşterilerden elde edilen ciro? (₺) <span className="text-destructive">*</span></Label>
+                        <Input type="number" placeholder="0" value={existingCustomerRevenue} onChange={(e) => setExistingCustomerRevenue(e.target.value)} className="mt-1" />
+                      </div>
                     </div>
                   </div>
-
                   <Separator />
                   <div className="space-y-3">
-                    <div className="flex items-center gap-2">
-                      <Handshake className="h-5 w-5 text-primary" />
-                      <h3 className="font-semibold text-foreground">Dış Kaynak Harcamaları</h3>
+                    <div className="flex items-center gap-2"><Megaphone className="h-5 w-5 text-primary" /><h3 className="font-semibold text-foreground">Reklam Harcamaları</h3></div>
+                    <div>
+                      <Label className="text-sm">Toplam reklam harcama (₺) <span className="text-destructive">*</span></Label>
+                      <p className="text-xs text-muted-foreground mt-0.5">Facebook, Google Ads ve diğer reklam platformlarındaki harcamaların toplam tutarı</p>
+                      <Input type="number" placeholder="0" value={adSpend} onChange={(e) => setAdSpend(e.target.value)} className="mt-1" />
                     </div>
+                  </div>
+                  <Separator />
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2"><Settings2 className="h-5 w-5 text-primary" /><h3 className="font-semibold text-foreground">Operasyonel Harcamalar</h3></div>
+                    <div>
+                      <Label className="text-sm">Toplam operasyonel harcama (₺) <span className="text-destructive">*</span></Label>
+                      <Input type="number" placeholder="0" value={operationalSpend} onChange={(e) => setOperationalSpend(e.target.value)} className="mt-1" />
+                    </div>
+                  </div>
+                  <Separator />
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2"><Handshake className="h-5 w-5 text-primary" /><h3 className="font-semibold text-foreground">Dış Kaynak Harcamaları</h3></div>
                     <div>
                       <Label className="text-sm">Toplam dış kaynak harcama (₺) <span className="text-destructive">*</span></Label>
-                      <p className="text-xs text-muted-foreground mt-0.5">Freelancer ve tedarikçi harcamaları toplam tutarı</p>
                       <Input type="number" placeholder="0" value={outsourceSpend} onChange={(e) => setOutsourceSpend(e.target.value)} className="mt-1" />
                     </div>
                   </div>
-
                   <Separator />
                   <div className="space-y-3">
-                    <div className="flex items-center gap-2">
-                      <Briefcase className="h-5 w-5 text-primary" />
-                      <h3 className="font-semibold text-foreground">Maaş Giderleri</h3>
-                    </div>
+                    <div className="flex items-center gap-2"><Briefcase className="h-5 w-5 text-primary" /><h3 className="font-semibold text-foreground">Maaş Giderleri</h3></div>
                     <div>
                       <Label className="text-sm">Toplam maaş tutarı (₺) <span className="text-destructive">*</span></Label>
-                      <p className="text-xs text-muted-foreground mt-0.5">Tüm çalışanların toplam maaşı</p>
                       <Input type="number" placeholder="0" value={salarySpend} onChange={(e) => setSalarySpend(e.target.value)} className="mt-1" />
                     </div>
                   </div>
-
                   <Separator />
                   <div className="space-y-3">
-                    <div className="flex items-center gap-2">
-                      <Gem className="h-5 w-5 text-primary" />
-                      <h3 className="font-semibold text-foreground">Temettü / Kişisel Ödeme</h3>
-                    </div>
+                    <div className="flex items-center gap-2"><Gem className="h-5 w-5 text-primary" /><h3 className="font-semibold text-foreground">Temettü / Kişisel Ödeme</h3></div>
                     <div>
                       <Label className="text-sm">Toplam temettü / kişisel ödeme (₺)</Label>
-                      <p className="text-xs text-muted-foreground mt-0.5">Kendinize ödediğiniz temettü/kâr payı tutarı</p>
                       <Input type="number" placeholder="0" value={dividendSpend} onChange={(e) => setDividendSpend(e.target.value)} className="mt-1" />
                     </div>
                   </div>
+                  <Separator />
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2"><Wallet className="h-5 w-5 text-primary" /><h3 className="font-semibold text-foreground">Net Kar (Otomatik Hesaplama)</h3></div>
+                    <Card className={`p-4 ${netProfit >= 0 ? "bg-green-500/10 border-green-500/30" : "bg-destructive/10 border-destructive/30"}`}>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm text-muted-foreground">Net Kar:</span>
+                        <span className={`text-xl font-bold ${netProfit >= 0 ? "text-green-600 dark:text-green-400" : "text-destructive"}`}>{formatCurrency(netProfit)}</span>
+                      </div>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-muted-foreground">Ciro:</span>
+                        <span className="font-medium text-foreground">{formatCurrency(totalRevenue)}</span>
+                      </div>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-muted-foreground">Toplam Harcama:</span>
+                        <span className="font-medium text-foreground">{formatCurrency(totalExpenses)}</span>
+                      </div>
+                    </Card>
+                  </div>
                 </>
               )}
-
-              <Separator />
-
-              {/* Net Profit Auto */}
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <Wallet className="h-5 w-5 text-primary" />
-                  <h3 className="font-semibold text-foreground">
-                    {isClientReport ? "Net Sonuç (Otomatik)" : "Net Kar (Otomatik Hesaplama)"}
-                  </h3>
-                </div>
-                <Card className={`p-4 ${netProfit >= 0 ? "bg-green-500/10 border-green-500/30" : "bg-destructive/10 border-destructive/30"}`}>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-muted-foreground">Net Kar:</span>
-                    <span className={`text-xl font-bold ${netProfit >= 0 ? "text-green-600 dark:text-green-400" : "text-destructive"}`}>
-                      {formatCurrency(netProfit)}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Ciro:</span>
-                    <span className="font-medium text-foreground">{formatCurrency(totalRevenue)}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Toplam Harcama:</span>
-                    <span className="font-medium text-foreground">{formatCurrency(totalExpenses)}</span>
-                  </div>
-                </Card>
-              </div>
 
               <Separator />
 
