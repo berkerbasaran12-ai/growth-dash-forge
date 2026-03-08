@@ -197,6 +197,7 @@ export default function ReportBuilder() {
         user_id: user.id,
         target_user_id: isClientReport ? selectedClientId : null,
         report_type: reportType,
+        report_name: isClientReport ? reportName : '',
         week_start: weekStart,
         week_end: weekEnd,
         new_customer_revenue: parseFloat(newCustomerRevenue) || 0,
