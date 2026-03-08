@@ -18,7 +18,6 @@ const AdminClients = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [teamDialogClient, setTeamDialogClient] = useState<any>(null);
   const [clients, setClients] = useState<any[]>([]);
 
   const fetchClients = async () => {
