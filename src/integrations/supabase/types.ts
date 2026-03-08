@@ -717,8 +717,10 @@ export type Database = {
           next_week_plan: string | null
           operational_spend: number
           outsource_spend: number
+          report_type: string
           salary_spend: number
           sales_closed: number
+          target_user_id: string | null
           total_expenses: number
           total_revenue: number
           updated_at: string
@@ -743,8 +745,10 @@ export type Database = {
           next_week_plan?: string | null
           operational_spend?: number
           outsource_spend?: number
+          report_type?: string
           salary_spend?: number
           sales_closed?: number
+          target_user_id?: string | null
           total_expenses?: number
           total_revenue?: number
           updated_at?: string
@@ -769,8 +773,10 @@ export type Database = {
           next_week_plan?: string | null
           operational_spend?: number
           outsource_spend?: number
+          report_type?: string
           salary_spend?: number
           sales_closed?: number
+          target_user_id?: string | null
           total_expenses?: number
           total_revenue?: number
           updated_at?: string
