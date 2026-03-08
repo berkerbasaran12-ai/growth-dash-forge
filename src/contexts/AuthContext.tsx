@@ -25,6 +25,8 @@ interface AuthContextType extends AuthUser {
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
   isAdmin: boolean;
+  isTeamMember: boolean;
+  effectiveUserId: string | null; // The user_id whose data to display
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -34,6 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [role, setRole] = useState<"admin" | "client" | null>(null);
   const [profile, setProfile] = useState<AuthUser["profile"]>(null);
+  const [teamMembership, setTeamMembership] = useState<TeamMembership | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchUserData = async (userId: string) => {
