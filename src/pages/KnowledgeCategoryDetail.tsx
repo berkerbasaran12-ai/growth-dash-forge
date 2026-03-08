@@ -39,7 +39,7 @@ const KnowledgeCategoryDetail = () => {
       if (catRes.data) setCategory(catRes.data);
       if (contentRes.data) {
         setContent(contentRes.data);
-        if (contentRes.data.length > 0) setSelectedId(contentRes.data[0].id);
+        // Don't auto-select
       }
     };
     fetchData();
