@@ -182,23 +182,7 @@ const ClientDetail = () => {
           {/* TEAM TAB */}
           <TabsContent value="team">
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="glass rounded-xl p-6">
-              {teamMembers.length === 0 ? (
-                <p className="text-sm text-muted-foreground text-center py-6">Bu müşteriye bağlı ekip üyesi yok.</p>
-              ) : (
-                <div className="space-y-2">
-                  {teamMembers.map((m) => (
-                    <div key={m.id} className="flex items-center justify-between bg-secondary/30 rounded-lg px-4 py-3">
-                      <div>
-                        <p className="text-sm font-medium text-foreground">{m.profiles?.full_name || m.profiles?.email || "—"}</p>
-                        <p className="text-xs text-muted-foreground">{m.profiles?.email}</p>
-                      </div>
-                      <Badge variant="secondary" className="text-xs">
-                        {m.permission === "full" ? "Tam Erişim" : "Görüntüleme"}
-                      </Badge>
-                    </div>
-                  ))}
-                </div>
-              )}
+              <TeamManagement clientUserId={userId!} onChanged={fetchAll} />
             </motion.div>
           </TabsContent>
 
