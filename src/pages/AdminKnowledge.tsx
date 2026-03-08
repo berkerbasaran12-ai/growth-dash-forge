@@ -71,7 +71,7 @@ const AdminKnowledge = () => {
     }
     setCatDialogOpen(false);
     setEditCat(null);
-    setCatForm({ name: "", icon: "📚" });
+    setCatForm({ name: "", icon: "📚", thumbnail_url: "" });
     fetchData();
   };
 
