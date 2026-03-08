@@ -677,30 +677,53 @@ export default function ReportBuilder() {
 
                 <Separator />
 
-                <div className="grid grid-cols-2 gap-3 text-sm">
-                  <div><p className="text-muted-foreground">Yeni Müşteri Cirosu</p><p className="font-semibold text-foreground">{formatCurrency(parseFloat(newCustomerRevenue) || 0)}</p></div>
-                  <div><p className="text-muted-foreground">Mevcut Müşteri Cirosu</p><p className="font-semibold text-foreground">{formatCurrency(parseFloat(existingCustomerRevenue) || 0)}</p></div>
-                  <div><p className="text-muted-foreground">Toplam Ciro</p><p className="font-semibold text-primary">{formatCurrency(totalRevenue)}</p></div>
-                  <div><p className="text-muted-foreground">Toplam Harcama</p><p className="font-semibold text-destructive">{formatCurrency(totalExpenses)}</p></div>
-                </div>
+                {isClientReport ? (
+                  <>
+                    <div className="grid grid-cols-2 gap-3 text-sm">
+                      <div><p className="text-muted-foreground">Reklam Bütçesi</p><p className="font-semibold text-foreground">{formatCurrency(parseFloat(adSpend) || 0)}</p></div>
+                      <div><p className="text-muted-foreground">DM Sayısı</p><p className="font-semibold text-foreground">{dmCount || 0}</p></div>
+                      <div><p className="text-muted-foreground">Gösterim</p><p className="font-semibold text-foreground">{impressions || 0}</p></div>
+                      <div><p className="text-muted-foreground">Erişim</p><p className="font-semibold text-foreground">{reach || 0}</p></div>
+                      <div><p className="text-muted-foreground">Tıklama</p><p className="font-semibold text-foreground">{clicks || 0}</p></div>
+                    </div>
 
-                <Separator />
+                    <Separator />
 
-                <div className="flex items-center justify-between">
-                  <span className="font-semibold text-foreground">Net Kar</span>
-                  <span className={`text-lg font-bold ${netProfit >= 0 ? "text-green-600 dark:text-green-400" : "text-destructive"}`}>
-                    {formatCurrency(netProfit)}
-                  </span>
-                </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+                      <div className="flex items-center gap-2"><Users className="h-4 w-4 text-muted-foreground" /><div><p className="text-muted-foreground text-xs">Lead</p><p className="font-semibold text-foreground">{leadsCount || 0}</p></div></div>
+                      <div className="flex items-center gap-2"><Target className="h-4 w-4 text-muted-foreground" /><div><p className="text-muted-foreground text-xs">Toplantı</p><p className="font-semibold text-foreground">{meetingsHeld || 0} / {meetingsPlanned || 0}</p></div></div>
+                      <div className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-muted-foreground" /><div><p className="text-muted-foreground text-xs">Satış</p><p className="font-semibold text-foreground">{salesClosed || 0}</p></div></div>
+                      <div className="flex items-center gap-2"><TrendingUp className="h-4 w-4 text-muted-foreground" /><div><p className="text-muted-foreground text-xs">Dönüşüm</p><p className="font-semibold text-foreground">{parseInt(leadsCount) > 0 ? `%${((parseInt(salesClosed) || 0) / parseInt(leadsCount) * 100).toFixed(0)}` : "%0"}</p></div></div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="grid grid-cols-2 gap-3 text-sm">
+                      <div><p className="text-muted-foreground">Yeni Müşteri Cirosu</p><p className="font-semibold text-foreground">{formatCurrency(parseFloat(newCustomerRevenue) || 0)}</p></div>
+                      <div><p className="text-muted-foreground">Mevcut Müşteri Cirosu</p><p className="font-semibold text-foreground">{formatCurrency(parseFloat(existingCustomerRevenue) || 0)}</p></div>
+                      <div><p className="text-muted-foreground">Toplam Ciro</p><p className="font-semibold text-primary">{formatCurrency(totalRevenue)}</p></div>
+                      <div><p className="text-muted-foreground">Toplam Harcama</p><p className="font-semibold text-destructive">{formatCurrency(totalExpenses)}</p></div>
+                    </div>
 
-                <Separator />
+                    <Separator />
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
-                  <div className="flex items-center gap-2"><Users className="h-4 w-4 text-muted-foreground" /><div><p className="text-muted-foreground text-xs">Lead</p><p className="font-semibold text-foreground">{leadsCount || 0}</p></div></div>
-                  <div className="flex items-center gap-2"><Target className="h-4 w-4 text-muted-foreground" /><div><p className="text-muted-foreground text-xs">Toplantı</p><p className="font-semibold text-foreground">{meetingsHeld || 0} / {meetingsPlanned || 0}</p></div></div>
-                  <div className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-muted-foreground" /><div><p className="text-muted-foreground text-xs">Satış</p><p className="font-semibold text-foreground">{salesClosed || 0}</p></div></div>
-                  <div className="flex items-center gap-2"><TrendingUp className="h-4 w-4 text-muted-foreground" /><div><p className="text-muted-foreground text-xs">Dönüşüm</p><p className="font-semibold text-foreground">{parseInt(leadsCount) > 0 ? `%${((parseInt(salesClosed) || 0) / parseInt(leadsCount) * 100).toFixed(0)}` : "%0"}</p></div></div>
-                </div>
+                    <div className="flex items-center justify-between">
+                      <span className="font-semibold text-foreground">Net Kar</span>
+                      <span className={`text-lg font-bold ${netProfit >= 0 ? "text-green-600 dark:text-green-400" : "text-destructive"}`}>
+                        {formatCurrency(netProfit)}
+                      </span>
+                    </div>
+
+                    <Separator />
+
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+                      <div className="flex items-center gap-2"><Users className="h-4 w-4 text-muted-foreground" /><div><p className="text-muted-foreground text-xs">Lead</p><p className="font-semibold text-foreground">{leadsCount || 0}</p></div></div>
+                      <div className="flex items-center gap-2"><Target className="h-4 w-4 text-muted-foreground" /><div><p className="text-muted-foreground text-xs">Toplantı</p><p className="font-semibold text-foreground">{meetingsHeld || 0} / {meetingsPlanned || 0}</p></div></div>
+                      <div className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-muted-foreground" /><div><p className="text-muted-foreground text-xs">Satış</p><p className="font-semibold text-foreground">{salesClosed || 0}</p></div></div>
+                      <div className="flex items-center gap-2"><TrendingUp className="h-4 w-4 text-muted-foreground" /><div><p className="text-muted-foreground text-xs">Dönüşüm</p><p className="font-semibold text-foreground">{parseInt(leadsCount) > 0 ? `%${((parseInt(salesClosed) || 0) / parseInt(leadsCount) * 100).toFixed(0)}` : "%0"}</p></div></div>
+                    </div>
+                  </>
+                )}
 
                 {!isClientReport && (weeklyNotes || challenges || nextWeekPlan) && (
                   <>
