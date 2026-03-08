@@ -280,7 +280,7 @@ export default function ReportBuilder() {
     setSalarySpend(""); setDividendSpend("");
     setLeadsCount(""); setMeetingsPlanned(""); setMeetingsHeld(""); setSalesClosed("");
     setDmCount(""); setImpressions(""); setReach(""); setClicks("");
-    setWeeklyNotes(""); setChallenges(""); setNextWeekPlan("");
+    setWeeklyNotes(""); setChallenges(""); setNextWeekPlan(""); setReportName("");
     setSubmitted(false);
   };
 
