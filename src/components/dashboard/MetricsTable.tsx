@@ -192,6 +192,7 @@ function SalesTable({ metrics, canEdit, editingId, editData, setEditData, startE
                 <td className="px-1 py-1"><EditInput value={editData.win_rate} onChange={v => setEditData({ ...editData, win_rate: v })} /></td>
                 <td className="px-1 py-1"><EditInput value={editData.avg_deal_value} onChange={v => setEditData({ ...editData, avg_deal_value: v })} /></td>
                 <td className="px-1 py-1"><EditInput value={editData.new_customers} onChange={v => setEditData({ ...editData, new_customers: v })} /></td>
+                <td className="px-1 py-1"><EditInput value={editData.returning_customers} onChange={v => setEditData({ ...editData, returning_customers: v })} /></td>
                 <td className="px-1 py-1"><EditInput value={editData.churn_rate} onChange={v => setEditData({ ...editData, churn_rate: v })} /></td>
                 <td className="px-1 py-1"><EditInput value={editData.ltv} onChange={v => setEditData({ ...editData, ltv: v })} /></td>
                 <td className="px-1 py-1"><EditInput value={editData.net_profit} onChange={v => setEditData({ ...editData, net_profit: v })} /></td>
