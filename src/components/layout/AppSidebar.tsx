@@ -98,6 +98,28 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {/* Quick Actions */}
+        <SidebarGroup>
+          {!collapsed && <SidebarGroupLabel className="text-muted-foreground text-xs uppercase tracking-wider px-4 mb-2">Hızlı İşlemler</SidebarGroupLabel>}
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <NavLink
+                    to="/reports/new"
+                    end
+                    className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sidebar-foreground transition-all duration-200 hover:bg-primary/10 hover:text-primary"
+                    activeClassName="bg-primary/10 text-primary font-medium"
+                  >
+                    <Plus className="h-4 w-4 shrink-0" />
+                    {!collapsed && <span className="text-sm">Rapor Oluştur</span>}
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
 
       <SidebarFooter className="p-4 border-t border-border">
