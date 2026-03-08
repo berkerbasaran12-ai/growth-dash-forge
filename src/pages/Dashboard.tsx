@@ -80,9 +80,9 @@ const Dashboard = () => {
   ];
 
   const handleSave = async (formData: any) => {
-    if (!user) return;
+    if (!effectiveUserId) return;
     const { error } = await supabase.from("sales_metrics").upsert({
-      user_id: user.id,
+      user_id: effectiveUserId,
       date: formData.date,
       total_sales: Number(formData.totalSales),
       order_count: Number(formData.orderCount),
