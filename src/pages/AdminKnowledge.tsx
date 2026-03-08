@@ -187,10 +187,45 @@ const AdminKnowledge = () => {
                 </div>
               </div>
               <div className="space-y-1.5">
-                <Label className="text-xs text-muted-foreground">Kapak Görseli URL</Label>
-                <Input value={catForm.thumbnail_url} onChange={e => setCatForm({ ...catForm, thumbnail_url: e.target.value })} placeholder="https://..." className="bg-secondary border-border h-9 text-sm" />
+                <Label className="text-xs text-muted-foreground">Kapak Görseli</Label>
+                <div className="flex items-center gap-3">
+                  <label className="flex-1 flex items-center justify-center gap-2 h-20 rounded-xl border-2 border-dashed border-border hover:border-primary/50 bg-secondary/50 cursor-pointer transition-colors">
+                    {catUploading ? (
+                      <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                    ) : (
+                      <>
+                        <Upload className="h-5 w-5 text-muted-foreground" />
+                        <span className="text-xs text-muted-foreground">PNG veya JPG seçin</span>
+                      </>
+                    )}
+                    <input
+                      type="file"
+                      className="hidden"
+                      accept="image/png,image/jpeg,image/jpg"
+                      disabled={catUploading}
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        setCatUploading(true);
+                        const ext = file.name.split('.').pop();
+                        const fileName = `cat-${Date.now()}.${ext}`;
+                        const { error } = await supabase.storage.from("kb-files").upload(fileName, file);
+                        if (error) { toast.error("Yükleme başarısız: " + error.message); setCatUploading(false); return; }
+                        const { data: urlData } = supabase.storage.from("kb-files").getPublicUrl(fileName);
+                        setCatForm({ ...catForm, thumbnail_url: urlData.publicUrl });
+                        setCatUploading(false);
+                        toast.success("Görsel yüklendi");
+                      }}
+                    />
+                  </label>
+                </div>
                 {catForm.thumbnail_url && (
-                  <img src={catForm.thumbnail_url} alt="Önizleme" className="w-full h-24 object-cover rounded-lg mt-2" />
+                  <div className="relative">
+                    <img src={catForm.thumbnail_url} alt="Önizleme" className="w-full h-24 object-cover rounded-lg mt-2" />
+                    <Button type="button" variant="ghost" size="sm" className="absolute top-3 right-1 h-6 px-2 text-destructive text-xs bg-background/80" onClick={() => setCatForm({...catForm, thumbnail_url: ''})}>
+                      Kaldır
+                    </Button>
+                  </div>
                 )}
               </div>
               <Button className="w-full h-9 text-sm bg-primary hover:bg-primary/90" onClick={handleSaveCat}>
