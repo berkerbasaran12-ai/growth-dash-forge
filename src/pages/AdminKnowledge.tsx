@@ -35,32 +35,16 @@ const AdminKnowledge = () => {
 
   useEffect(() => { fetchData(); }, []);
 
-  const handleSave = async (data: any, allowedUserIds?: string[]) => {
-    let contentId: string;
+  const handleSave = async (data: any) => {
     if (editItem) {
       const { error } = await supabase.from("kb_content").update(data).eq("id", editItem.id);
       if (error) { toast.error(error.message); return; }
-      contentId = editItem.id;
       toast.success("İçerik güncellendi");
     } else {
-      const { data: inserted, error } = await supabase.from("kb_content").insert(data).select("id").single();
+      const { error } = await supabase.from("kb_content").insert(data);
       if (error) { toast.error(error.message); return; }
-      contentId = inserted.id;
       toast.success("İçerik oluşturuldu");
     }
-
-    // Update visibility
-    if (data.visibility === "restricted" && allowedUserIds) {
-      await supabase.from("kb_content_visibility").delete().eq("content_id", contentId);
-      if (allowedUserIds.length > 0) {
-        await supabase.from("kb_content_visibility").insert(
-          allowedUserIds.map((uid) => ({ content_id: contentId, user_id: uid }))
-        );
-      }
-    } else if (data.visibility === "public") {
-      await supabase.from("kb_content_visibility").delete().eq("content_id", contentId);
-    }
-
     setDialogOpen(false);
     setEditItem(null);
     fetchData();
