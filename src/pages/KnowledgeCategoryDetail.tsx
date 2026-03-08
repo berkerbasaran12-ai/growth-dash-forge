@@ -59,9 +59,9 @@ const KnowledgeCategoryDetail = () => {
 
   return (
     <AppLayout>
-      <div className="-m-3 sm:-m-6 flex flex-col lg:flex-row min-h-[calc(100vh-3.5rem)]">
+      <div className="-m-3 sm:-m-6 flex flex-row min-h-[calc(100vh-3.5rem)]">
         {/* Left sidebar - content list */}
-        <div className="w-full lg:w-[380px] shrink-0 border-r border-border bg-card lg:overflow-y-auto lg:h-[calc(100vh-3.5rem)]">
+        <div className="w-[320px] md:w-[380px] shrink-0 border-r border-border bg-card overflow-y-auto h-[calc(100vh-3.5rem)]">
           <div className="p-5 border-b border-border space-y-3">
             <Button
               variant="ghost"
@@ -118,7 +118,7 @@ const KnowledgeCategoryDetail = () => {
         </div>
 
         {/* Right content area */}
-        <div className="flex-1 bg-background lg:overflow-y-auto lg:h-[calc(100vh-3.5rem)]">
+        <div className="flex-1 bg-background overflow-y-auto h-[calc(100vh-3.5rem)]">
           {selectedItem ? (
             <div className="p-6 lg:p-10 max-w-3xl space-y-6">
               <div className="flex items-start justify-between gap-4">
