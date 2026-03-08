@@ -24,6 +24,7 @@ import {
 
 const clientItems = [
   { title: "Anasayfa", url: "/dashboard", icon: LayoutDashboard },
+  { title: "Onboarding", url: "/onboarding", icon: ClipboardCheck },
   { title: "Raporlarım", url: "/reports", icon: ClipboardList },
   { title: "Detaylı Analiz", url: "/analytics", icon: BarChart3 },
   { title: "Gelir-Gider", url: "/finance", icon: Wallet },
