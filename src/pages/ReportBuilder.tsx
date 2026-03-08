@@ -628,7 +628,7 @@ export default function ReportBuilder() {
           )}
 
           {/* Step 3: Notes & Plans */}
-          {step === 3 && (
+          {step === 3 && !isClientReport && (
             <div className="space-y-6">
               <h2 className="text-lg font-semibold text-foreground">Notlar & Planlama</h2>
               <div className="space-y-3">
