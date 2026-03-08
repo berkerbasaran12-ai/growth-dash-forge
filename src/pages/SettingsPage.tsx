@@ -14,6 +14,7 @@ const SettingsPage = () => {
   const { profile, user } = useAuth();
   const [name, setName] = useState(profile?.full_name || "");
   const [company, setCompany] = useState(profile?.company || "");
+  const [avatarUrl, setAvatarUrl] = useState(profile?.avatar_url || null);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
