@@ -21,6 +21,7 @@ import Goals from "./pages/Goals";
 import Finance from "./pages/Finance";
 import Analytics from "./pages/Analytics";
 import ReportBuilder from "./pages/ReportBuilder";
+import MyReports from "./pages/MyReports";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
