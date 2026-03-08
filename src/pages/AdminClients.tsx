@@ -124,25 +124,19 @@ const AdminClients = () => {
                       </Badge>
                     </td>
                     <td className="px-5 py-3 text-right">
-                      <div className="flex items-center justify-end gap-1">
-                        <Button variant="ghost" size="sm" className="h-8 px-2 text-muted-foreground hover:text-foreground" onClick={() => setTeamDialogClient(client)}>
-                          <Users className="h-4 w-4 mr-1" />
-                          <span className="text-xs">Ekip</span>
-                        </Button>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"><MoreHorizontal className="h-4 w-4" /></Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="glass border-border">
-                            <DropdownMenuItem className="text-sm cursor-pointer" onClick={() => handleToggleActive(client.user_id, client.is_active)}>
-                              {client.is_active ? <><UserX className="h-3.5 w-3.5 mr-2" /> Pasif Yap</> : <><UserCheck className="h-3.5 w-3.5 mr-2" /> Aktif Yap</>}
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="text-sm cursor-pointer text-destructive" onClick={() => handleDelete(client.user_id)}>
-                              <Trash2 className="h-3.5 w-3.5 mr-2" /> Sil
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"><MoreHorizontal className="h-4 w-4" /></Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="glass border-border">
+                          <DropdownMenuItem className="text-sm cursor-pointer" onClick={() => handleToggleActive(client.user_id, client.is_active)}>
+                            {client.is_active ? <><UserX className="h-3.5 w-3.5 mr-2" /> Pasif Yap</> : <><UserCheck className="h-3.5 w-3.5 mr-2" /> Aktif Yap</>}
+                          </DropdownMenuItem>
+                          <DropdownMenuItem className="text-sm cursor-pointer text-destructive" onClick={() => handleDelete(client.user_id)}>
+                            <Trash2 className="h-3.5 w-3.5 mr-2" /> Sil
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </td>
                   </tr>
                 ))}
