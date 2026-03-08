@@ -58,6 +58,7 @@ const AdminClients = () => {
     try {
       await callAdminFunction("toggle_active", { user_id: userId, is_active: !currentActive });
       toast.success(currentActive ? "Müşteri pasif yapıldı" : "Müşteri aktif yapıldı");
+      logActivity("client_toggle", `Müşteri ${currentActive ? "pasif" : "aktif"} yapıldı`);
       fetchClients();
     } catch (err: any) { toast.error(err.message); }
   };
