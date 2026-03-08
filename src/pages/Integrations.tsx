@@ -26,10 +26,44 @@ const MetaAdsIcon = () => (
 
 const Integrations = () => {
   const { effectiveUserId } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [googleConnected, setGoogleConnected] = useState(false);
   const [metaConnected, setMetaConnected] = useState(false);
   const [loadingGoogle, setLoadingGoogle] = useState(false);
   const [loadingMeta, setLoadingMeta] = useState(false);
+  const [checkingStatus, setCheckingStatus] = useState(true);
+
+  // Check connection status on mount
+  useEffect(() => {
+    if (!effectiveUserId) return;
+    const checkConnections = async () => {
+      const { data } = await supabase
+        .from("ad_platform_connections")
+        .select("platform, is_active")
+        .eq("user_id", effectiveUserId);
+      if (data) {
+        setGoogleConnected(data.some(c => c.platform === "google_ads" && c.is_active));
+        setMetaConnected(data.some(c => c.platform === "meta_ads" && c.is_active));
+      }
+      setCheckingStatus(false);
+    };
+    checkConnections();
+  }, [effectiveUserId]);
+
+  // Handle OAuth redirect results
+  useEffect(() => {
+    const success = searchParams.get("success");
+    const error = searchParams.get("error");
+    if (success === "google_ads") {
+      toast.success("Google Ads başarıyla bağlandı!");
+      setGoogleConnected(true);
+      setSearchParams({});
+    }
+    if (error) {
+      toast.error("Bağlantı başarısız: " + error);
+      setSearchParams({});
+    }
+  }, [searchParams]);
 
   const handleConnectGoogle = async () => {
     setLoadingGoogle(true);
