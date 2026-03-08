@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Plus, Megaphone, HandCoins } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -22,18 +23,25 @@ import { DateFilter } from "@/components/dashboard/DateFilter";
 import { MarketingEntryForm, SalesEntryForm } from "@/components/dashboard/DataEntryForm";
 
 const Dashboard = () => {
-  const { effectiveUserId, isTeamMember, teamMembership } = useAuth();
-  const [tab, setTab] = useState("marketing");
+  const { effectiveUserId, isTeamMember, teamMembership, isAdmin } = useAuth();
+  const [searchParams] = useSearchParams();
+  const viewingClientId = searchParams.get("client");
+  const isViewingClient = isAdmin && !!viewingClientId;
+  const targetUserId = isViewingClient ? viewingClientId : effectiveUserId;
+  const showMarketing = isAdmin;
+
+  const [tab, setTab] = useState(showMarketing ? "marketing" : "sales");
   const [dateFilter, setDateFilter] = useState("7d");
   const [customRange, setCustomRange] = useState<{ from: Date | undefined; to: Date | undefined }>({ from: undefined, to: undefined });
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [viewingClientName, setViewingClientName] = useState("");
 
   const [salesMetrics, setSalesMetrics] = useState<any[]>([]);
   const [prevSalesMetrics, setPrevSalesMetrics] = useState<any[]>([]);
   const [marketingMetrics, setMarketingMetrics] = useState<any[]>([]);
   const [prevMarketingMetrics, setPrevMarketingMetrics] = useState<any[]>([]);
 
-  const canEdit = !isTeamMember || teamMembership?.permission === "full";
+  const canEdit = isViewingClient ? true : (!isTeamMember || teamMembership?.permission === "full");
 
   const getDateRange = () => {
     const now = new Date();
