@@ -22,8 +22,11 @@ import {
   Users,
   Target,
   CheckCircle2,
+  UserCheck,
+  Megaphone,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { SalesFunnel } from "@/components/dashboard/SalesFunnel";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -113,6 +116,8 @@ export default function MyReports() {
               const isExpanded = expandedId === report.id;
               const profitPositive = report.net_profit >= 0;
 
+              const isClient = report.report_type === "client";
+
               return (
                 <Card
                   key={report.id}
@@ -135,16 +140,23 @@ export default function MyReports() {
                       </p>
                     </div>
                     <div className="flex items-center gap-3 shrink-0">
-                      <div className="text-right">
-                        <p className="text-xs text-muted-foreground">Net Kar</p>
-                        <p className={`text-sm font-bold ${profitPositive ? "text-green-600 dark:text-green-400" : "text-destructive"}`}>
-                          {formatCurrency(report.net_profit)}
-                        </p>
-                      </div>
-                      <Badge variant={profitPositive ? "default" : "destructive"} className="text-xs">
-                        {profitPositive ? <TrendingUp className="h-3 w-3 mr-1" /> : <TrendingDown className="h-3 w-3 mr-1" />}
-                        {profitPositive ? "Kâr" : "Zarar"}
+                      <Badge variant="outline" className="text-xs">
+                        {isClient ? "Müşteri" : "Ajans"}
                       </Badge>
+                      {!isClient && (
+                        <div className="text-right">
+                          <p className="text-xs text-muted-foreground">Net Kar</p>
+                          <p className={`text-sm font-bold ${profitPositive ? "text-green-600 dark:text-green-400" : "text-destructive"}`}>
+                            {formatCurrency(report.net_profit)}
+                          </p>
+                        </div>
+                      )}
+                      {!isClient && (
+                        <Badge variant={profitPositive ? "default" : "destructive"} className="text-xs">
+                          {profitPositive ? <TrendingUp className="h-3 w-3 mr-1" /> : <TrendingDown className="h-3 w-3 mr-1" />}
+                          {profitPositive ? "Kâr" : "Zarar"}
+                        </Badge>
+                      )}
                       <ChevronRight className={`h-4 w-4 text-muted-foreground transition-transform ${isExpanded ? "rotate-90" : ""}`} />
                     </div>
                   </button>
@@ -154,93 +166,172 @@ export default function MyReports() {
                     <div className="px-4 pb-4 space-y-4">
                       <Separator />
 
-                      {/* Financial summary */}
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
-                        <div className="bg-muted/30 rounded-lg p-3">
-                          <p className="text-xs text-muted-foreground">Yeni Müşteri Cirosu</p>
-                          <p className="font-semibold text-foreground">{formatCurrency(report.new_customer_revenue)}</p>
-                        </div>
-                        <div className="bg-muted/30 rounded-lg p-3">
-                          <p className="text-xs text-muted-foreground">Mevcut Müşteri Cirosu</p>
-                          <p className="font-semibold text-foreground">{formatCurrency(report.existing_customer_revenue)}</p>
-                        </div>
-                        <div className="bg-muted/30 rounded-lg p-3">
-                          <p className="text-xs text-muted-foreground">Toplam Ciro</p>
-                          <p className="font-semibold text-primary">{formatCurrency(report.total_revenue)}</p>
-                        </div>
-                        <div className="bg-muted/30 rounded-lg p-3">
-                          <p className="text-xs text-muted-foreground">Reklam</p>
-                          <p className="font-semibold text-foreground">{formatCurrency(report.ad_spend)}</p>
-                        </div>
-                        <div className="bg-muted/30 rounded-lg p-3">
-                          <p className="text-xs text-muted-foreground">Operasyonel</p>
-                          <p className="font-semibold text-foreground">{formatCurrency(report.operational_spend)}</p>
-                        </div>
-                        <div className="bg-muted/30 rounded-lg p-3">
-                          <p className="text-xs text-muted-foreground">Toplam Harcama</p>
-                          <p className="font-semibold text-destructive">{formatCurrency(report.total_expenses)}</p>
-                        </div>
-                      </div>
+                      {isClient ? (
+                        <>
+                          {/* Ad Metrics for client reports */}
+                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
+                            <div className="bg-muted/30 rounded-lg p-3">
+                              <p className="text-xs text-muted-foreground">Reklam Bütçesi</p>
+                              <p className="font-semibold text-foreground">{formatCurrency(report.ad_spend)}</p>
+                            </div>
+                            <div className="bg-muted/30 rounded-lg p-3">
+                              <p className="text-xs text-muted-foreground">DM Sayısı</p>
+                              <p className="font-semibold text-foreground">{report.dm_count || 0}</p>
+                            </div>
+                            <div className="bg-muted/30 rounded-lg p-3">
+                              <p className="text-xs text-muted-foreground">Gösterim</p>
+                              <p className="font-semibold text-foreground">{report.impressions || 0}</p>
+                            </div>
+                            <div className="bg-muted/30 rounded-lg p-3">
+                              <p className="text-xs text-muted-foreground">Erişim</p>
+                              <p className="font-semibold text-foreground">{report.reach || 0}</p>
+                            </div>
+                            <div className="bg-muted/30 rounded-lg p-3">
+                              <p className="text-xs text-muted-foreground">Tıklama</p>
+                              <p className="font-semibold text-foreground">{report.clicks || 0}</p>
+                            </div>
+                          </div>
 
-                      {/* Metrics */}
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
-                        <div className="flex items-center gap-2 bg-muted/30 rounded-lg p-3">
-                          <Users className="h-4 w-4 text-muted-foreground" />
-                          <div>
-                            <p className="text-xs text-muted-foreground">Lead</p>
-                            <p className="font-semibold text-foreground">{report.leads_count}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2 bg-muted/30 rounded-lg p-3">
-                          <Target className="h-4 w-4 text-muted-foreground" />
-                          <div>
-                            <p className="text-xs text-muted-foreground">Toplantı</p>
-                            <p className="font-semibold text-foreground">{report.meetings_held} / {report.meetings_planned}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2 bg-muted/30 rounded-lg p-3">
-                          <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
-                          <div>
-                            <p className="text-xs text-muted-foreground">Satış</p>
-                            <p className="font-semibold text-foreground">{report.sales_closed}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2 bg-muted/30 rounded-lg p-3">
-                          <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                          <div>
-                            <p className="text-xs text-muted-foreground">Dönüşüm</p>
-                            <p className="font-semibold text-foreground">
-                              {report.leads_count > 0
-                                ? `%${((report.sales_closed / report.leads_count) * 100).toFixed(0)}`
-                                : "%0"}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
+                          <Separator />
 
-                      {/* Notes */}
-                      {(report.weekly_notes || report.challenges || report.next_week_plan) && (
-                        <div className="space-y-2 text-sm">
-                          {report.weekly_notes && (
+                          {/* Sales metrics */}
+                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+                            <div className="flex items-center gap-2 bg-muted/30 rounded-lg p-3">
+                              <Users className="h-4 w-4 text-muted-foreground" />
+                              <div>
+                                <p className="text-xs text-muted-foreground">Lead</p>
+                                <p className="font-semibold text-foreground">{report.leads_count}</p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2 bg-muted/30 rounded-lg p-3">
+                              <Target className="h-4 w-4 text-muted-foreground" />
+                              <div>
+                                <p className="text-xs text-muted-foreground">Toplantı</p>
+                                <p className="font-semibold text-foreground">{report.meetings_held} / {report.meetings_planned}</p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2 bg-muted/30 rounded-lg p-3">
+                              <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+                              <div>
+                                <p className="text-xs text-muted-foreground">Satış</p>
+                                <p className="font-semibold text-foreground">{report.sales_closed}</p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2 bg-muted/30 rounded-lg p-3">
+                              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                              <div>
+                                <p className="text-xs text-muted-foreground">Dönüşüm</p>
+                                <p className="font-semibold text-foreground">
+                                  {report.leads_count > 0
+                                    ? `%${((report.sales_closed / report.leads_count) * 100).toFixed(0)}`
+                                    : "%0"}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          {/* Financial summary for agency reports */}
+                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
                             <div className="bg-muted/30 rounded-lg p-3">
-                              <p className="text-xs text-muted-foreground mb-1">📝 Haftalık Notlar</p>
-                              <p className="text-foreground">{report.weekly_notes}</p>
+                              <p className="text-xs text-muted-foreground">Yeni Müşteri Cirosu</p>
+                              <p className="font-semibold text-foreground">{formatCurrency(report.new_customer_revenue)}</p>
+                            </div>
+                            <div className="bg-muted/30 rounded-lg p-3">
+                              <p className="text-xs text-muted-foreground">Mevcut Müşteri Cirosu</p>
+                              <p className="font-semibold text-foreground">{formatCurrency(report.existing_customer_revenue)}</p>
+                            </div>
+                            <div className="bg-muted/30 rounded-lg p-3">
+                              <p className="text-xs text-muted-foreground">Toplam Ciro</p>
+                              <p className="font-semibold text-primary">{formatCurrency(report.total_revenue)}</p>
+                            </div>
+                            <div className="bg-muted/30 rounded-lg p-3">
+                              <p className="text-xs text-muted-foreground">Toplam Harcama</p>
+                              <p className="font-semibold text-destructive">{formatCurrency(report.total_expenses)}</p>
+                            </div>
+                          </div>
+
+                          <Separator />
+
+                          <div className="flex items-center justify-between px-1">
+                            <span className="font-semibold text-foreground">Net Kar</span>
+                            <span className={`text-lg font-bold ${profitPositive ? "text-green-600 dark:text-green-400" : "text-destructive"}`}>
+                              {formatCurrency(report.net_profit)}
+                            </span>
+                          </div>
+
+                          <Separator />
+
+                          {/* Sales metrics */}
+                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+                            <div className="flex items-center gap-2 bg-muted/30 rounded-lg p-3">
+                              <Users className="h-4 w-4 text-muted-foreground" />
+                              <div>
+                                <p className="text-xs text-muted-foreground">Lead</p>
+                                <p className="font-semibold text-foreground">{report.leads_count}</p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2 bg-muted/30 rounded-lg p-3">
+                              <Target className="h-4 w-4 text-muted-foreground" />
+                              <div>
+                                <p className="text-xs text-muted-foreground">Toplantı</p>
+                                <p className="font-semibold text-foreground">{report.meetings_held} / {report.meetings_planned}</p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2 bg-muted/30 rounded-lg p-3">
+                              <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+                              <div>
+                                <p className="text-xs text-muted-foreground">Satış</p>
+                                <p className="font-semibold text-foreground">{report.sales_closed}</p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2 bg-muted/30 rounded-lg p-3">
+                              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                              <div>
+                                <p className="text-xs text-muted-foreground">Dönüşüm</p>
+                                <p className="font-semibold text-foreground">
+                                  {report.leads_count > 0
+                                    ? `%${((report.sales_closed / report.leads_count) * 100).toFixed(0)}`
+                                    : "%0"}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Notes (agency only) */}
+                          {(report.weekly_notes || report.challenges || report.next_week_plan) && (
+                            <div className="space-y-2 text-sm">
+                              {report.weekly_notes && (
+                                <div className="bg-muted/30 rounded-lg p-3">
+                                  <p className="text-xs text-muted-foreground mb-1">📝 Haftalık Notlar</p>
+                                  <p className="text-foreground">{report.weekly_notes}</p>
+                                </div>
+                              )}
+                              {report.challenges && (
+                                <div className="bg-muted/30 rounded-lg p-3">
+                                  <p className="text-xs text-muted-foreground mb-1">⚠️ Zorluklar</p>
+                                  <p className="text-foreground">{report.challenges}</p>
+                                </div>
+                              )}
+                              {report.next_week_plan && (
+                                <div className="bg-muted/30 rounded-lg p-3">
+                                  <p className="text-xs text-muted-foreground mb-1">🎯 Gelecek Hafta Planı</p>
+                                  <p className="text-foreground">{report.next_week_plan}</p>
+                                </div>
+                              )}
                             </div>
                           )}
-                          {report.challenges && (
-                            <div className="bg-muted/30 rounded-lg p-3">
-                              <p className="text-xs text-muted-foreground mb-1">⚠️ Zorluklar</p>
-                              <p className="text-foreground">{report.challenges}</p>
-                            </div>
-                          )}
-                          {report.next_week_plan && (
-                            <div className="bg-muted/30 rounded-lg p-3">
-                              <p className="text-xs text-muted-foreground mb-1">🎯 Gelecek Hafta Planı</p>
-                              <p className="text-foreground">{report.next_week_plan}</p>
-                            </div>
-                          )}
-                        </div>
+                        </>
                       )}
+
+                      {/* Sales Funnel */}
+                      <Separator />
+                      <SalesFunnel steps={[
+                        { label: "Lead", value: report.leads_count || 0, color: "hsl(220, 70%, 55%)" },
+                        { label: "Toplantı / Randevu", value: report.meetings_held || 0, color: "hsl(40, 80%, 50%)" },
+                        { label: "Satış", value: report.sales_closed || 0, color: "hsl(140, 65%, 40%)" },
+                      ]} />
 
                       {/* Actions */}
                       <div className="flex justify-end">
