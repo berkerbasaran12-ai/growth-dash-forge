@@ -44,12 +44,14 @@ const ClientDetail = () => {
     if (!userId) return;
     setLoading(true);
 
-    const [profileRes, teamRes, servicesRes, paymentsRes, notesRes] = await Promise.all([
+    const [profileRes, teamRes, servicesRes, paymentsRes, notesRes, catsRes, accessRes] = await Promise.all([
       supabase.from("profiles").select("*").eq("user_id", userId).maybeSingle(),
       supabase.from("team_members").select("*, profiles!team_members_member_user_id_fkey(full_name, email)").eq("client_user_id", userId),
       supabase.from("client_services").select("*").eq("client_user_id", userId).order("created_at", { ascending: false }),
       supabase.from("client_payments").select("*, client_services(service_name)").eq("client_user_id", userId).order("payment_date", { ascending: false }),
       supabase.from("client_notes").select("*").eq("client_user_id", userId).order("created_at", { ascending: false }),
+      supabase.from("kb_categories").select("*").order("sort_order"),
+      supabase.from("kb_category_access").select("category_id").eq("user_id", userId),
     ]);
 
     if (profileRes.data) {
