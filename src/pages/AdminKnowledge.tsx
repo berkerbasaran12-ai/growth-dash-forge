@@ -104,7 +104,7 @@ const AdminKnowledge = () => {
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="glass rounded-xl p-5 space-y-3">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-medium text-foreground">Kategoriler</h3>
-            <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={() => { setEditCat(null); setCatForm({ name: "", icon: "📚" }); setCatDialogOpen(true); }}>
+            <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={() => { setEditCat(null); setCatForm({ name: "", icon: "📚", thumbnail_url: "" }); setCatDialogOpen(true); }}>
               <Plus className="h-3 w-3 mr-1" /> Ekle
             </Button>
           </div>
