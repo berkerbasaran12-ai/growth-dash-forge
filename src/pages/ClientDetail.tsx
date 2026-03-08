@@ -28,6 +28,8 @@ const ClientDetail = () => {
   const [services, setServices] = useState<any[]>([]);
   const [payments, setPayments] = useState<any[]>([]);
   const [notes, setNotes] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [accessCategoryIds, setAccessCategoryIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Editable fields
