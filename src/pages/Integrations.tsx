@@ -95,7 +95,7 @@ const Integrations = () => {
       });
       if (error) throw error;
       if (data?.url) {
-        window.location.href = data.url;
+        window.open(data.url, "_blank");
       }
     } catch (err: any) {
       toast.error("Meta Ads bağlantısı başlatılamadı: " + err.message);
