@@ -52,14 +52,17 @@ export function AppSidebar() {
       <SidebarHeader className="p-4 border-b border-border">
         {!collapsed ? (
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-sm">P</span>
+            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shrink-0">
+              <span className="text-primary-foreground font-bold text-sm">H</span>
             </div>
-            <span className="font-semibold text-foreground tracking-tight">Portal</span>
+            <div className="min-w-0">
+              <p className="font-semibold text-foreground tracking-tight text-sm leading-tight truncate">Havana Dijital</p>
+              <p className="text-[10px] text-muted-foreground leading-tight truncate">Müşteri Yönetim Portalı</p>
+            </div>
           </div>
         ) : (
           <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center mx-auto">
-            <span className="text-primary-foreground font-bold text-sm">P</span>
+            <span className="text-primary-foreground font-bold text-sm">H</span>
           </div>
         )}
       </SidebarHeader>
