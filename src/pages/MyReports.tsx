@@ -60,6 +60,21 @@ export default function MyReports() {
     enabled: !!user,
   });
 
+  const { data: profiles } = useQuery({
+    queryKey: ["profiles_for_reports"],
+    queryFn: async () => {
+      const { data } = await supabase.from("profiles").select("user_id, full_name, email, company");
+      return (data || []) as any[];
+    },
+    enabled: !!user,
+  });
+
+  const getClientName = (targetUserId: string | null) => {
+    if (!targetUserId || !profiles) return null;
+    const p = profiles.find((pr: any) => pr.user_id === targetUserId);
+    return p ? (p.full_name || p.email) : null;
+  };
+
   const handleDelete = async (id: string) => {
     const { error } = await supabase
       .from("weekly_reports" as any)
