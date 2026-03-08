@@ -23,8 +23,8 @@ function exportCSV(metrics: any[], type: string) {
     headers = ["Tarih", "Kanal", "Harcama", "Trafik", "Dönüşüm", "Lead", "CPC", "CPM", "Etkileşim %", "ROAS"];
     mapRow = r => [r.date, r.channel, r.spend, r.traffic, r.conversions, r.leads, r.cpc, r.cpm, r.engagement_rate, r.roas];
   } else {
-    headers = ["Tarih", "Satış", "Sipariş", "Lead", "Randevu", "Kapatma %", "ACV", "Yeni Müşteri", "Kayıp %", "LTV", "Net Kar"];
-    mapRow = r => [r.date, r.total_sales, r.order_count, r.leads_received, r.appointments, r.win_rate, r.avg_deal_value, r.new_customers, r.churn_rate, r.ltv, r.net_profit];
+    headers = ["Tarih", "Satış", "Sipariş", "Lead", "Randevu", "Kapatma %", "ACV", "Yeni Müşteri", "Tekrar Müş.", "Kayıp %", "LTV", "Net Kar"];
+    mapRow = r => [r.date, r.total_sales, r.order_count, r.leads_received, r.appointments, r.win_rate, r.avg_deal_value, r.new_customers, r.returning_customers, r.churn_rate, r.ltv, r.net_profit];
   }
 
   const csv = [headers.join(","), ...metrics.map(r => mapRow(r).join(","))].join("\n");
@@ -51,7 +51,7 @@ export function MetricsTable({ metrics, canEdit, onRefresh, type }: MetricsTable
     if (type === "marketing") {
       setEditData({ spend: Number(row.spend), traffic: row.traffic, conversions: row.conversions, leads: row.leads, cpc: Number(row.cpc), cpm: Number(row.cpm), engagement_rate: Number(row.engagement_rate), roas: Number(row.roas) });
     } else {
-      setEditData({ total_sales: Number(row.total_sales), order_count: row.order_count, leads_received: row.leads_received, appointments: row.appointments, win_rate: Number(row.win_rate), avg_deal_value: Number(row.avg_deal_value), new_customers: row.new_customers, churn_rate: Number(row.churn_rate), ltv: Number(row.ltv), net_profit: Number(row.net_profit) });
+      setEditData({ total_sales: Number(row.total_sales), order_count: row.order_count, leads_received: row.leads_received, appointments: row.appointments, win_rate: Number(row.win_rate), avg_deal_value: Number(row.avg_deal_value), new_customers: row.new_customers, returning_customers: row.returning_customers, churn_rate: Number(row.churn_rate), ltv: Number(row.ltv), net_profit: Number(row.net_profit) });
     }
   };
 
@@ -171,7 +171,7 @@ function SalesTable({ metrics, canEdit, editingId, editData, setEditData, startE
     <table className="w-full">
       <thead>
         <tr className="border-b border-border">
-          {["Tarih", "Satış (₺)", "Sipariş", "Lead", "Randevu", "Kapatma %", "ACV (₺)", "Yeni Müşteri", "Kayıp %", "LTV (₺)", "Net Kar (₺)"].map((h, i) => (
+          {["Tarih", "Satış (₺)", "Sipariş", "Lead", "Randevu", "Kapatma %", "ACV (₺)", "Yeni Müş.", "Tekrar Müş.", "Kayıp %", "LTV (₺)", "Net Kar (₺)"].map((h, i) => (
             <th key={h} className={`text-xs font-medium text-muted-foreground uppercase tracking-wider px-3 py-3 ${i === 0 ? "text-left" : "text-right"}`}>{h}</th>
           ))}
           {canEdit && <th className="text-right text-xs font-medium text-muted-foreground uppercase tracking-wider px-3 py-3">İşlem</th>}
@@ -179,7 +179,7 @@ function SalesTable({ metrics, canEdit, editingId, editData, setEditData, startE
       </thead>
       <tbody>
         {metrics.length === 0 ? (
-          <tr><td colSpan={canEdit ? 12 : 11} className="px-5 py-8 text-center text-sm text-muted-foreground">Henüz veri yok</td></tr>
+          <tr><td colSpan={canEdit ? 13 : 12} className="px-5 py-8 text-center text-sm text-muted-foreground">Henüz veri yok</td></tr>
         ) : metrics.map((row: any) => (
           <tr key={row.id} className="border-b border-border/50 hover:bg-secondary/50 transition-colors">
             <td className="px-3 py-3 text-sm text-foreground">{format(parseISO(row.date), "dd MMM", { locale: tr })}</td>
@@ -192,6 +192,7 @@ function SalesTable({ metrics, canEdit, editingId, editData, setEditData, startE
                 <td className="px-1 py-1"><EditInput value={editData.win_rate} onChange={v => setEditData({ ...editData, win_rate: v })} /></td>
                 <td className="px-1 py-1"><EditInput value={editData.avg_deal_value} onChange={v => setEditData({ ...editData, avg_deal_value: v })} /></td>
                 <td className="px-1 py-1"><EditInput value={editData.new_customers} onChange={v => setEditData({ ...editData, new_customers: v })} /></td>
+                <td className="px-1 py-1"><EditInput value={editData.returning_customers} onChange={v => setEditData({ ...editData, returning_customers: v })} /></td>
                 <td className="px-1 py-1"><EditInput value={editData.churn_rate} onChange={v => setEditData({ ...editData, churn_rate: v })} /></td>
                 <td className="px-1 py-1"><EditInput value={editData.ltv} onChange={v => setEditData({ ...editData, ltv: v })} /></td>
                 <td className="px-1 py-1"><EditInput value={editData.net_profit} onChange={v => setEditData({ ...editData, net_profit: v })} /></td>
@@ -205,6 +206,7 @@ function SalesTable({ metrics, canEdit, editingId, editData, setEditData, startE
                 <td className="px-3 py-3 text-sm text-right font-mono text-foreground">%{Number(row.win_rate || 0).toFixed(1)}</td>
                 <td className="px-3 py-3 text-sm text-right font-mono text-foreground">{Number(row.avg_deal_value || 0).toLocaleString("tr-TR")}</td>
                 <td className="px-3 py-3 text-sm text-right font-mono text-foreground">{row.new_customers}</td>
+                <td className="px-3 py-3 text-sm text-right font-mono text-foreground">{row.returning_customers || 0}</td>
                 <td className="px-3 py-3 text-sm text-right font-mono text-foreground">%{Number(row.churn_rate || 0).toFixed(1)}</td>
                 <td className="px-3 py-3 text-sm text-right font-mono text-foreground">{Number(row.ltv || 0).toLocaleString("tr-TR")}</td>
                 <td className="px-3 py-3 text-sm text-right font-mono text-accent">{Number(row.net_profit).toLocaleString("tr-TR")}</td>
