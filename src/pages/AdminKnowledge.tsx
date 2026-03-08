@@ -19,6 +19,9 @@ const AdminKnowledge = () => {
   const [categories, setCategories] = useState<any[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editItem, setEditItem] = useState<any>(null);
+  const [catDialogOpen, setCatDialogOpen] = useState(false);
+  const [editCat, setEditCat] = useState<any>(null);
+  const [catForm, setCatForm] = useState({ name: "", icon: "📚" });
 
   const fetchData = async () => {
     const [contentRes, catRes] = await Promise.all([
