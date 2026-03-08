@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Plus, Search, MoreHorizontal, UserCheck, UserX, Trash2, Users, Copy, X, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
