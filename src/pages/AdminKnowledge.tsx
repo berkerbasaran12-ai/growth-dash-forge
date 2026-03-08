@@ -22,6 +22,7 @@ const AdminKnowledge = () => {
   const [catDialogOpen, setCatDialogOpen] = useState(false);
   const [editCat, setEditCat] = useState<any>(null);
   const [catForm, setCatForm] = useState({ name: "", icon: "📚", thumbnail_url: "" });
+  const [catUploading, setCatUploading] = useState(false);
 
   const fetchData = async () => {
     const [contentRes, catRes] = await Promise.all([
