@@ -120,8 +120,18 @@ const Integrations = () => {
   };
 
   const handleDisconnectGoogle = async () => {
-    toast.info("Google Ads bağlantısı kaldırıldı");
-    setGoogleConnected(false);
+    try {
+      const { error } = await supabase
+        .from("ad_platform_connections")
+        .update({ is_active: false })
+        .eq("user_id", effectiveUserId)
+        .eq("platform", "google_ads");
+      if (error) throw error;
+      setGoogleConnected(false);
+      toast.success("Google Ads bağlantısı kaldırıldı");
+    } catch (err: any) {
+      toast.error("Bağlantı kaldırılamadı: " + err.message);
+    }
   };
 
   return (
