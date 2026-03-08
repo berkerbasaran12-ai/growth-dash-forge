@@ -46,6 +46,7 @@ const AdminClients = () => {
         company: formData.company,
       });
       toast.success("Müşteri oluşturuldu");
+      logActivity("client_create", `${formData.name} (${formData.email}) müşterisi oluşturuldu`);
       setDialogOpen(false);
       fetchClients();
     } catch (err: any) {
