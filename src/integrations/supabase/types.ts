@@ -721,6 +721,7 @@ export type Database = {
           operational_spend: number
           outsource_spend: number
           reach: number
+          report_name: string
           report_type: string
           salary_spend: number
           sales_closed: number
@@ -753,6 +754,7 @@ export type Database = {
           operational_spend?: number
           outsource_spend?: number
           reach?: number
+          report_name?: string
           report_type?: string
           salary_spend?: number
           sales_closed?: number
@@ -785,6 +787,7 @@ export type Database = {
           operational_spend?: number
           outsource_spend?: number
           reach?: number
+          report_name?: string
           report_type?: string
           salary_spend?: number
           sales_closed?: number

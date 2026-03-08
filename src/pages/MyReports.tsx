@@ -60,6 +60,21 @@ export default function MyReports() {
     enabled: !!user,
   });
 
+  const { data: profiles } = useQuery({
+    queryKey: ["profiles_for_reports"],
+    queryFn: async () => {
+      const { data } = await supabase.from("profiles").select("user_id, full_name, email, company");
+      return (data || []) as any[];
+    },
+    enabled: !!user,
+  });
+
+  const getClientName = (targetUserId: string | null) => {
+    if (!targetUserId || !profiles) return null;
+    const p = profiles.find((pr: any) => pr.user_id === targetUserId);
+    return p ? (p.full_name || p.email) : null;
+  };
+
   const handleDelete = async (id: string) => {
     const { error } = await supabase
       .from("weekly_reports" as any)
@@ -133,9 +148,11 @@ export default function MyReports() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-foreground text-sm">
-                        {formatWeek(report.week_start, report.week_end)}
+                        {isClient && report.report_name ? report.report_name : formatWeek(report.week_start, report.week_end)}
                       </p>
                       <p className="text-xs text-muted-foreground">
+                        {isClient && report.report_name ? formatWeek(report.week_start, report.week_end) + " · " : ""}
+                        {isClient && report.target_user_id ? (getClientName(report.target_user_id) || "") + " · " : ""}
                         {format(new Date(report.created_at), "dd MMM yyyy HH:mm", { locale: tr })}
                       </p>
                     </div>

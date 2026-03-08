@@ -1,0 +1,1 @@
+ALTER TABLE public.weekly_reports ADD COLUMN report_name text NOT NULL DEFAULT '';

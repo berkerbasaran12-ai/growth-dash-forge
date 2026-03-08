@@ -69,6 +69,7 @@ export default function ReportBuilder() {
   // Report type (admin only picks)
   const [reportType, setReportType] = useState<ReportType | null>(isAdmin ? null : "agency");
   const [selectedClientId, setSelectedClientId] = useState<string>("");
+  const [reportName, setReportName] = useState("");
 
   const [step, setStep] = useState(isAdmin ? 0 : 1); // 0 = type selection for admin
 
@@ -171,7 +172,7 @@ export default function ReportBuilder() {
   const handleNextMonth = () => setBrowseDate(new Date(browseYear, browseMonth + 1, 1));
 
   const canGoNext = () => {
-    if (step === 0) return !!reportType && (reportType === "agency" || (reportType === "client" && selectedClientId));
+    if (step === 0) return !!reportType && (reportType === "agency" || (reportType === "client" && selectedClientId && reportName.trim() !== ""));
     if (step === 1) return !!selectedWeek;
     if (step === 2) {
       const baseValid = newCustomerRevenue !== "" && existingCustomerRevenue !== "" && adSpend !== "" &&
@@ -196,6 +197,7 @@ export default function ReportBuilder() {
         user_id: user.id,
         target_user_id: isClientReport ? selectedClientId : null,
         report_type: reportType,
+        report_name: isClientReport ? reportName : '',
         week_start: weekStart,
         week_end: weekEnd,
         new_customer_revenue: parseFloat(newCustomerRevenue) || 0,
@@ -278,7 +280,7 @@ export default function ReportBuilder() {
     setSalarySpend(""); setDividendSpend("");
     setLeadsCount(""); setMeetingsPlanned(""); setMeetingsHeld(""); setSalesClosed("");
     setDmCount(""); setImpressions(""); setReach(""); setClicks("");
-    setWeeklyNotes(""); setChallenges(""); setNextWeekPlan("");
+    setWeeklyNotes(""); setChallenges(""); setNextWeekPlan(""); setReportName("");
     setSubmitted(false);
   };
 
@@ -344,21 +346,32 @@ export default function ReportBuilder() {
 
               {/* Client selector for "client" type */}
               {reportType === "client" && (
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium">Müşteri Seçin</Label>
-                  <Select value={selectedClientId} onValueChange={setSelectedClientId}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Rapor oluşturulacak müşteriyi seçin" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {clients?.map((c) => (
-                        <SelectItem key={c.user_id} value={c.user_id}>
-                          {c.full_name || c.email} {c.company ? `(${c.company})` : ""}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+                <>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium">Müşteri Seçin</Label>
+                    <Select value={selectedClientId} onValueChange={setSelectedClientId}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Rapor oluşturulacak müşteriyi seçin" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {clients?.map((c) => (
+                          <SelectItem key={c.user_id} value={c.user_id}>
+                            {c.full_name || c.email} {c.company ? `(${c.company})` : ""}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium">Rapor Adı</Label>
+                    <Input
+                      placeholder="Örn: Mart 1. Hafta Performans Raporu"
+                      value={reportName}
+                      onChange={(e) => setReportName(e.target.value)}
+                      className="rounded-xl"
+                    />
+                  </div>
+                </>
               )}
             </div>
           )}
