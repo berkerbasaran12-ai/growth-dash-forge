@@ -478,6 +478,156 @@ export type Database = {
         }
         Relationships: []
       }
+      onboarding_checklist_items: {
+        Row: {
+          checklist_id: string
+          completed_at: string | null
+          created_at: string
+          description: string | null
+          id: string
+          is_completed: boolean
+          is_required: boolean
+          item_type: string
+          response_file_url: string | null
+          response_text: string | null
+          sort_order: number
+          title: string
+        }
+        Insert: {
+          checklist_id: string
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_completed?: boolean
+          is_required?: boolean
+          item_type?: string
+          response_file_url?: string | null
+          response_text?: string | null
+          sort_order?: number
+          title: string
+        }
+        Update: {
+          checklist_id?: string
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_completed?: boolean
+          is_required?: boolean
+          item_type?: string
+          response_file_url?: string | null
+          response_text?: string | null
+          sort_order?: number
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "onboarding_checklist_items_checklist_id_fkey"
+            columns: ["checklist_id"]
+            isOneToOne: false
+            referencedRelation: "onboarding_checklists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      onboarding_checklists: {
+        Row: {
+          client_user_id: string
+          created_at: string
+          id: string
+          name: string
+          status: string
+          template_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          client_user_id: string
+          created_at?: string
+          id?: string
+          name: string
+          status?: string
+          template_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          client_user_id?: string
+          created_at?: string
+          id?: string
+          name?: string
+          status?: string
+          template_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "onboarding_checklists_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "onboarding_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      onboarding_template_items: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_required: boolean
+          item_type: string
+          sort_order: number
+          template_id: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_required?: boolean
+          item_type?: string
+          sort_order?: number
+          template_id: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_required?: boolean
+          item_type?: string
+          sort_order?: number
+          template_id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "onboarding_template_items_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "onboarding_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      onboarding_templates: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
