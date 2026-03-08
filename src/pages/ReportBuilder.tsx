@@ -265,6 +265,7 @@ export default function ReportBuilder() {
     setAdSpend(""); setOperationalSpend(""); setOutsourceSpend("");
     setSalarySpend(""); setDividendSpend("");
     setLeadsCount(""); setMeetingsPlanned(""); setMeetingsHeld(""); setSalesClosed("");
+    setDmCount(""); setImpressions(""); setReach(""); setClicks("");
     setWeeklyNotes(""); setChallenges(""); setNextWeekPlan("");
     setSubmitted(false);
   };
