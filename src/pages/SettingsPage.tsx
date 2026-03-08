@@ -24,7 +24,10 @@ const SettingsPage = () => {
     if (!user) return;
     const { error } = await supabase.from("profiles").update({ full_name: name, company }).eq("user_id", user.id);
     if (error) toast.error(error.message);
-    else toast.success("Profil güncellendi");
+    else {
+      toast.success("Profil güncellendi");
+      logActivity("profile_update", "Profil bilgileri güncellendi");
+    }
   };
 
   const handlePasswordChange = async () => {
