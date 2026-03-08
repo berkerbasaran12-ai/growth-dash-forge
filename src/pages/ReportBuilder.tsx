@@ -649,8 +649,8 @@ export default function ReportBuilder() {
             </div>
           )}
 
-          {/* Step 4: Summary & Submit */}
-          {step === 4 && !submitted && (
+          {/* Step: Summary & Submit */}
+          {step === getSummaryStep() && !submitted && (
             <div className="space-y-6">
               <h2 className="text-lg font-semibold text-foreground">Rapor Özeti</h2>
               <Card className="p-4 bg-muted/30 space-y-4">
