@@ -59,9 +59,9 @@ const KnowledgeCategoryDetail = () => {
 
   return (
     <AppLayout>
-      <div className="-m-3 sm:-m-6 flex flex-col lg:flex-row min-h-[calc(100vh-3.5rem)]">
+      <div className="-m-3 sm:-m-6 flex flex-row min-h-[calc(100vh-3.5rem)]">
         {/* Left sidebar - content list */}
-        <div className="w-full lg:w-[380px] shrink-0 border-r border-border bg-card lg:overflow-y-auto lg:h-[calc(100vh-3.5rem)]">
+        <div className="w-[320px] md:w-[380px] shrink-0 border-r border-border bg-card overflow-y-auto h-[calc(100vh-3.5rem)]">
           <div className="p-5 border-b border-border space-y-3">
             <Button
               variant="ghost"
