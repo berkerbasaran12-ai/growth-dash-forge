@@ -69,6 +69,7 @@ export default function ReportBuilder() {
   // Report type (admin only picks)
   const [reportType, setReportType] = useState<ReportType | null>(isAdmin ? null : "agency");
   const [selectedClientId, setSelectedClientId] = useState<string>("");
+  const [reportName, setReportName] = useState("");
 
   const [step, setStep] = useState(isAdmin ? 0 : 1); // 0 = type selection for admin
 
