@@ -165,13 +165,14 @@ export default function ReportBuilder() {
     if (step === 2) {
       const baseValid = newCustomerRevenue !== "" && existingCustomerRevenue !== "" && adSpend !== "" &&
         leadsCount !== "" && meetingsPlanned !== "" && meetingsHeld !== "" && salesClosed !== "";
-      if (isClientReport) return baseValid;
-      return baseValid && operationalSpend !== "" && outsourceSpend !== "" && salarySpend !== "";
+      if (isClientReport) return adSpend !== "" && dmCount !== "" &&
+        leadsCount !== "" && meetingsPlanned !== "" && meetingsHeld !== "" && salesClosed !== "";
+      return newCustomerRevenue !== "" && existingCustomerRevenue !== "" && adSpend !== "" &&
+        operationalSpend !== "" && outsourceSpend !== "" && salarySpend !== "" &&
+        leadsCount !== "" && meetingsPlanned !== "" && meetingsHeld !== "" && salesClosed !== "";
     }
     return true;
   };
-
-  const handleSubmit = async () => {
     if (!user || !selectedWeek) return;
     setSubmitting(true);
     try {
