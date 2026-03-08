@@ -56,6 +56,119 @@ export type Database = {
         }
         Relationships: []
       }
+      client_notes: {
+        Row: {
+          admin_user_id: string
+          client_user_id: string
+          content: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          admin_user_id: string
+          client_user_id: string
+          content: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          admin_user_id?: string
+          client_user_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+        }
+        Relationships: []
+      }
+      client_payments: {
+        Row: {
+          amount: number
+          client_user_id: string
+          created_at: string
+          currency: string
+          id: string
+          notes: string | null
+          payment_date: string
+          service_id: string | null
+          status: string
+        }
+        Insert: {
+          amount?: number
+          client_user_id: string
+          created_at?: string
+          currency?: string
+          id?: string
+          notes?: string | null
+          payment_date?: string
+          service_id?: string | null
+          status?: string
+        }
+        Update: {
+          amount?: number
+          client_user_id?: string
+          created_at?: string
+          currency?: string
+          id?: string
+          notes?: string | null
+          payment_date?: string
+          service_id?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_payments_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "client_services"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      client_services: {
+        Row: {
+          amount: number
+          billing_cycle: string
+          client_user_id: string
+          created_at: string
+          currency: string
+          description: string | null
+          end_date: string | null
+          id: string
+          is_active: boolean
+          service_name: string
+          start_date: string
+          updated_at: string
+        }
+        Insert: {
+          amount?: number
+          billing_cycle?: string
+          client_user_id: string
+          created_at?: string
+          currency?: string
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          is_active?: boolean
+          service_name: string
+          start_date?: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          billing_cycle?: string
+          client_user_id?: string
+          created_at?: string
+          currency?: string
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          is_active?: boolean
+          service_name?: string
+          start_date?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       kb_categories: {
         Row: {
           created_at: string

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Plus, Search, MoreHorizontal, UserCheck, UserX, Trash2, Users, Copy, X, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 const AdminClients = () => {
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [teamDialogClient, setTeamDialogClient] = useState<any>(null);
@@ -109,8 +111,8 @@ const AdminClients = () => {
               <tbody>
                 {filtered.map((client) => (
                   <tr key={client.id} className="border-b border-border/50 hover:bg-secondary/50 transition-colors">
-                    <td className="px-5 py-3">
-                      <div><div className="text-sm font-medium text-foreground">{client.full_name || "-"}</div><div className="text-xs text-muted-foreground">{client.email}</div></div>
+                    <td className="px-5 py-3 cursor-pointer" onClick={() => navigate(`/admin/clients/${client.user_id}`)}>
+                      <div><div className="text-sm font-medium text-foreground hover:text-primary transition-colors">{client.full_name || "-"}</div><div className="text-xs text-muted-foreground">{client.email}</div></div>
                     </td>
                     <td className="px-5 py-3 text-sm text-foreground">{client.company || "-"}</td>
                     <td className="px-5 py-3">
