@@ -218,8 +218,12 @@ const Dashboard = () => {
       <div className="space-y-6 max-w-7xl">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h1 className="text-xl sm:text-2xl font-semibold text-foreground tracking-tight">Dashboard</h1>
-            <p className="text-xs sm:text-sm text-muted-foreground mt-1">Pazarlama ve satış metriklerinizi takip edin</p>
+            <h1 className="text-xl sm:text-2xl font-semibold text-foreground tracking-tight">
+              {isViewingClient ? `${viewingClientName || "Müşteri"} — Yönetim Paneli` : "Yönetim Paneli"}
+            </h1>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+              {isViewingClient ? "Müşterinin metriklerini görüntülüyorsunuz" : showMarketing ? "Pazarlama ve satış metriklerinizi takip edin" : "Satış metriklerinizi takip edin"}
+            </p>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
             <DateFilter dateFilter={dateFilter} onFilterChange={setDateFilter} customRange={customRange} onCustomRangeChange={setCustomRange} />
@@ -247,28 +251,36 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <Tabs value={tab} onValueChange={setTab}>
-          <TabsList className="bg-secondary border border-border">
-            <TabsTrigger value="marketing" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground gap-1.5">
-              <Megaphone className="h-3.5 w-3.5" /> Pazarlama
-            </TabsTrigger>
-            <TabsTrigger value="sales" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground gap-1.5">
-              <HandCoins className="h-3.5 w-3.5" /> Satış
-            </TabsTrigger>
-          </TabsList>
+        {showMarketing ? (
+          <Tabs value={tab} onValueChange={setTab}>
+            <TabsList className="bg-secondary border border-border">
+              <TabsTrigger value="marketing" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground gap-1.5">
+                <Megaphone className="h-3.5 w-3.5" /> Pazarlama
+              </TabsTrigger>
+              <TabsTrigger value="sales" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground gap-1.5">
+                <HandCoins className="h-3.5 w-3.5" /> Satış
+              </TabsTrigger>
+            </TabsList>
 
-          <TabsContent value="marketing" className="space-y-6 mt-6">
-            <SummaryCards cards={marketingCards} />
-            <MarketingCharts chartData={mktChartData} channelBreakdown={channelBreakdown} />
-            <MetricsTable metrics={marketingMetrics} canEdit={canEdit} onRefresh={fetchData} type="marketing" />
-          </TabsContent>
+            <TabsContent value="marketing" className="space-y-6 mt-6">
+              <SummaryCards cards={marketingCards} />
+              <MarketingCharts chartData={mktChartData} channelBreakdown={channelBreakdown} />
+              <MetricsTable metrics={marketingMetrics} canEdit={canEdit} onRefresh={fetchData} type="marketing" />
+            </TabsContent>
 
-          <TabsContent value="sales" className="space-y-6 mt-6">
+            <TabsContent value="sales" className="space-y-6 mt-6">
+              <SummaryCards cards={salesCards} />
+              <SalesCharts chartData={salesChartData} totalNewCustomers={sNewCustomers} totalReturningCustomers={sReturning} />
+              <MetricsTable metrics={salesMetrics} canEdit={canEdit} onRefresh={fetchData} type="sales" />
+            </TabsContent>
+          </Tabs>
+        ) : (
+          <div className="space-y-6">
             <SummaryCards cards={salesCards} />
             <SalesCharts chartData={salesChartData} totalNewCustomers={sNewCustomers} totalReturningCustomers={sReturning} />
             <MetricsTable metrics={salesMetrics} canEdit={canEdit} onRefresh={fetchData} type="sales" />
-          </TabsContent>
-        </Tabs>
+          </div>
+        )}
       </div>
     </AppLayout>
   );
