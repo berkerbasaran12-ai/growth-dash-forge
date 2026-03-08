@@ -11,6 +11,7 @@ import KnowledgeBase from "./pages/KnowledgeBase";
 import AdminClients from "./pages/AdminClients";
 import AdminKnowledge from "./pages/AdminKnowledge";
 import SettingsPage from "./pages/SettingsPage";
+import AcceptInvite from "./pages/AcceptInvite";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
