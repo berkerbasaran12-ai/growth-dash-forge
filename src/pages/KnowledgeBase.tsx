@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 const typeIcon: Record<string, React.ReactNode> = {
   video: <Play className="h-3.5 w-3.5" />,
@@ -14,6 +15,7 @@ const typeIcon: Record<string, React.ReactNode> = {
 const typeLabel: Record<string, string> = { video: "Video", pdf: "PDF", link: "Link" };
 
 const KnowledgeBase = () => {
+  const { user, isAdmin } = useAuth();
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("all");
   const [categories, setCategories] = useState<any[]>([]);
@@ -26,10 +28,27 @@ const KnowledgeBase = () => {
         supabase.from("kb_content").select("*, kb_categories(name, icon)").eq("status", "published").order("sort_order"),
       ]);
       if (catRes.data) setCategories(catRes.data);
-      if (contentRes.data) setContent(contentRes.data);
+
+      if (contentRes.data && user && !isAdmin) {
+        // Filter restricted content for non-admin users
+        const { data: visibilityData } = await supabase
+          .from("kb_content_visibility")
+          .select("content_id")
+          .eq("user_id", user.id);
+
+        const allowedIds = new Set(visibilityData?.map((v: any) => v.content_id) || []);
+
+        const filtered = contentRes.data.filter((item: any) => {
+          if (item.visibility === "public") return true;
+          return allowedIds.has(item.id);
+        });
+        setContent(filtered);
+      } else if (contentRes.data) {
+        setContent(contentRes.data);
+      }
     };
     fetchData();
-  }, []);
+  }, [user, isAdmin]);
 
   const filtered = content.filter((c) => {
     const matchCat = activeCategory === "all" || c.category_id === activeCategory;
@@ -41,7 +60,7 @@ const KnowledgeBase = () => {
     <AppLayout>
       <div className="space-y-6 max-w-7xl">
         <div>
-          <h1 className="text-2xl font-semibold text-foreground tracking-tight">Bilgi Bankası</h1>
+          <h1 className="text-2xl font-semibold text-foreground tracking-tight">Havana Akademi</h1>
           <p className="text-sm text-muted-foreground mt-1">Eğitim içeriklerine göz atın</p>
         </div>
 

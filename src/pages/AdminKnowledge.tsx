@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Plus, Search, Edit, Trash2, MoreHorizontal, Save } from "lucide-react";
+import { Plus, Search, Edit, Trash2, MoreHorizontal, Save, Lock, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
@@ -34,16 +35,32 @@ const AdminKnowledge = () => {
 
   useEffect(() => { fetchData(); }, []);
 
-  const handleSave = async (data: any) => {
+  const handleSave = async (data: any, allowedUserIds?: string[]) => {
+    let contentId: string;
     if (editItem) {
       const { error } = await supabase.from("kb_content").update(data).eq("id", editItem.id);
       if (error) { toast.error(error.message); return; }
+      contentId = editItem.id;
       toast.success("İçerik güncellendi");
     } else {
-      const { error } = await supabase.from("kb_content").insert(data);
+      const { data: inserted, error } = await supabase.from("kb_content").insert(data).select("id").single();
       if (error) { toast.error(error.message); return; }
+      contentId = inserted.id;
       toast.success("İçerik oluşturuldu");
     }
+
+    // Update visibility
+    if (data.visibility === "restricted" && allowedUserIds) {
+      await supabase.from("kb_content_visibility").delete().eq("content_id", contentId);
+      if (allowedUserIds.length > 0) {
+        await supabase.from("kb_content_visibility").insert(
+          allowedUserIds.map((uid) => ({ content_id: contentId, user_id: uid }))
+        );
+      }
+    } else if (data.visibility === "public") {
+      await supabase.from("kb_content_visibility").delete().eq("content_id", contentId);
+    }
+
     setDialogOpen(false);
     setEditItem(null);
     fetchData();
@@ -132,6 +149,7 @@ const AdminKnowledge = () => {
                   <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-5 py-3">Başlık</th>
                   <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-5 py-3">Kategori</th>
                   <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-5 py-3">Tip</th>
+                  <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-5 py-3">Görünürlük</th>
                   <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-5 py-3">Durum</th>
                   <th className="text-right text-xs font-medium text-muted-foreground uppercase tracking-wider px-5 py-3">İşlemler</th>
                 </tr>
@@ -142,6 +160,13 @@ const AdminKnowledge = () => {
                     <td className="px-5 py-3 text-sm font-medium text-foreground">{item.title}</td>
                     <td className="px-5 py-3 text-sm text-muted-foreground">{item.kb_categories ? `${item.kb_categories.icon} ${item.kb_categories.name}` : "-"}</td>
                     <td className="px-5 py-3"><Badge variant="secondary" className="text-xs bg-secondary text-muted-foreground capitalize">{item.content_type}</Badge></td>
+                    <td className="px-5 py-3">
+                      {item.visibility === "restricted" ? (
+                        <Badge variant="outline" className="text-xs gap-1"><Lock className="h-3 w-3" /> Kısıtlı</Badge>
+                      ) : (
+                        <Badge variant="secondary" className="text-xs gap-1"><Globe className="h-3 w-3" /> Herkese Açık</Badge>
+                      )}
+                    </td>
                     <td className="px-5 py-3">
                       <Badge className={item.status === "published" ? "bg-accent/10 text-accent border-accent/20 text-xs" : "bg-warning/10 text-warning border-warning/20 text-xs"}>
                         {item.status === "published" ? "Yayında" : "Taslak"}
@@ -158,7 +183,7 @@ const AdminKnowledge = () => {
                     </td>
                   </tr>
                 ))}
-                {filtered.length === 0 && <tr><td colSpan={5} className="px-5 py-8 text-center text-sm text-muted-foreground">İçerik bulunamadı</td></tr>}
+                {filtered.length === 0 && <tr><td colSpan={6} className="px-5 py-8 text-center text-sm text-muted-foreground">İçerik bulunamadı</td></tr>}
               </tbody>
             </table>
           </div>
@@ -195,7 +220,7 @@ const AdminKnowledge = () => {
   );
 };
 
-function ContentForm({ categories, initialData, onSave }: { categories: any[]; initialData?: any; onSave: (data: any) => void }) {
+function ContentForm({ categories, initialData, onSave }: { categories: any[]; initialData?: any; onSave: (data: any, allowedUserIds?: string[]) => void }) {
   const [form, setForm] = useState({
     title: initialData?.title || '',
     description: initialData?.description || '',
@@ -203,11 +228,40 @@ function ContentForm({ categories, initialData, onSave }: { categories: any[]; i
     content_type: initialData?.content_type || 'video',
     content_url: initialData?.content_url || '',
     status: initialData?.status || 'draft',
+    visibility: initialData?.visibility || 'public',
   });
+  const [clients, setClients] = useState<any[]>([]);
+  const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchClients = async () => {
+      const { data } = await supabase.from("profiles").select("user_id, full_name, email");
+      if (data) setClients(data);
+    };
+    fetchClients();
+
+    // Load existing visibility if editing
+    if (initialData?.id && initialData?.visibility === "restricted") {
+      supabase
+        .from("kb_content_visibility")
+        .select("user_id")
+        .eq("content_id", initialData.id)
+        .then(({ data }) => {
+          if (data) setSelectedUserIds(data.map((v: any) => v.user_id));
+        });
+    }
+  }, [initialData]);
+
+  const toggleUser = (uid: string) => {
+    setSelectedUserIds((prev) =>
+      prev.includes(uid) ? prev.filter((id) => id !== uid) : [...prev, uid]
+    );
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave({ ...form, category_id: form.category_id || null });
+    const { visibility, ...rest } = form;
+    onSave({ ...rest, visibility, category_id: form.category_id || null }, selectedUserIds);
   };
 
   return (
@@ -235,16 +289,48 @@ function ContentForm({ categories, initialData, onSave }: { categories: any[]; i
         </div>
       </div>
       <div className="space-y-1.5"><Label className="text-xs text-muted-foreground">İçerik URL</Label><Input value={form.content_url} onChange={e => setForm({...form, content_url: e.target.value})} placeholder="https://..." className="bg-secondary border-border h-9 text-sm" /></div>
-      <div className="space-y-1.5">
-        <Label className="text-xs text-muted-foreground">Durum</Label>
-        <Select value={form.status} onValueChange={v => setForm({...form, status: v})}>
-          <SelectTrigger className="bg-secondary border-border h-9 text-sm"><SelectValue /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="draft">Taslak</SelectItem>
-            <SelectItem value="published">Yayında</SelectItem>
-          </SelectContent>
-        </Select>
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-1.5">
+          <Label className="text-xs text-muted-foreground">Durum</Label>
+          <Select value={form.status} onValueChange={v => setForm({...form, status: v})}>
+            <SelectTrigger className="bg-secondary border-border h-9 text-sm"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="draft">Taslak</SelectItem>
+              <SelectItem value="published">Yayında</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-1.5">
+          <Label className="text-xs text-muted-foreground">Görünürlük</Label>
+          <Select value={form.visibility} onValueChange={v => setForm({...form, visibility: v})}>
+            <SelectTrigger className="bg-secondary border-border h-9 text-sm"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="public">Herkese Açık</SelectItem>
+              <SelectItem value="restricted">Belirli Kişiler</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
+
+      {form.visibility === "restricted" && (
+        <div className="space-y-2 border border-border rounded-lg p-3 bg-secondary/30">
+          <Label className="text-xs text-muted-foreground">Bu içeriği görebilecek müşteriler:</Label>
+          <div className="max-h-40 overflow-y-auto space-y-1">
+            {clients.map((c) => (
+              <label key={c.user_id} className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-secondary cursor-pointer">
+                <Checkbox
+                  checked={selectedUserIds.includes(c.user_id)}
+                  onCheckedChange={() => toggleUser(c.user_id)}
+                />
+                <span className="text-sm text-foreground">{c.full_name || c.email}</span>
+                <span className="text-xs text-muted-foreground ml-auto">{c.email}</span>
+              </label>
+            ))}
+            {clients.length === 0 && <p className="text-xs text-muted-foreground text-center py-2">Müşteri bulunamadı</p>}
+          </div>
+        </div>
+      )}
+
       <Button type="submit" className="w-full h-9 text-sm bg-primary hover:bg-primary/90"><Save className="h-4 w-4 mr-1.5" /> Kaydet</Button>
     </form>
   );
