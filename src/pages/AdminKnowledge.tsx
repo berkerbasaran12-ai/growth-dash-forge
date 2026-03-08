@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Plus, Search, Edit, Trash2, MoreHorizontal, Save } from "lucide-react";
+import { Plus, Search, Edit, Trash2, MoreHorizontal, Save, Upload, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -213,16 +213,55 @@ function ContentForm({ categories, initialData, onSave }: { categories: any[]; i
     content_url: initialData?.content_url || '',
     status: initialData?.status || 'draft',
   });
+  const [uploading, setUploading] = useState(false);
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+
+    const { data, error } = await supabase.storage
+      .from("kb-files")
+      .upload(fileName, file);
+
+    if (error) {
+      toast.error("Dosya yüklenemedi: " + error.message);
+      setUploading(false);
+      return;
+    }
+
+    const { data: urlData } = supabase.storage.from("kb-files").getPublicUrl(fileName);
+    setForm({ ...form, content_url: urlData.publicUrl });
+    setUploading(false);
+    toast.success("Dosya yüklendi");
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSave({ ...form, category_id: form.category_id || null });
   };
 
+  const showUpload = form.content_type === "pdf" || form.content_type === "file";
+  const showUrlInput = form.content_type === "video" || form.content_type === "link";
+
+  const acceptMap: Record<string, string> = {
+    pdf: ".pdf",
+    file: "*",
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4 pt-2">
-      <div className="space-y-1.5"><Label className="text-xs text-muted-foreground">Başlık</Label><Input value={form.title} onChange={e => setForm({...form, title: e.target.value})} className="bg-secondary border-border h-9 text-sm" required /></div>
-      <div className="space-y-1.5"><Label className="text-xs text-muted-foreground">Açıklama</Label><Textarea value={form.description} onChange={e => setForm({...form, description: e.target.value})} className="bg-secondary border-border text-sm min-h-[80px]" required /></div>
+      <div className="space-y-1.5">
+        <Label className="text-xs text-muted-foreground">Başlık</Label>
+        <Input value={form.title} onChange={e => setForm({...form, title: e.target.value})} className="bg-secondary border-border h-9 text-sm" required />
+      </div>
+      <div className="space-y-1.5">
+        <Label className="text-xs text-muted-foreground">Açıklama</Label>
+        <Textarea value={form.description} onChange={e => setForm({...form, description: e.target.value})} className="bg-secondary border-border text-sm min-h-[80px]" required />
+      </div>
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">
           <Label className="text-xs text-muted-foreground">Kategori</Label>
@@ -233,7 +272,7 @@ function ContentForm({ categories, initialData, onSave }: { categories: any[]; i
         </div>
         <div className="space-y-1.5">
           <Label className="text-xs text-muted-foreground">İçerik Tipi</Label>
-          <Select value={form.content_type} onValueChange={v => setForm({...form, content_type: v})}>
+          <Select value={form.content_type} onValueChange={v => setForm({...form, content_type: v, content_url: ''})}>
             <SelectTrigger className="bg-secondary border-border h-9 text-sm"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="video">Video</SelectItem>
@@ -244,7 +283,59 @@ function ContentForm({ categories, initialData, onSave }: { categories: any[]; i
           </Select>
         </div>
       </div>
-      <div className="space-y-1.5"><Label className="text-xs text-muted-foreground">İçerik URL</Label><Input value={form.content_url} onChange={e => setForm({...form, content_url: e.target.value})} placeholder="https://..." className="bg-secondary border-border h-9 text-sm" /></div>
+
+      {/* URL input for video/link */}
+      {showUrlInput && (
+        <div className="space-y-1.5">
+          <Label className="text-xs text-muted-foreground">
+            {form.content_type === "video" ? "Video URL (YouTube vb.)" : "Link URL"}
+          </Label>
+          <Input value={form.content_url} onChange={e => setForm({...form, content_url: e.target.value})} placeholder="https://..." className="bg-secondary border-border h-9 text-sm" />
+        </div>
+      )}
+
+      {/* File upload for pdf/file */}
+      {showUpload && (
+        <div className="space-y-2">
+          <Label className="text-xs text-muted-foreground">
+            {form.content_type === "pdf" ? "PDF Dosyası" : "Dosya"} Yükle
+          </Label>
+          <div className="flex items-center gap-3">
+            <label className="flex-1 flex items-center justify-center gap-2 h-20 rounded-xl border-2 border-dashed border-border hover:border-primary/50 bg-secondary/50 cursor-pointer transition-colors">
+              {uploading ? (
+                <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+              ) : (
+                <>
+                  <Upload className="h-5 w-5 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">
+                    Dosya seçin veya sürükleyin
+                  </span>
+                </>
+              )}
+              <input
+                type="file"
+                className="hidden"
+                accept={acceptMap[form.content_type] || "*"}
+                onChange={handleFileUpload}
+                disabled={uploading}
+              />
+            </label>
+          </div>
+          {form.content_url && (
+            <div className="flex items-center gap-2 text-xs text-muted-foreground bg-secondary rounded-lg px-3 py-2">
+              <span className="truncate flex-1">{form.content_url.split('/').pop()}</span>
+              <Button type="button" variant="ghost" size="sm" className="h-6 px-2 text-destructive text-xs" onClick={() => setForm({...form, content_url: ''})}>
+                Kaldır
+              </Button>
+            </div>
+          )}
+          <div className="space-y-1.5">
+            <Label className="text-xs text-muted-foreground">veya URL girin</Label>
+            <Input value={form.content_url} onChange={e => setForm({...form, content_url: e.target.value})} placeholder="https://..." className="bg-secondary border-border h-9 text-sm" />
+          </div>
+        </div>
+      )}
+
       <div className="space-y-1.5">
         <Label className="text-xs text-muted-foreground">Durum</Label>
         <Select value={form.status} onValueChange={v => setForm({...form, status: v})}>
@@ -255,7 +346,9 @@ function ContentForm({ categories, initialData, onSave }: { categories: any[]; i
           </SelectContent>
         </Select>
       </div>
-      <Button type="submit" className="w-full h-9 text-sm bg-primary hover:bg-primary/90"><Save className="h-4 w-4 mr-1.5" /> Kaydet</Button>
+      <Button type="submit" disabled={uploading} className="w-full h-9 text-sm bg-primary hover:bg-primary/90">
+        <Save className="h-4 w-4 mr-1.5" /> Kaydet
+      </Button>
     </form>
   );
 }
