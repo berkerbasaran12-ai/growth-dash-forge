@@ -68,6 +68,7 @@ const AdminClients = () => {
     try {
       await callAdminFunction("delete_user", { user_id: userId });
       toast.success("Müşteri silindi");
+      logActivity("client_delete", "Müşteri silindi");
       fetchClients();
     } catch (err: any) { toast.error(err.message); }
   };
