@@ -26,6 +26,7 @@ const clientItems = [
 const adminItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "Müşteri Yönetimi", url: "/admin/clients", icon: Users },
+  { title: "Entegrasyonlar", url: "/integrations", icon: Plug },
   { title: "Bilgi Bankası", url: "/knowledge-base", icon: BookOpen },
   { title: "İçerik Yönetimi", url: "/admin/knowledge", icon: FileText },
   { title: "Ayarlar", url: "/settings", icon: Settings },
