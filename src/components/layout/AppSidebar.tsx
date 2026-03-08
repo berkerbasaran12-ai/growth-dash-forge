@@ -21,17 +21,17 @@ import {
 
 const clientItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-  { title: "Entegrasyonlar", url: "/integrations", icon: Plug },
   { title: "Havana Akademi", url: "/knowledge-base", icon: BookOpen },
+  { title: "Entegrasyonlar", url: "/integrations", icon: Plug },
   { title: "Ayarlar", url: "/settings", icon: Settings },
 ];
 
 const adminItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "Müşteri Yönetimi", url: "/admin/clients", icon: Users },
-  { title: "Entegrasyonlar", url: "/integrations", icon: Plug },
   { title: "Havana Akademi", url: "/knowledge-base", icon: BookOpen },
   { title: "İçerik Yönetimi", url: "/admin/knowledge", icon: FileText },
+  { title: "Entegrasyonlar", url: "/integrations", icon: Plug },
   { title: "Ayarlar", url: "/settings", icon: Settings },
 ];
 
