@@ -170,6 +170,26 @@ const AdminKnowledge = () => {
             <ContentForm categories={categories} initialData={editItem} onSave={handleSave} />
           </DialogContent>
         </Dialog>
+
+        {/* Category Dialog */}
+        <Dialog open={catDialogOpen} onOpenChange={(open) => { setCatDialogOpen(open); if (!open) { setEditCat(null); setCatForm({ name: "", icon: "📚" }); } }}>
+          <DialogContent className="glass border-border max-w-sm">
+            <DialogHeader><DialogTitle className="text-foreground">{editCat ? "Kategori Düzenle" : "Yeni Kategori"}</DialogTitle></DialogHeader>
+            <div className="space-y-4 pt-2">
+              <div className="space-y-1.5">
+                <Label className="text-xs text-muted-foreground">İkon</Label>
+                <Input value={catForm.icon} onChange={e => setCatForm({ ...catForm, icon: e.target.value })} className="bg-secondary border-border h-9 text-sm w-20" />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs text-muted-foreground">Kategori Adı</Label>
+                <Input value={catForm.name} onChange={e => setCatForm({ ...catForm, name: e.target.value })} className="bg-secondary border-border h-9 text-sm" required />
+              </div>
+              <Button className="w-full h-9 text-sm bg-primary hover:bg-primary/90" onClick={handleSaveCat}>
+                <Save className="h-4 w-4 mr-1.5" /> Kaydet
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </AppLayout>
   );
