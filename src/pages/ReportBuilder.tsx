@@ -110,7 +110,17 @@ export default function ReportBuilder() {
   const [submitted, setSubmitted] = useState(false);
 
   const isClientReport = reportType === "client";
-  const TOTAL_STEPS = 4;
+  const TOTAL_STEPS = isClientReport ? 3 : 4;
+
+  const getNextStep = (current: number) => {
+    if (isClientReport && current === 2) return 3; // skip notes, go to summary (now step 3)
+    return current + 1;
+  };
+  const getPrevStep = (current: number) => {
+    if (isClientReport && current === 3) return 2; // skip notes going back
+    return current - 1;
+  };
+  const getSummaryStep = () => isClientReport ? 3 : 4;
 
   // Fetch clients for admin
   const { data: clients } = useQuery({
@@ -618,7 +628,7 @@ export default function ReportBuilder() {
           )}
 
           {/* Step 3: Notes & Plans */}
-          {step === 3 && (
+          {step === 3 && !isClientReport && (
             <div className="space-y-6">
               <h2 className="text-lg font-semibold text-foreground">Notlar & Planlama</h2>
               <div className="space-y-3">
@@ -639,8 +649,8 @@ export default function ReportBuilder() {
             </div>
           )}
 
-          {/* Step 4: Summary & Submit */}
-          {step === 4 && !submitted && (
+          {/* Step: Summary & Submit */}
+          {step === getSummaryStep() && !submitted && (
             <div className="space-y-6">
               <h2 className="text-lg font-semibold text-foreground">Rapor Özeti</h2>
               <Card className="p-4 bg-muted/30 space-y-4">
@@ -692,7 +702,7 @@ export default function ReportBuilder() {
                   <div className="flex items-center gap-2"><TrendingUp className="h-4 w-4 text-muted-foreground" /><div><p className="text-muted-foreground text-xs">Dönüşüm</p><p className="font-semibold text-foreground">{parseInt(leadsCount) > 0 ? `%${((parseInt(salesClosed) || 0) / parseInt(leadsCount) * 100).toFixed(0)}` : "%0"}</p></div></div>
                 </div>
 
-                {(weeklyNotes || challenges || nextWeekPlan) && (
+                {!isClientReport && (weeklyNotes || challenges || nextWeekPlan) && (
                   <>
                     <Separator />
                     <div className="space-y-2 text-sm">
@@ -707,7 +717,7 @@ export default function ReportBuilder() {
           )}
 
           {/* Success */}
-          {step === 4 && submitted && (
+          {step === getSummaryStep() && submitted && (
             <div className="text-center py-12 space-y-4">
               <div className="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center mx-auto">
                 <CheckCircle2 className="h-8 w-8 text-green-600 dark:text-green-400" />
@@ -728,18 +738,18 @@ export default function ReportBuilder() {
           )}
 
           {/* Footer Buttons */}
-          {!(step === 4 && submitted) && (
+          {!(step === getSummaryStep() && submitted) && (
             <div className="flex items-center justify-end gap-3 mt-8 pt-6 border-t border-border">
               {step > (isAdmin ? 0 : 1) && (
-                <Button variant="outline" onClick={() => setStep(step - 1)} className="rounded-xl">
+                <Button variant="outline" onClick={() => setStep(getPrevStep(step))} className="rounded-xl">
                   <ArrowLeft className="h-4 w-4 mr-2" /> Geri
                 </Button>
               )}
               <Button variant="outline" onClick={() => navigate("/reports")} className="rounded-xl">
                 İptal
               </Button>
-              {step < TOTAL_STEPS ? (
-                <Button onClick={() => setStep(step + 1)} disabled={!canGoNext()} className="rounded-xl">
+              {step < getSummaryStep() ? (
+                <Button onClick={() => setStep(getNextStep(step))} disabled={!canGoNext()} className="rounded-xl">
                   Sonraki <ChevronRight className="h-4 w-4 ml-2" />
                 </Button>
               ) : (
