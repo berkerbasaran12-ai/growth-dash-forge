@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Building2, Users, CreditCard, StickyNote, Plus, X, Save, Trash2, BookOpen } from "lucide-react";
+import { ArrowLeft, Building2, Users, CreditCard, StickyNote, Plus, X, Save, Trash2, BookOpen, BarChart3 } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -143,6 +143,9 @@ const ClientDetail = () => {
           <Badge variant={client.is_active ? "default" : "secondary"} className={`self-start sm:ml-auto shrink-0 ${client.is_active ? "bg-accent/10 text-accent border-accent/20" : ""}`}>
             {client.is_active ? "Aktif" : "Pasif"}
           </Badge>
+          <Button size="sm" variant="outline" className="shrink-0" onClick={() => navigate(`/dashboard?client=${userId}`)}>
+            <BarChart3 className="h-4 w-4 mr-1.5" /> Paneli Görüntüle
+          </Button>
         </div>
 
         {/* Tabs */}

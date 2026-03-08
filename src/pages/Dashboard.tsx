@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Plus, Megaphone, HandCoins } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -22,18 +23,25 @@ import { DateFilter } from "@/components/dashboard/DateFilter";
 import { MarketingEntryForm, SalesEntryForm } from "@/components/dashboard/DataEntryForm";
 
 const Dashboard = () => {
-  const { effectiveUserId, isTeamMember, teamMembership } = useAuth();
-  const [tab, setTab] = useState("marketing");
+  const { effectiveUserId, isTeamMember, teamMembership, isAdmin } = useAuth();
+  const [searchParams] = useSearchParams();
+  const viewingClientId = searchParams.get("client");
+  const isViewingClient = isAdmin && !!viewingClientId;
+  const targetUserId = isViewingClient ? viewingClientId : effectiveUserId;
+  const showMarketing = isAdmin;
+
+  const [tab, setTab] = useState(showMarketing ? "marketing" : "sales");
   const [dateFilter, setDateFilter] = useState("7d");
   const [customRange, setCustomRange] = useState<{ from: Date | undefined; to: Date | undefined }>({ from: undefined, to: undefined });
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [viewingClientName, setViewingClientName] = useState("");
 
   const [salesMetrics, setSalesMetrics] = useState<any[]>([]);
   const [prevSalesMetrics, setPrevSalesMetrics] = useState<any[]>([]);
   const [marketingMetrics, setMarketingMetrics] = useState<any[]>([]);
   const [prevMarketingMetrics, setPrevMarketingMetrics] = useState<any[]>([]);
 
-  const canEdit = !isTeamMember || teamMembership?.permission === "full";
+  const canEdit = isViewingClient ? true : (!isTeamMember || teamMembership?.permission === "full");
 
   const getDateRange = () => {
     const now = new Date();
@@ -48,7 +56,7 @@ const Dashboard = () => {
   };
 
   const fetchData = async () => {
-    if (!effectiveUserId) return;
+    if (!targetUserId) return;
     const { from, to, prevFrom, prevTo } = getDateRange();
     const fmtFrom = format(from, "yyyy-MM-dd");
     const fmtTo = format(to, "yyyy-MM-dd");
@@ -56,10 +64,10 @@ const Dashboard = () => {
     const fmtPrevTo = format(prevTo, "yyyy-MM-dd");
 
     const [salesCur, salesPrev, mktCur, mktPrev] = await Promise.all([
-      supabase.from("sales_metrics").select("*").eq("user_id", effectiveUserId).gte("date", fmtFrom).lte("date", fmtTo).order("date"),
-      supabase.from("sales_metrics").select("*").eq("user_id", effectiveUserId).gte("date", fmtPrevFrom).lte("date", fmtPrevTo),
-      supabase.from("marketing_metrics").select("*").eq("user_id", effectiveUserId).gte("date", fmtFrom).lte("date", fmtTo).order("date"),
-      supabase.from("marketing_metrics").select("*").eq("user_id", effectiveUserId).gte("date", fmtPrevFrom).lte("date", fmtPrevTo),
+      supabase.from("sales_metrics").select("*").eq("user_id", targetUserId).gte("date", fmtFrom).lte("date", fmtTo).order("date"),
+      supabase.from("sales_metrics").select("*").eq("user_id", targetUserId).gte("date", fmtPrevFrom).lte("date", fmtPrevTo),
+      supabase.from("marketing_metrics").select("*").eq("user_id", targetUserId).gte("date", fmtFrom).lte("date", fmtTo).order("date"),
+      supabase.from("marketing_metrics").select("*").eq("user_id", targetUserId).gte("date", fmtPrevFrom).lte("date", fmtPrevTo),
     ]);
 
     setSalesMetrics(salesCur.data || []);
@@ -68,7 +76,14 @@ const Dashboard = () => {
     setPrevMarketingMetrics(mktPrev.data || []);
   };
 
-  useEffect(() => { fetchData(); }, [effectiveUserId, dateFilter, customRange.from?.getTime(), customRange.to?.getTime()]);
+  useEffect(() => {
+    if (isViewingClient && viewingClientId) {
+      supabase.from("profiles").select("full_name").eq("user_id", viewingClientId).maybeSingle()
+        .then(({ data }) => setViewingClientName(data?.full_name || ""));
+    }
+  }, [viewingClientId]);
+
+  useEffect(() => { fetchData(); }, [targetUserId, dateFilter, customRange.from?.getTime(), customRange.to?.getTime()]);
 
   const sum = (arr: any[], key: string) => arr.reduce((s, m) => s + Number(m[key] || 0), 0);
   const avg = (arr: any[], key: string) => arr.length > 0 ? sum(arr, key) / arr.length : 0;
@@ -161,9 +176,9 @@ const Dashboard = () => {
   }));
 
   const handleSaveMarketing = async (form: any) => {
-    if (!effectiveUserId) return;
+    if (!targetUserId) return;
     const { error } = await supabase.from("marketing_metrics").upsert({
-      user_id: effectiveUserId, date: form.date, channel: form.channel,
+      user_id: targetUserId, date: form.date, channel: form.channel,
       spend: Number(form.spend || 0), traffic: Number(form.traffic || 0),
       conversions: Number(form.conversions || 0), leads: Number(form.leads || 0),
       cpc: Number(form.cpc || 0), cpm: Number(form.cpm || 0),
@@ -179,9 +194,9 @@ const Dashboard = () => {
   };
 
   const handleSaveSales = async (form: any) => {
-    if (!effectiveUserId) return;
+    if (!targetUserId) return;
     const { error } = await supabase.from("sales_metrics").upsert({
-      user_id: effectiveUserId, date: form.date,
+      user_id: targetUserId, date: form.date,
       total_sales: Number(form.total_sales || 0), order_count: Number(form.order_count || 0),
       new_customers: Number(form.new_customers || 0), returning_customers: Number(form.returning_customers || 0),
       net_profit: Number(form.net_profit || 0), win_rate: Number(form.win_rate || 0),
@@ -203,8 +218,12 @@ const Dashboard = () => {
       <div className="space-y-6 max-w-7xl">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h1 className="text-xl sm:text-2xl font-semibold text-foreground tracking-tight">Dashboard</h1>
-            <p className="text-xs sm:text-sm text-muted-foreground mt-1">Pazarlama ve satış metriklerinizi takip edin</p>
+            <h1 className="text-xl sm:text-2xl font-semibold text-foreground tracking-tight">
+              {isViewingClient ? `${viewingClientName || "Müşteri"} — Yönetim Paneli` : "Yönetim Paneli"}
+            </h1>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+              {isViewingClient ? "Müşterinin metriklerini görüntülüyorsunuz" : showMarketing ? "Pazarlama ve satış metriklerinizi takip edin" : "Satış metriklerinizi takip edin"}
+            </p>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
             <DateFilter dateFilter={dateFilter} onFilterChange={setDateFilter} customRange={customRange} onCustomRangeChange={setCustomRange} />
@@ -232,28 +251,36 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <Tabs value={tab} onValueChange={setTab}>
-          <TabsList className="bg-secondary border border-border">
-            <TabsTrigger value="marketing" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground gap-1.5">
-              <Megaphone className="h-3.5 w-3.5" /> Pazarlama
-            </TabsTrigger>
-            <TabsTrigger value="sales" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground gap-1.5">
-              <HandCoins className="h-3.5 w-3.5" /> Satış
-            </TabsTrigger>
-          </TabsList>
+        {showMarketing ? (
+          <Tabs value={tab} onValueChange={setTab}>
+            <TabsList className="bg-secondary border border-border">
+              <TabsTrigger value="marketing" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground gap-1.5">
+                <Megaphone className="h-3.5 w-3.5" /> Pazarlama
+              </TabsTrigger>
+              <TabsTrigger value="sales" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground gap-1.5">
+                <HandCoins className="h-3.5 w-3.5" /> Satış
+              </TabsTrigger>
+            </TabsList>
 
-          <TabsContent value="marketing" className="space-y-6 mt-6">
-            <SummaryCards cards={marketingCards} />
-            <MarketingCharts chartData={mktChartData} channelBreakdown={channelBreakdown} />
-            <MetricsTable metrics={marketingMetrics} canEdit={canEdit} onRefresh={fetchData} type="marketing" />
-          </TabsContent>
+            <TabsContent value="marketing" className="space-y-6 mt-6">
+              <SummaryCards cards={marketingCards} />
+              <MarketingCharts chartData={mktChartData} channelBreakdown={channelBreakdown} />
+              <MetricsTable metrics={marketingMetrics} canEdit={canEdit} onRefresh={fetchData} type="marketing" />
+            </TabsContent>
 
-          <TabsContent value="sales" className="space-y-6 mt-6">
+            <TabsContent value="sales" className="space-y-6 mt-6">
+              <SummaryCards cards={salesCards} />
+              <SalesCharts chartData={salesChartData} totalNewCustomers={sNewCustomers} totalReturningCustomers={sReturning} />
+              <MetricsTable metrics={salesMetrics} canEdit={canEdit} onRefresh={fetchData} type="sales" />
+            </TabsContent>
+          </Tabs>
+        ) : (
+          <div className="space-y-6">
             <SummaryCards cards={salesCards} />
             <SalesCharts chartData={salesChartData} totalNewCustomers={sNewCustomers} totalReturningCustomers={sReturning} />
             <MetricsTable metrics={salesMetrics} canEdit={canEdit} onRefresh={fetchData} type="sales" />
-          </TabsContent>
-        </Tabs>
+          </div>
+        )}
       </div>
     </AppLayout>
   );
