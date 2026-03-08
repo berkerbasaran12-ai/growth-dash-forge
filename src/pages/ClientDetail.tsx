@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Building2, Users, CreditCard, StickyNote, Plus, X, Save, Trash2, BookOpen } from "lucide-react";
+import { ArrowLeft, Building2, Users, CreditCard, StickyNote, Plus, X, Save, Trash2, BookOpen, BarChart3 } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
