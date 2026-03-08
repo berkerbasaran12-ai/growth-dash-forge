@@ -7,6 +7,7 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { logActivity } from "@/hooks/useActivityLog";
 import { format, subDays, parseISO } from "date-fns";
 import { tr } from "date-fns/locale";
 import {
@@ -169,7 +170,11 @@ const Dashboard = () => {
       engagement_rate: Number(form.engagement_rate || 0), roas: Number(form.roas || 0),
     }, { onConflict: "user_id,date,channel" });
     if (error) toast.error("Kaydedilemedi: " + error.message);
-    else { toast.success("Pazarlama verisi kaydedildi"); fetchData(); }
+    else {
+      toast.success("Pazarlama verisi kaydedildi");
+      logActivity("data_entry_marketing", `${form.date} - ${form.channel} pazarlama verisi girildi`);
+      fetchData();
+    }
     setDialogOpen(false);
   };
 
@@ -185,7 +190,11 @@ const Dashboard = () => {
       leads_received: Number(form.leads_received || 0),
     }, { onConflict: "user_id,date" });
     if (error) toast.error("Kaydedilemedi: " + error.message);
-    else { toast.success("Satış verisi kaydedildi"); fetchData(); }
+    else {
+      toast.success("Satış verisi kaydedildi");
+      logActivity("data_entry_sales", `${form.date} satış verisi girildi`);
+      fetchData();
+    }
     setDialogOpen(false);
   };
 

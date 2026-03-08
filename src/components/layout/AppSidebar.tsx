@@ -1,10 +1,12 @@
-import { LayoutDashboard, BookOpen, Settings, Users, LogOut, FileText, Plug } from "lucide-react";
+import { LayoutDashboard, BookOpen, Settings, Users, LogOut, FileText, Plug, Activity, Sun, Moon } from "lucide-react";
 import { NotificationBell } from "@/components/NotificationBell";
 import { SendNotificationDialog } from "@/components/SendNotificationDialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { NavLink } from "@/components/NavLink";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTheme } from "@/contexts/ThemeContext";
+import { Button } from "@/components/ui/button";
 import {
   Sidebar,
   SidebarContent,
@@ -21,17 +23,18 @@ import {
 
 const clientItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-  { title: "Havana Akademi", url: "/knowledge-base", icon: BookOpen },
   { title: "Entegrasyonlar", url: "/integrations", icon: Plug },
+  { title: "Havana Akademi", url: "/knowledge-base", icon: BookOpen },
   { title: "Ayarlar", url: "/settings", icon: Settings },
 ];
 
 const adminItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "Müşteri Yönetimi", url: "/admin/clients", icon: Users },
+  { title: "Entegrasyonlar", url: "/integrations", icon: Plug },
   { title: "Havana Akademi", url: "/knowledge-base", icon: BookOpen },
   { title: "İçerik Yönetimi", url: "/admin/knowledge", icon: FileText },
-  { title: "Entegrasyonlar", url: "/integrations", icon: Plug },
+  { title: "Aktivite Logu", url: "/admin/activity", icon: Activity },
   { title: "Ayarlar", url: "/settings", icon: Settings },
 ];
 
@@ -39,6 +42,7 @@ export function AppSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const { isAdmin, signOut, profile } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const items = isAdmin ? adminItems : clientItems;
 
@@ -109,6 +113,15 @@ export function AppSidebar() {
             </div>
           )}
           <div className="flex items-center gap-1 shrink-0">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+              className="h-8 w-8 text-muted-foreground hover:text-foreground"
+              title={theme === "dark" ? "Aydınlık Tema" : "Karanlık Tema"}
+            >
+              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </Button>
             <NotificationBell />
             {isAdmin && !collapsed && <SendNotificationDialog />}
           </div>

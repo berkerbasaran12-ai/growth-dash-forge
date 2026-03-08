@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { AppLayout } from "@/components/layout/AppLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { logActivity } from "@/hooks/useActivityLog";
 
 const AdminClients = () => {
   const navigate = useNavigate();
@@ -45,6 +46,7 @@ const AdminClients = () => {
         company: formData.company,
       });
       toast.success("Müşteri oluşturuldu");
+      logActivity("client_create", `${formData.name} (${formData.email}) müşterisi oluşturuldu`);
       setDialogOpen(false);
       fetchClients();
     } catch (err: any) {
@@ -56,6 +58,7 @@ const AdminClients = () => {
     try {
       await callAdminFunction("toggle_active", { user_id: userId, is_active: !currentActive });
       toast.success(currentActive ? "Müşteri pasif yapıldı" : "Müşteri aktif yapıldı");
+      logActivity("client_toggle", `Müşteri ${currentActive ? "pasif" : "aktif"} yapıldı`);
       fetchClients();
     } catch (err: any) { toast.error(err.message); }
   };
@@ -65,6 +68,7 @@ const AdminClients = () => {
     try {
       await callAdminFunction("delete_user", { user_id: userId });
       toast.success("Müşteri silindi");
+      logActivity("client_delete", "Müşteri silindi");
       fetchClients();
     } catch (err: any) { toast.error(err.message); }
   };

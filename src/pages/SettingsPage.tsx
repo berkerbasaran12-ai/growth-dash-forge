@@ -9,6 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { AvatarUpload } from "@/components/AvatarUpload";
+import { logActivity } from "@/hooks/useActivityLog";
 
 const SettingsPage = () => {
   const { profile, user } = useAuth();
@@ -23,7 +24,10 @@ const SettingsPage = () => {
     if (!user) return;
     const { error } = await supabase.from("profiles").update({ full_name: name, company }).eq("user_id", user.id);
     if (error) toast.error(error.message);
-    else toast.success("Profil güncellendi");
+    else {
+      toast.success("Profil güncellendi");
+      logActivity("profile_update", "Profil bilgileri güncellendi");
+    }
   };
 
   const handlePasswordChange = async () => {
@@ -31,7 +35,11 @@ const SettingsPage = () => {
     if (newPassword.length < 6) { toast.error("Şifre en az 6 karakter olmalı"); return; }
     const { error } = await supabase.auth.updateUser({ password: newPassword });
     if (error) toast.error(error.message);
-    else { toast.success("Şifre güncellendi"); setCurrentPassword(""); setNewPassword(""); setConfirmPassword(""); }
+    else {
+      toast.success("Şifre güncellendi");
+      logActivity("password_change", "Şifre değiştirildi");
+      setCurrentPassword(""); setNewPassword(""); setConfirmPassword("");
+    }
   };
 
   return (
