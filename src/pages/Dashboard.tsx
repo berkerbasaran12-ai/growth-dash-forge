@@ -25,14 +25,16 @@ import { format, subDays, parseISO } from "date-fns";
 import { tr } from "date-fns/locale";
 
 const Dashboard = () => {
-  const { user } = useAuth();
+  const { user, effectiveUserId, isTeamMember, teamMembership } = useAuth();
   const [dateFilter, setDateFilter] = useState("7d");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [metrics, setMetrics] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const canEdit = !isTeamMember || teamMembership?.permission === "full";
+
   const fetchMetrics = async () => {
-    if (!user) return;
+    if (!effectiveUserId) return;
     setLoading(true);
 
     let fromDate: Date;
@@ -46,7 +48,7 @@ const Dashboard = () => {
     const { data, error } = await supabase
       .from("sales_metrics")
       .select("*")
-      .eq("user_id", user.id)
+      .eq("user_id", effectiveUserId)
       .gte("date", format(fromDate, "yyyy-MM-dd"))
       .order("date", { ascending: true });
 
@@ -55,7 +57,7 @@ const Dashboard = () => {
     setLoading(false);
   };
 
-  useEffect(() => { fetchMetrics(); }, [user, dateFilter]);
+  useEffect(() => { fetchMetrics(); }, [effectiveUserId, dateFilter]);
 
   const totalSales = metrics.reduce((s, m) => s + Number(m.total_sales), 0);
   const totalOrders = metrics.reduce((s, m) => s + m.order_count, 0);
