@@ -1,4 +1,4 @@
-import { LayoutDashboard, BookOpen, Settings, Users, LogOut, FileText } from "lucide-react";
+import { LayoutDashboard, BookOpen, Settings, Users, LogOut, FileText, Plug } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -18,6 +18,7 @@ import {
 
 const clientItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+  { title: "Entegrasyonlar", url: "/integrations", icon: Plug },
   { title: "Bilgi Bankası", url: "/knowledge-base", icon: BookOpen },
   { title: "Ayarlar", url: "/settings", icon: Settings },
 ];
@@ -25,6 +26,7 @@ const clientItems = [
 const adminItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "Müşteri Yönetimi", url: "/admin/clients", icon: Users },
+  { title: "Entegrasyonlar", url: "/integrations", icon: Plug },
   { title: "Bilgi Bankası", url: "/knowledge-base", icon: BookOpen },
   { title: "İçerik Yönetimi", url: "/admin/knowledge", icon: FileText },
   { title: "Ayarlar", url: "/settings", icon: Settings },
