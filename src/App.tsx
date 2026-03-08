@@ -23,6 +23,8 @@ import Analytics from "./pages/Analytics";
 import ReportBuilder from "./pages/ReportBuilder";
 import MyReports from "./pages/MyReports";
 import KnowledgeCategoryDetail from "./pages/KnowledgeCategoryDetail";
+import OnboardingTemplates from "./pages/OnboardingTemplates";
+import ClientOnboarding from "./pages/ClientOnboarding";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
