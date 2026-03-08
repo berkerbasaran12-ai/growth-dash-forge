@@ -216,27 +216,36 @@ function ContentForm({ categories, initialData, onSave }: { categories: any[]; i
   const [uploading, setUploading] = useState(false);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
     setUploading(true);
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+    const uploadedUrls: string[] = [];
 
-    const { data, error } = await supabase.storage
-      .from("kb-files")
-      .upload(fileName, file);
+    for (const file of Array.from(files)) {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
 
-    if (error) {
-      toast.error("Dosya yüklenemedi: " + error.message);
-      setUploading(false);
-      return;
+      const { error } = await supabase.storage
+        .from("kb-files")
+        .upload(fileName, file);
+
+      if (error) {
+        toast.error(`"${file.name}" yüklenemedi: ${error.message}`);
+        continue;
+      }
+
+      const { data: urlData } = supabase.storage.from("kb-files").getPublicUrl(fileName);
+      uploadedUrls.push(urlData.publicUrl);
     }
 
-    const { data: urlData } = supabase.storage.from("kb-files").getPublicUrl(fileName);
-    setForm({ ...form, content_url: urlData.publicUrl });
+    if (uploadedUrls.length > 0) {
+      const existing = form.content_url ? form.content_url.split('\n').filter(Boolean) : [];
+      const allUrls = [...existing, ...uploadedUrls].join('\n');
+      setForm({ ...form, content_url: allUrls });
+      toast.success(`${uploadedUrls.length} dosya yüklendi`);
+    }
     setUploading(false);
-    toast.success("Dosya yüklendi");
   };
 
   const handleSubmit = (e: React.FormEvent) => {
