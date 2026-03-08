@@ -79,6 +79,73 @@ serve(async (req) => {
       });
     }
 
+    if (action === "create_invite") {
+      const { client_user_id, email, permission } = payload;
+      if (!client_user_id || !email || !permission) throw new Error("Missing fields");
+
+      // Check if invite already exists
+      const { data: existing } = await supabaseAdmin
+        .from("team_invites")
+        .select("id")
+        .eq("client_user_id", client_user_id)
+        .eq("email", email)
+        .eq("status", "pending")
+        .maybeSingle();
+
+      if (existing) throw new Error("Bu e-posta için zaten bekleyen bir davet var");
+
+      const { data: invite, error: invErr } = await supabaseAdmin
+        .from("team_invites")
+        .insert({ client_user_id, email, permission })
+        .select()
+        .single();
+
+      if (invErr) throw invErr;
+
+      return new Response(JSON.stringify({ invite }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (action === "list_team") {
+      const { client_user_id } = payload;
+
+      const [membersRes, invitesRes] = await Promise.all([
+        supabaseAdmin
+          .from("team_members")
+          .select("*, profiles:member_user_id(full_name, email)")
+          .eq("client_user_id", client_user_id),
+        supabaseAdmin
+          .from("team_invites")
+          .select("*")
+          .eq("client_user_id", client_user_id)
+          .eq("status", "pending"),
+      ]);
+
+      return new Response(JSON.stringify({
+        members: membersRes.data || [],
+        invites: invitesRes.data || [],
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (action === "remove_team_member") {
+      const { member_id } = payload;
+      await supabaseAdmin.from("team_members").delete().eq("id", member_id);
+      return new Response(JSON.stringify({ success: true }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (action === "cancel_invite") {
+      const { invite_id } = payload;
+      await supabaseAdmin.from("team_invites").update({ status: "cancelled" }).eq("id", invite_id);
+      return new Response(JSON.stringify({ success: true }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     throw new Error("Unknown action");
   } catch (error) {
     return new Response(JSON.stringify({ error: error.message }), {
