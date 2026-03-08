@@ -61,11 +61,11 @@ const AdminKnowledge = () => {
   const handleSaveCat = async () => {
     if (!catForm.name.trim()) return;
     if (editCat) {
-      const { error } = await supabase.from("kb_categories").update({ name: catForm.name, icon: catForm.icon }).eq("id", editCat.id);
+      const { error } = await supabase.from("kb_categories").update({ name: catForm.name, icon: catForm.icon, thumbnail_url: catForm.thumbnail_url }).eq("id", editCat.id);
       if (error) { toast.error(error.message); return; }
       toast.success("Kategori güncellendi");
     } else {
-      const { error } = await supabase.from("kb_categories").insert({ name: catForm.name, icon: catForm.icon });
+      const { error } = await supabase.from("kb_categories").insert({ name: catForm.name, icon: catForm.icon, thumbnail_url: catForm.thumbnail_url });
       if (error) { toast.error(error.message); return; }
       toast.success("Kategori oluşturuldu");
     }
