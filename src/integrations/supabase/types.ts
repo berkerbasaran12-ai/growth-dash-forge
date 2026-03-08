@@ -704,10 +704,13 @@ export type Database = {
         Row: {
           ad_spend: number
           challenges: string | null
+          clicks: number
           created_at: string
           dividend_spend: number
+          dm_count: number
           existing_customer_revenue: number
           id: string
+          impressions: number
           include_payments: boolean
           leads_count: number
           meetings_held: number
@@ -717,6 +720,7 @@ export type Database = {
           next_week_plan: string | null
           operational_spend: number
           outsource_spend: number
+          reach: number
           report_type: string
           salary_spend: number
           sales_closed: number
@@ -732,10 +736,13 @@ export type Database = {
         Insert: {
           ad_spend?: number
           challenges?: string | null
+          clicks?: number
           created_at?: string
           dividend_spend?: number
+          dm_count?: number
           existing_customer_revenue?: number
           id?: string
+          impressions?: number
           include_payments?: boolean
           leads_count?: number
           meetings_held?: number
@@ -745,6 +752,7 @@ export type Database = {
           next_week_plan?: string | null
           operational_spend?: number
           outsource_spend?: number
+          reach?: number
           report_type?: string
           salary_spend?: number
           sales_closed?: number
@@ -760,10 +768,13 @@ export type Database = {
         Update: {
           ad_spend?: number
           challenges?: string | null
+          clicks?: number
           created_at?: string
           dividend_spend?: number
+          dm_count?: number
           existing_customer_revenue?: number
           id?: string
+          impressions?: number
           include_payments?: boolean
           leads_count?: number
           meetings_held?: number
@@ -773,6 +784,7 @@ export type Database = {
           next_week_plan?: string | null
           operational_spend?: number
           outsource_spend?: number
+          reach?: number
           report_type?: string
           salary_spend?: number
           sales_closed?: number

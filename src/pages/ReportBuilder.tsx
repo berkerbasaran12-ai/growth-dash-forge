@@ -94,6 +94,12 @@ export default function ReportBuilder() {
   const [meetingsHeld, setMeetingsHeld] = useState("");
   const [salesClosed, setSalesClosed] = useState("");
 
+  // Ad metrics (client report)
+  const [dmCount, setDmCount] = useState("");
+  const [impressions, setImpressions] = useState("");
+  const [reach, setReach] = useState("");
+  const [clicks, setClicks] = useState("");
+
   // Step 3 state
   const [weeklyNotes, setWeeklyNotes] = useState("");
   const [challenges, setChallenges] = useState("");
