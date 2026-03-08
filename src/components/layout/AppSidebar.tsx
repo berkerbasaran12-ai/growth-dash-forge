@@ -1,4 +1,4 @@
-import { LayoutDashboard, BookOpen, Settings, Users, LogOut, FileText, Plug, Activity, Sun, Moon, Target, Wallet, BarChart3, ClipboardList } from "lucide-react";
+import { LayoutDashboard, BookOpen, Settings, Users, LogOut, FileText, Plug, Activity, Sun, Moon, Target, Wallet, BarChart3, ClipboardList, Plus } from "lucide-react";
 import havanaLogo from "@/assets/havana-logo.png";
 import { NotificationBell } from "@/components/NotificationBell";
 import { SendNotificationDialog } from "@/components/SendNotificationDialog";
@@ -24,7 +24,7 @@ import {
 
 const clientItems = [
   { title: "Anasayfa", url: "/dashboard", icon: LayoutDashboard },
-  { title: "Rapor Oluştur", url: "/reports", icon: ClipboardList },
+  { title: "Raporlarım", url: "/reports", icon: ClipboardList },
   { title: "Detaylı Analiz", url: "/analytics", icon: BarChart3 },
   { title: "Gelir-Gider", url: "/finance", icon: Wallet },
   { title: "Havana Akademi", url: "/knowledge-base", icon: BookOpen },
@@ -34,7 +34,7 @@ const clientItems = [
 
 const adminItems = [
   { title: "Anasayfa", url: "/dashboard", icon: LayoutDashboard },
-  { title: "Rapor Oluştur", url: "/reports", icon: ClipboardList },
+  { title: "Raporlarım", url: "/reports", icon: ClipboardList },
   { title: "Hedefler", url: "/goals", icon: Target },
   { title: "Detaylı Analiz", url: "/analytics", icon: BarChart3 },
   { title: "Gelir-Gider", url: "/finance", icon: Wallet },
@@ -95,6 +95,28 @@ export function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Quick Actions */}
+        <SidebarGroup>
+          {!collapsed && <SidebarGroupLabel className="text-muted-foreground text-xs uppercase tracking-wider px-4 mb-2">Hızlı İşlemler</SidebarGroupLabel>}
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <NavLink
+                    to="/reports/new"
+                    end
+                    className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sidebar-foreground transition-all duration-200 hover:bg-primary/10 hover:text-primary"
+                    activeClassName="bg-primary/10 text-primary font-medium"
+                  >
+                    <Plus className="h-4 w-4 shrink-0" />
+                    {!collapsed && <span className="text-sm">Rapor Oluştur</span>}
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

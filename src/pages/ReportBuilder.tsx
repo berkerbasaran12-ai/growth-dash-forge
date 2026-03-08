@@ -177,8 +177,36 @@ export default function ReportBuilder() {
 
     try {
       const weekStart = format(selectedWeek.start, "yyyy-MM-dd");
+      const weekEnd = format(selectedWeek.end, "yyyy-MM-dd");
 
-      // Insert sales_metrics
+      // Save to weekly_reports table
+      const { error: reportError } = await supabase.from("weekly_reports" as any).insert({
+        user_id: user.id,
+        week_start: weekStart,
+        week_end: weekEnd,
+        new_customer_revenue: parseFloat(newCustomerRevenue) || 0,
+        existing_customer_revenue: parseFloat(existingCustomerRevenue) || 0,
+        total_revenue: totalRevenue,
+        ad_spend: parseFloat(adSpend) || 0,
+        operational_spend: parseFloat(operationalSpend) || 0,
+        outsource_spend: parseFloat(outsourceSpend) || 0,
+        salary_spend: parseFloat(salarySpend) || 0,
+        dividend_spend: parseFloat(dividendSpend) || 0,
+        total_expenses: totalExpenses,
+        net_profit: netProfit,
+        leads_count: parseInt(leadsCount) || 0,
+        meetings_planned: parseInt(meetingsPlanned) || 0,
+        meetings_held: parseInt(meetingsHeld) || 0,
+        sales_closed: parseInt(salesClosed) || 0,
+        weekly_notes: weeklyNotes,
+        challenges,
+        next_week_plan: nextWeekPlan,
+        include_payments: includePayments,
+      });
+
+      if (reportError) throw reportError;
+
+      // Also insert into sales_metrics for analytics
       const { error: salesError } = await supabase.from("sales_metrics").insert({
         user_id: user.id,
         date: weekStart,
