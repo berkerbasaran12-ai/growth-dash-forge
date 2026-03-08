@@ -87,8 +87,36 @@ const Integrations = () => {
     }
   };
 
-  const handleConnectMeta = () => {
-    toast.info("Meta Ads entegrasyonu yakında aktif olacak");
+  const handleConnectMeta = async () => {
+    setLoadingMeta(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("meta-ads-auth", {
+        body: { user_id: effectiveUserId },
+      });
+      if (error) throw error;
+      if (data?.url) {
+        window.location.href = data.url;
+      }
+    } catch (err: any) {
+      toast.error("Meta Ads bağlantısı başlatılamadı: " + err.message);
+    } finally {
+      setLoadingMeta(false);
+    }
+  };
+
+  const handleDisconnectMeta = async () => {
+    try {
+      const { error } = await supabase
+        .from("ad_platform_connections")
+        .update({ is_active: false })
+        .eq("user_id", effectiveUserId)
+        .eq("platform", "meta_ads");
+      if (error) throw error;
+      setMetaConnected(false);
+      toast.success("Meta Ads bağlantısı kaldırıldı");
+    } catch (err: any) {
+      toast.error("Bağlantı kaldırılamadı: " + err.message);
+    }
   };
 
   const handleDisconnectGoogle = async () => {
