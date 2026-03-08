@@ -170,7 +170,11 @@ const Dashboard = () => {
       engagement_rate: Number(form.engagement_rate || 0), roas: Number(form.roas || 0),
     }, { onConflict: "user_id,date,channel" });
     if (error) toast.error("Kaydedilemedi: " + error.message);
-    else { toast.success("Pazarlama verisi kaydedildi"); fetchData(); }
+    else {
+      toast.success("Pazarlama verisi kaydedildi");
+      logActivity("data_entry_marketing", `${form.date} - ${form.channel} pazarlama verisi girildi`);
+      fetchData();
+    }
     setDialogOpen(false);
   };
 
