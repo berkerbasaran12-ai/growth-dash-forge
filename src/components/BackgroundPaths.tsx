@@ -10,7 +10,7 @@ function FloatingPaths({ position }: { position: number }) {
     } ${343 - i * 6}C${616 - i * 5 * position} ${470 - i * 6} ${
       684 - i * 5 * position
     } ${875 - i * 6} ${684 - i * 5 * position} ${875 - i * 6}`,
-    color: `rgba(255,255,255,${0.03 + i * 0.01})`,
+    color: `rgba(255,255,255,${0.08 + i * 0.025})`,
     width: 0.5 + i * 0.03,
   }));
 
