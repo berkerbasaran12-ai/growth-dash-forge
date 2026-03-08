@@ -14,6 +14,7 @@ import AdminKnowledge from "./pages/AdminKnowledge";
 import SettingsPage from "./pages/SettingsPage";
 import Integrations from "./pages/Integrations";
 import AcceptInvite from "./pages/AcceptInvite";
+import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +30,7 @@ const App = () => (
             <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/invite" element={<AcceptInvite />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/knowledge-base" element={<ProtectedRoute><KnowledgeBase /></ProtectedRoute>} />
             <Route path="/admin/clients" element={<ProtectedRoute adminOnly><AdminClients /></ProtectedRoute>} />
