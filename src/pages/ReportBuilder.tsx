@@ -262,7 +262,7 @@ export default function ReportBuilder() {
     new Intl.NumberFormat("tr-TR", { style: "currency", currency: "TRY", minimumFractionDigits: 0 }).format(val);
 
   return (
-    <AppLayout title="Rapor Oluştur">
+    <AppLayout>
       <div className="max-w-3xl mx-auto py-6 px-4">
         <Card className="p-6 md:p-8">
           {/* Header */}
