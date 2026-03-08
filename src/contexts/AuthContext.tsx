@@ -40,13 +40,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchUserData = async (userId: string) => {
-    const [roleRes, profileRes] = await Promise.all([
+    const [roleRes, profileRes, teamRes] = await Promise.all([
       supabase.from("user_roles").select("role").eq("user_id", userId).maybeSingle(),
       supabase.from("profiles").select("full_name, email, company, is_active").eq("user_id", userId).maybeSingle(),
+      supabase.from("team_members").select("client_user_id, permission").eq("member_user_id", userId).maybeSingle(),
     ]);
 
     if (roleRes.data) setRole(roleRes.data.role);
     if (profileRes.data) setProfile(profileRes.data);
+    setTeamMembership(teamRes.data || null);
   };
 
   useEffect(() => {
